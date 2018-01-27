@@ -1,0 +1,148 @@
+a.face-trigger{
+	display: inline-block;
+}
+a.face-trigger:hover, a.file-trigger:hover{
+	cursor: pointer;
+}
+#publish-action a.face-trigger{
+	padding-bottom: 0;
+	padding-right: 0;
+}
+textarea + a.face-trigger{
+	position: absolute;
+	margin-top: 4px;
+}
+#topic-content-modal a.file-trigger, #source-modal a.file-trigger{
+	position: absolute;
+	margin-top: 28px;
+	margin-left: 5px;
+}
+a.face-trigger > img{
+	width: 20px;
+}
+.publishment .replied-list .replied a.face-trigger > img, 
+.publishment .reply .repling a.face-trigger > img{
+	width: 24px;
+	margin-top: -3px;
+}
+
+.publishment .replied-list .replied p img.img{
+	height: 80px;
+	width: auto;	
+}
+.publishment .replied-list .replied p img.img:hover{
+	cursor: pointer;
+}
+
+a.face-trigger + div.face-panel, 
+a.file-trigger + div.file-panel{
+	position: absolute;
+	background-color: #fff;
+	z-index: 1;
+	padding: 6px;
+	border: 1px solid #ccc;
+	border-radius: 4px; 
+	display: none;
+}
+a.face-trigger + div.face-panel{
+	z-index: 2;
+}
+a.file-trigger + div.file-panel{
+	padding: 10px;
+}
+.publishment a.face-trigger + div.face-panel{
+	margin-left: 22em;
+}
+.publishment a.file-trigger + div.file-panel{
+	margin-left: 42em;
+}
+#topic-content-modal .publishment a.file-trigger + div.file-panel,
+#source-modal .publishment a.file-trigger + div.file-panel{
+	margin-left: 45.3em;
+	margin-top: -10em;
+}
+.publishment textarea + a.face-trigger + div.face-panel,
+.publishment textarea + a.file-trigger + div.file-panel{
+	margin-top: -9.4em;
+}
+@media (max-width: 1200px){
+	.publishment a.face-trigger + div.face-panel{
+		margin-left: 12em;
+	}
+	.publishment a.file-trigger + div.file-panel{
+		margin-left: 31.5em;
+	}
+	#topic-content-modal .publishment a.file-trigger + div.file-panel,
+	#source-modal .publishment a.file-trigger + div.file-panel{
+		margin-left: 42.8em;
+		margin-top: -10em;
+	}
+}
+a.face-trigger:hover, a.file-trigger:hover{
+	text-decoration: none;
+}
+a.face-trigger + div.face-panel img{
+	width: 22px;
+}
+a.file-trigger + div.file-panel img{
+	height: 80px;
+	max-width: 5.7em;
+	margin-right: -20px;
+}
+a.file-trigger + div.file-panel ul{
+	margin-top: 10px;
+	margin-bottom: 0;
+	padding-left: 0;
+}
+a.file-trigger + div.file-panel ul.imgs li{
+	list-style-type: none;
+	display: inline-block;
+}
+a.file-trigger + div.file-panel ul.imgs .del-tmp-img{
+	float: right;
+}
+a.file-trigger + div.file-panel ul.imgs img:hover{
+	opacity: 0.5;
+}
+a.file-trigger + div.file-panel ul.others li{
+	list-style-type: none;
+}
+.publishment .replied-list .replied a.face-trigger + div.face-panel img, 
+.publishment .reply .repling a.face-trigger + div.face-panel img{
+	width: 22px;
+	border: 0;
+	border-radius: 0;
+}
+.publishment .replied-list .replied .file-panel img,
+.publishment .reply .repling .file-panel img{
+	width: auto;
+	border: 0;
+	border-radius: 0;
+}
+a.face-trigger + div.face-panel > table > tbody > tr > td{
+	padding: 4px;
+}
+#source-modal a.face-trigger + div.face-panel > table > tbody > tr > td{
+	min-width: 0;
+}
+#source-modal a.face-trigger + div.face-panel > table{
+	margin-bottom: 0;
+}
+
+.file-panel a.add-file + span{
+	color: #ccc;
+	margin-left: 0.4em;
+}
+.file-panel input{
+	position: absolute;
+	margin-top: -26px;
+	opacity: 0;
+	width: 85px;
+}
+.file-panel p, .publishment .replied-list .replied .file-panel p{
+	display: none;	
+}
+
+span.files-part{
+	display: block;
+}

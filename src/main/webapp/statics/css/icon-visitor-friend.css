@@ -1,0 +1,82 @@
+/* Simple Info Part BEGIN */
+.simpleInfo-part{
+	background-image: url("../img/img-bg.jpg");
+	background-color: #fcfcfc;
+	background-repeat: no-repeat;
+	border: 1px solid #ccc;
+}
+.simpleInfo-part img{
+	width: 14em;
+	border: 1px solid #ccc;
+	border-radius: 50%;
+	margin: 12%;
+}
+.simpleInfo-part img:hover{
+	border: 3px solid #ECF9FF;
+}
+
+@media screen and (max-width: 1200px) and (min-width: 992px){
+	.simpleInfo-part img{
+		width:12em;
+		margin: 10%;
+	}
+}
+@media screen and (max-width: 992px){
+	.simpleInfo-part{
+		display: none;
+		margin-top: 10px;
+	}
+	.simpleInfo-part img{
+		margin-top: 1.8em;
+		margin-left: 1.8em;
+	}
+}
+/*  Simple Info Part END */
+
+/* Visitor Part & friend Part  BEGIN */
+.visitor-part, .friend-part{
+	margin-top: 10px;
+}
+.visitor-part label.box-title + a,
+.friend-part label.box-title + a{
+	margin-top: -2.2em;
+	color: #ddd;
+}
+#visitor-list, #friend-list{
+	margin: 3px 1px 0 9px;
+}
+#visitor-list .visitor, #friend-list .friend{
+	padding-right: 0;
+	float: left;
+	margin-right: 8px;
+	margin-bottom: 8px;
+}
+#visitor-list .visitor img, #friend-list .friend img{
+	border: 1px solid #ccc;
+	width: 75px;
+}
+#visitor-list .visitor a.name, #friend-list .friend a.name, 
+#visitor-list .visitor span, #friend-list .friend span{
+	display: block;
+	text-align: center;
+}
+#visitor-list .visitor span.time{
+	font-size: 0.6em;
+	color: #aaa;
+}
+@media screen and (max-width: 1200px) and (min-width: 992px){
+	#visitor-list .visitor img, #friend-list .friend img{
+		width: 92px;
+	}
+}
+@media screen and (max-width: 992px) and (min-width: 768px){
+	#visitor-list .visitor img, #friend-list .friend img{
+		width: 70px;
+	}
+}
+@media screen and (max-width: 308px){
+	#visitor-list .visitor img, #friend-list .friend img{
+		width: 4.8em;
+	}
+}
+/* Visitor Part & Friend Part  END */

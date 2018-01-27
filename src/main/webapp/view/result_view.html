@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>班级空间</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    <link rel="shortcut icon" href="https://www.mynereus.com/Education/resource/img/favicon.ico">
+    <link rel="stylesheet" href="../statics/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="../statics/css/public.css" type="text/css">
+    <link rel="stylesheet" href="../statics/css/publish.css" type="text/css">
+    <link rel="stylesheet" href="../statics/css/published.css" type="text/css">
+    <link rel="stylesheet" href="../statics/css/icon-visitor-friend.css" type="text/css">
+    <link rel="stylesheet" href="../statics/css/rich-text.css" type="text/css">
+    <link rel="stylesheet" href="../statics/css/dashboard.css" type="text/css">
+</head>
+<body>
+
+<!-- Static navbar -->
+<nav class="navbar navbar-default navbar-static-top navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://www.mynereus.com/Education/homepage.do">作业批改系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <!--<li class="active"><a href="https://www.mynereus.com/Education/homepage.do"><i-->
+                <!--class="glyphicon glyphicon-home"></i> 首页</a></li>-->
+                <!--<li class=""><a href="https://www.mynereus.com/Education/personal.do"><i-->
+                <!--class="glyphicon glyphicon-heart"></i> 个人主页</a></li>-->
+                <!--<li class=""><a href="https://www.mynereus.com/Education/courseTable.do"><i-->
+                <!--class="glyphicon glyphicon-th"></i> 我的课程</a></li>-->
+                <!--<li class=""><a href="https://www.mynereus.com/Education/friend.do"><i-->
+                <!--class="glyphicon glyphicon-gift"></i> 我的好友</a></li>-->
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="https://www.mynereus.com/Education/homepage.do#" class="dropdown-toggle"
+                       data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-user"></i>
+                        <span id="username">林淳波</span>
+                        <input type="hidden" id="curId" value="10142510166">
+
+
+                        <input type="hidden" id="curFaceIcon" value="/Education/resource/img/blank.jpg">
+
+
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="https://www.mynereus.com/Education/login.do?method=logout"><i
+                                class="glyphicon glyphicon-off"></i> 注销</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="javascript:void(0)">测试用例及答案编辑<span class="sr-only">(current)</span></a></li>
+                <li><a href="javascript:void(0)">作业上传</a></li>
+                <li class="active"><a href="javascript:void(0)">批改结果查看</a></li>
+                <li><a href="javascript:void(0)">相似度分析</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <a class="btn btn-primary">新增</a>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>题号</th>
+                        <th>测试用例</th>
+                        <th>答案</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>34</td>
+                        <td>qqq</td>
+                        <td>fff</td>
+                        <td>
+                            <a href="javascript:void(0)" class="btn btn-success btn-xs edit-answer" title="编辑"><i
+                                    class="glyphicon glyphicon-edit"></i></a>
+                            <a href="javascript:void(0)" class="btn btn-danger btn-xs" title="删除"><i
+                                    class="glyphicon glyphicon-trash"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var basePath = "/Education";
+</script>
+
+<script type="text/javascript" src="../statics/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../statics/js/jquery.form.min.js"></script>
+<script type="text/javascript" src="../statics/js/bootstrap.js"></script>
+<script type="text/javascript" src="../statics/js/public.js"></script>
+<script type="text/javascript" src="../statics/js/class.js"></script>
+<script type="text/javascript" src="../statics/js/published.js"></script>
+<script type="text/javascript" src="../statics/js/jsrender.min.js"></script>
+<script type="text/javascript" src="../statics/js/MyTable.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var aoColumns = [
+            {
+                "mDataProp": "id",
+                "bSortable": true
+            }, {
+                "mDataProp": "index",
+                "bSortable": true
+            }, {
+                "mDataProp": "linkmanName",
+                "bSortable": true
+            }, {
+                "mDataProp": "phoneNum",
+                "bSortable": true
+            }, {
+                "mDataProp": "licenseNum",
+                "bSortable": true
+            }, {
+                "mDataProp": "carType",
+                "bSortable": true
+            }, {
+                "mDataProp": "companyName",
+                "bSortable": true
+            }, {
+                "mDataProp": "others",
+                "bSortable": true
+            }];
+        var ajaxSource = {
+            "select": "${pageContext.request.contextPath}/carOperationController/getCars",
+            "get": "${pageContext.request.contextPath}/carOperationController/getCarDetail",
+            "add": "${pageContext.request.contextPath}/carOperationController/addCar",
+            "delete": "${pageContext.request.contextPath}/carOperationController/deleteCar",
+            "edit": "${pageContext.request.contextPath}/carOperationController/editCar"
+        };
+        initTable("cars", aoColumns, ajaxSource);
+    });
+
+    function printExcelForCars() {
+        $.ajax({
+            type: "post",
+            async: false,
+            dataType: "json",
+            //收受数据格式
+            url: "${pageContext.request.contextPath}/carOperationController/printExcelForCars",
+            cache: false,
+            success: function (data) {
+                if (data.retcode == "0000") {
+                    $("#printExcelForCars").attr("href", "../../web/download/" + data.obj);
+                    $("#printExcelForCarsSpan").trigger("click");
+                }
+                else {
+                    alert(data.errorMsg);
+                }
+
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

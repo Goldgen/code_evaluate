@@ -1,0 +1,73 @@
+*{
+	font-family: "微软雅黑", "Arial";
+}
+
+.container{
+	margin-top: 9em;
+	height:100%;
+}
+
+#main{
+	background-color: #eee;
+	position: relative;
+	border: 2px solid #fafafa;
+	border-radius: 10px;
+}
+#main img{
+	margin: 1em;
+	border-radius: 10px;
+}
+#main .row{
+	border: 2px solid #f4f4f4;
+	border-radius: 10px;
+}
+
+form{
+	margin-top: 2em;
+}
+#form-title{
+	font-size: 2em;
+}
+#login-btn{
+	width: 5.5em;
+}
+
+/* screen <= 1000px */
+@media screen and (max-width: 1000px){
+	#main img{
+		width: 16em;
+		margin-left: 0.2em;
+	}
+	form{
+		margin-top: 1em;
+	}
+}
+/* 1000px <= screen >= 1199px */
+@media screen and (min-width: 1000px) and (max-width: 1200px){
+	#main img{
+		width: 20em;
+		margin-left: 0.5em;
+	}
+}
+/* screen >= 1200px */
+@media screen and (min-width: 1200px){
+	#main img{
+		width: 24em;
+	}
+	form{
+		margin-right: 1em;
+	}
+}
+
+form span.msg{
+	display: none;
+}
+
+.alert.alert-danger{
+	text-align: center;
+}
+@media screen and (max-width: 1200px){
+	.alert.alert-danger{
+		padding: 7px 10px;
+	}
+}

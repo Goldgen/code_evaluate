@@ -1,0 +1,116 @@
+/* Publish Part BEGIN */
+div.publish-part{
+	padding: 0.9em;
+	background-color: #B6DBED;
+	border: 1px solid #82B7E4;
+}
+div.publish-part textarea{
+	height: 5.3em;	
+}
+#publish-action{
+	margin-top: 0.5em;
+}
+#publish-action > div > a{
+	display: inline-block;
+	padding: 6px;
+}
+#publish-msg{
+	color: #888;
+	font-size: 17px;
+	font-family: "SimHei";
+	padding-top: 7px;
+	display: inline-block;
+}
+#publish-msg.text-danger{
+	color: #B33A3A;
+}
+#rest-num{
+	color: #666;
+	font-weight: bold;
+	font-size: 18px;
+	font-family: "Calibri";
+	margin: 3px;
+}
+#publish-action button{
+	width: 100%;
+}
+/* #select-btn{
+	padding: 0;
+}
+#select-btn .btn-group{
+	padding: 0;
+	width: 100%;
+}
+#select-btn .btn-group .dropdown-toggle{
+	background-color: #B6DBED;
+	box-shadow: none;
+	border: 0;
+	color: #428bca; 
+}
+#select-btn .btn-group .dropdown-toggle .caret{
+	border-top-color: #428bca;
+	border-bottom-color: #428bca;
+}
+#select-btn .btn-group .dropdown-toggle:hover{
+	color: #124067;
+}
+#select-btn .btn-group .dropdown-toggle:hover .caret{
+	border-top-color: #124067;
+	border-bottom-color: #124067;
+}
+#select-btn .dropdown-menu{
+	min-width: 120px;
+}
+#select-btn .btn-group .btn, 
+#select-btn .dropdown-menu > li > a{
+	text-align: right;
+} */
+@media screen and (max-width: 992px) and (min-width: 600px){
+	#publish-action .col-md-8{
+		width: 65.22222222222222%;
+		display: inline-block;
+	}
+	#publish-action .col-md-2 {
+		width: 16.666666666666664%;
+		display: inline-block;
+	}
+}
+@media screen and (max-width: 600px) and (min-width: 450px){
+	#publish-action .col-md-8{
+		width: 58.22222222222222%;
+		display: inline-block;
+	}
+	#publish-action .col-md-2 {
+		width: 19.888888888888884%;
+		display: inline-block;
+	}
+	#publish-action .col-md-2 ul.dropdown-menu{
+		margin-left: -20px;
+	}
+}
+@media screen and (max-width: 450px){
+	#publish-action .col-md-8{
+		width: 100%;
+		display: inline-block;
+	}
+	#publish-action .col-md-2{
+		width: 49%;
+		display: inline-block;
+	}/* 
+	#select-btn .btn-group .dropdown-toggle{
+		margin-left: 5px;
+	} */
+	#publish-action .col-md-2 ul.dropdown-menu{
+		width: 75%;
+		margin-left: 25%;
+	}
+}
+/* Publish Part END */
+
+#publish-fail .modal-header, #reply-fail .modal-header{
+	border-bottom: 0;
+}
+#publish-fail .modal-title, #reply-fail .modal-title{
+	color: #D9534F;
+	text-align: center;
+}

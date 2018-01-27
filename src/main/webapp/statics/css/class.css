@@ -1,0 +1,192 @@
+#source-modal table{
+	width: 100%;
+	margin-bottom: 1em;
+}
+#source-modal table tr th, #source-modal table tr td{
+	padding: 4px;
+}
+#source-modal table tr th{
+	width: 6em;
+}
+#source-modal table tr td{
+	min-width: 16em;
+}
+#source-modal .modal-body{
+	padding-bottom: 0;
+}
+#source-modal .source-detail img{
+	width: 150px;
+	margin-left: 20px;
+}
+#source-modal a.reply-toggle{
+	margin-left: 10px;
+}
+#source-modal .publishment{
+	border: 0;
+	border-top: 1px solid #bbb;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	margin: 20px -15px 0;
+	padding-top: 0;
+	padding-bottom: 10px;
+	background-color: #e4e4e4;
+}
+#source-modal .publishment .replied-list .replied {
+	padding: 4px;
+}
+
+#change-content table .assignment-content{
+	display: none;
+	background-color: #eaeaea;
+}
+#change-content table>tbody>tr.assignment-content :hover{
+	background-color: #eaeaea;
+}
+#change-content table>tbody>tr.assignment-content td{
+	padding-left: 30px;
+	padding-bottom: 15px;
+	border-bottom: 2px solid #bbb;
+}
+#uploading{
+	display: none;
+	padding: 6px;
+	color: #5CB85C;
+	font-weight: bold;
+}
+
+.modal-dialog{
+	width: 700px;
+}
+.modal-dialog.modal-lg{
+	width: 900px;
+}
+#topic-content-modal .modal-dialog,
+#source-modal .modal-dialog{
+	width: 800px;
+} 
+#topic-content-modal span.time{
+	color: #777;
+	font-size: 12px;
+}
+
+#change-content .col-sm-3{
+	width: 20%;
+}
+#change-content .modal-footer{
+	margin-top: 0;
+}
+#source-list{
+	padding-bottom: 0;
+}
+
+#classmate-list .classmate, #result-list .classmate, #tutor-list .classmate{
+	padding-right: 0;
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 15px;
+}
+#classmate-list .classmate img, #result-list .classmate img, #tutor-list img{
+	border: 1px solid #ccc;
+	width: 79px;
+}
+#classmate-list .classmate span, #result-list .classmate span, #tutor-list span{
+	display: block;
+	text-align: center;
+}
+#result-list .classmate a{
+	text-align: center;
+}
+#result-list .classmate a.switch-1, #result-list .classmate a.switch-2{
+	margin-left: -2px;
+}
+
+#search-part{
+	padding: 12px;
+	background-color: #eee;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}
+#search-result{
+	display: none;
+}
+#search-result .panel-body{
+	padding-top: 10px;
+}
+#search-btn{
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+#import-student, #to-action{
+	margin-left: 10px;
+	float: right;
+}
+#del-classmate-group, #del-tutor-group{
+	float: right;
+}
+.add-tutor{
+	display: none;
+}
+.add-tutor + a{
+	display: none;
+}
+
+span.msg{
+	color: #aaa;
+	padding: 7px;
+	display: block;
+	text-align: center;
+}
+
+#confirm-del-topic .modal-title span, #confirm-del-source .modal-title span,
+#confirm-del-assignment .modal-title span, #confirm-del-ppt .modal-title span{
+	color: #DD8048;
+}
+
+#operation-fail .modal-title{
+	color: #D9534F;
+	text-align: center;
+}
+#operation-success .modal-title, #operation-success-im .modal-title{
+	color: #398439;
+	text-align: center;
+}
+#operation-success-im .modal-title p{
+	color: #000;
+	font-size: 14px;
+}
+#operation-success .modal-header, #operation-fail .modal-header, #operation-success-im .modal-header{
+	border-bottom: 0;
+}
+
+#score-part{
+	color: #ddd;
+	cursor: pointer;
+	font-size: 16px;
+}
+#score-part i.selected{
+	color: #FDE91C;
+}
+
+.tag-info{
+	padding: 0 2px;
+	border: 1px solid #589EC0;
+	color: #318CB8;
+}
+
+#send-topic-to-course{
+	float: right;
+	margin-top: -5px;
+	margin-left: 10px;
+	margin-bottom: 5px;
+}
+
+#change-content{
+	overflow: hidden;
+}
+#assignment-publish{
+	float: left;
+}
+#explain{
+	float: right;
+}
