@@ -90,4 +90,13 @@ public abstract class BaseAssignment<M extends BaseAssignment<M>> extends Model<
 		return getStr("answer");
 	}
 
+	public M setStatus(java.lang.Integer status) {
+		set("status", status);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getStatus() {
+		return getInt("status");
+	}
+
 }

@@ -13,7 +13,7 @@ public class ClassController extends Controller {
 
     private static ClassService classService = new ClassService();
 
-    public void index() {
+    public void list() {
         String teacherId = getSessionAttr("userId", "");
         List<ClassListVo> classList = classService.findAllByTeacherId(teacherId).stream().map(x->{
             ClassListVo vo=new ClassListVo();

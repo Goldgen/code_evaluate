@@ -30,7 +30,7 @@ public class UserController extends Controller {
             setAttr("errorType", "notTeacher");
         }  else{
             setSessionAttr("userId", userId);
-            redirect("classes");
+            redirect("class/list");
         }
     }
 

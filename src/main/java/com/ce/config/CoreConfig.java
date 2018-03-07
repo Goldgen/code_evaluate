@@ -2,9 +2,12 @@ package com.ce.config;
 
 import com.ce.controller.AssignmentController;
 import com.ce.controller.ClassController;
+import com.ce.controller.TestCaseController;
 import com.ce.controller.UserController;
 import com.ce.interceptor.SessionInterceptor;
+import com.ce.model.TestCase;
 import com.ce.model._MappingKit;
+import com.ce.task.CompileTask;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -14,6 +17,7 @@ import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
+import com.jfinal.plugin.cron4j.Cron4jPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.template.Engine;
 
@@ -57,14 +61,15 @@ public class CoreConfig extends JFinalConfig {
      */
     public void configRoute(Routes me) {
         //me.setBaseViewPath("/view");
-        me.add("/classes", ClassController.class, "/view");
-        me.add("/assignments", AssignmentController.class, "/view");
+        me.add("/class", ClassController.class, "/view");
+        me.add("/assignment", AssignmentController.class, "/view");
+        me.add("/testCase", TestCaseController.class, "/view");
         me.add("/", UserController.class, "/view");
     }
 
     public void configEngine(Engine me) {
-        me.addSharedFunction("/common/_layout.html");
-        me.addSharedFunction("/common/_paginate.html");
+//        me.addSharedFunction("/common/_layout.html");
+//        me.addSharedFunction("/common/_paginate.html");
     }
 
     /**
@@ -80,6 +85,11 @@ public class CoreConfig extends JFinalConfig {
         // 所有映射在 MappingKit 中自动化搞定
         _MappingKit.mapping(arp);
         me.add(arp);
+
+        Cron4jPlugin cp = new Cron4jPlugin();
+        cp.addTask("*/1 * * * *", new CompileTask());
+        me.add(cp);
+
     }
 
     public static DruidPlugin createDruidPlugin() {

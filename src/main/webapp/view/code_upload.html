@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>作业详情</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_css.html")
+    <link rel="stylesheet" href="/statics/css/dashboard.css" type="text/css">
+</head>
+<body>
+
+#include("_navbar.html")
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="/assignment/detail/#(assignment.assignmentId)-test_case_edit">测试用例编辑</a></li>
+                <li class="active"><a href="/assignment/detail/#(assignment.assignmentId)-code_upload">作业上传</a></li>
+                <li><a href="/assignment/detail/#(assignment.assignmentId)-execute_result">批改结果查看</a></li>
+                <li><a href="/assignment/detail/#(assignment.assignmentId)-similarity_analysis">相似度分析</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <form method="post" enctype="multipart/form-data" action="/assignment/codeUpload">
+                <label class="text-danger">请确保测试用例编辑完成再上传代码！</label>
+                <div class="form-group">
+                    <label>请选择代码压缩文件</label>
+                    <input type="file" name="code">
+                </div>
+                <input type="hidden" name="assignmentId" value="#(assignment.assignmentId)">
+                <button type="submit" class="btn btn-primary #if(assignment.status!=0)hidden#end">上传</button>
+                <span class="text-danger">#(uploadResult)</span>
+                <span class="text-danger #if(assignment.status==0)hidden#end">代码已上传</span>
+            </form>
+        </div>
+    </div>
+</div>
+
+#include("_js.html")
+
+</body>
+</html>

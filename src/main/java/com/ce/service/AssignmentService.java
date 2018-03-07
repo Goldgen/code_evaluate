@@ -16,6 +16,10 @@ public class AssignmentService {
         dao.deleteById(id);
     }
 
+    public List<Assignment> findUnEvaluate() {
+        return dao.find("select * from assignment where status = 1");
+    }
+
     public List<Assignment> findByClassId(String classId) {
         return dao.find("select * from assignment where classId = ? order by startDate DESC", classId);
     }

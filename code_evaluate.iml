@@ -62,5 +62,8 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: com.jfinal:cos:2017.5" level="project" />
+    <orderEntry type="library" name="Maven: it.sauronsoftware.cron4j:cron4j:2.2.5" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.46" level="project" />
   </component>
 </module>

@@ -41,6 +41,8 @@ public class _MappingKit {
 		arp.addMapping("password_reset_token", "id", PasswordResetToken.class);
 		arp.addMapping("ppt", "pptId", Ppt.class);
 		arp.addMapping("province", "provinceId", Province.class);
+		// Composite Primary Key order: assignmentId,questionId
+		arp.addMapping("question", "assignmentId,questionId", Question.class);
 		arp.addMapping("request", "id", Request.class);
 		arp.addMapping("source", "sourceId", Source.class);
 		// Composite Primary Key order: sourceId,userId
@@ -58,7 +60,10 @@ public class _MappingKit {
 		arp.addMapping("student_assignment", "assignmentId,userId", StudentAssignment.class);
 		// Composite Primary Key order: classId,userId
 		arp.addMapping("student_class", "classId,userId", StudentClass.class);
+		// Composite Primary Key order: questionId,userId
+		arp.addMapping("student_question", "questionId,userId", StudentQuestion.class);
 		arp.addMapping("term", "termId", Term.class);
+		arp.addMapping("test_case", "testCaseId", TestCase.class);
 		arp.addMapping("token", "id", Token.class);
 		arp.addMapping("topic", "topicId", Topic.class);
 		// Composite Primary Key order: path,topicId
@@ -68,6 +73,7 @@ public class _MappingKit {
 		arp.addMapping("topicreply_file", "path,replyId", TopicreplyFile.class);
 		// Composite Primary Key order: homelandP,userId
 		arp.addMapping("user", "homelandP,userId", User.class);
+		arp.addMapping("violation", "violationId", Violation.class);
 		// Composite Primary Key order: userId,visitorId
 		arp.addMapping("visitor", "userId,visitorId", Visitor.class);
 	}
