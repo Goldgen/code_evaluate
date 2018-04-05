@@ -76,7 +76,7 @@
                             <td>是</td>
                             <td>
                                 <a href="/assignment/detail/#(x.assignmentId)-execute_result"
-                                   title="查看作业详情" class="btn btn-info btn-xs">
+                                   title="查看作业详情" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="bottom">
                                     <i class="glyphicon glyphicon-list"></i>
                                 </a>
                             </td>
@@ -106,6 +106,9 @@
 #include("_js.html")
 <script>
     $(function(){
+
+        $('[data-toggle="tooltip"]').tooltip();
+
         var page = new Paging();
         var totalCount=#(totalCount);
         page.init({

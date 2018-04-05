@@ -21,10 +21,12 @@ public class TestCaseController extends Controller {
 
     public void addQuestion() {
         int assignmentId = getParaToInt("assignmentId");
-        int questionId = getParaToInt("questionId");
+        int questionNo = getParaToInt("questionNo");
+        String content = getPara("content");
         Question question = new Question();
         question.setAssignmentId(assignmentId);
-        question.setQuestionId(questionId);
+        question.setQuestionNo(questionNo);
+        question.setContent(content);
         question.save();
 
         redirect("/assignment/detail/" + assignmentId + "-test_case_edit");

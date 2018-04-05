@@ -41,8 +41,7 @@ public class _MappingKit {
 		arp.addMapping("password_reset_token", "id", PasswordResetToken.class);
 		arp.addMapping("ppt", "pptId", Ppt.class);
 		arp.addMapping("province", "provinceId", Province.class);
-		// Composite Primary Key order: assignmentId,questionId
-		arp.addMapping("question", "assignmentId,questionId", Question.class);
+		arp.addMapping("question", "questionId", Question.class);
 		arp.addMapping("request", "id", Request.class);
 		arp.addMapping("source", "sourceId", Source.class);
 		// Composite Primary Key order: sourceId,userId

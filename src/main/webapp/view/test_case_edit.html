@@ -32,16 +32,15 @@
                     <h2>测试用例列表</h2>
                 </div>
                 <div class="col-md-2">
-                    <a class="btn btn-primary" style="margin-top: 20px"
-                       href="/testCase/addQuestion?assignmentId=#(assignment.assignmentId)&questionId=#(questionSize + 1)">
-                        新增题号
+                    <a class="btn btn-primary add-question-btn" style="margin-top: 20px">
+                        新增题目
                     </a>
                 </div>
             </div>
             <div id="tab-content">
                 <div id="change-content">
                     #for(question : questionVoList)
-                    <div class="col-md-10"><h3>第#(question.questionId)题</h3></div>
+                    <div class="col-md-10"><h3>第#(question.questionNo)题</h3></div>
                     <div class="col-md-2" style="margin-top: 20px">
                         <a class="btn btn-info btn-xs add-btn" data-questionid="#(question.questionId)" title="添加用例">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -55,41 +54,47 @@
                         <a class="invisible">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
-                        <a class="btn btn-info btn-xs delete-btn #if(question.questionId!=questionSize)hidden#end" title="删除"
-                           href="/testCase/deleteQuestion?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)">
+                        <a class="btn btn-info btn-xs delete-btn #if(question.questionNo!=questionSize)hidden#end"
+                           title="删除" data-questionid="#(question.questionId)">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </a>
                     </div>
-                    <table class="table table-hover" style="margin-left: 15px">
-                        <thead>
-                        <tr>
-                            <th>测试用例</th>
-                            <th>答案</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        #for(x : question.testCaseList)
-                        <tr>
-                            <td>
-                                <pre>#(x.testCaseContent)</pre>
-                            </td>
-                            <td>
-                                <pre>#(x.answer)</pre>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)" class="btn btn-success btn-xs" title="修改"
-                                   data-id="#(x.testCaseId)" data-content="#(x.testCaseContent)"
-                                   data-answer="#(x.answer)">
-                                    <i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-danger btn-xs" title="删除"
-                                   data-id="#(x.testCaseId)">
-                                    <i class="glyphicon glyphicon-trash"></i></a>
-                            </td>
-                        </tr>
-                        #end
-                        </tbody>
-                    </table>
+                    <div class="col-md-12">
+                        <p>题目内容：#(question.content)</p>
+                        <table class="table table-hover" style="margin-left: -5px">
+                            <thead>
+                            <tr>
+                                <th>测试用例</th>
+                                <th>答案</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            #for(x : question.testCaseList)
+                            <tr>
+                                <td>
+                                    <pre>#(x.testCaseContent)</pre>
+                                </td>
+                                <td>
+                                    <pre>#(x.answer)</pre>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" class="btn btn-success btn-xs" title="修改"
+                                       data-toggle="tooltip" data-placement="bottom"
+                                       data-id="#(x.testCaseId)" data-content="#(x.testCaseContent)"
+                                       data-answer="#(x.answer)">
+                                        <i class="glyphicon glyphicon-edit"></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" title="删除"
+                                       data-toggle="tooltip" data-placement="bottom"
+                                       data-id="#(x.testCaseId)">
+                                        <i class="glyphicon glyphicon-trash"></i></a>
+                                </td>
+                            </tr>
+                            #end
+                            </tbody>
+                        </table>
+                    </div>
+
                     #end
                 </div>
                 <div id="pageTool"></div>
@@ -98,7 +103,37 @@
     </div>
 </div>
 
-<!--模态框-->
+<!--问题模态框-->
+<div class="modal fade" id="questionModel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">新增题目</h4>
+            </div>
+            <form class="form-horizontal" method="post" action="/testCase/addQuestion">
+                <div class="modal-body">
+                    <input type="hidden" name="assignmentId" value="#(assignment.assignmentId)">
+                    <input type="hidden" name="questionNo" value="#(questionSize + 1)">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">题目内容</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="6" name="content" id="question-content"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--测试用例模态框-->
 <div class="modal fade" id="caseModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -139,26 +174,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="deleteCaseModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">删除测试用例</h4>
-            </div>
-            <div class="modal-body">
-                确定删除吗？
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <a class="btn btn-primary" id="delete-btn"
-                   href="">删除</a>
-            </div>
-        </div>
-    </div>
-</div>
-
 #include("_js.html")
 
 </body>
@@ -167,6 +182,15 @@
     var editUrl = '/testCase/edit';
 
     $(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('.add-question-btn').click(function () {
+            $('#question-content').val('');
+            $('#questionModel').modal('toggle');
+            console.log('1111');
+        });
+
         $('.add-btn').click(function () {
             $('#modal-form').attr('action', addUrl);
             $('#modal-title').html('新增测试用例');
@@ -174,6 +198,17 @@
             $('#content').val('');
             $('#answer').val('');
             $('#caseModal').modal('toggle');
+        });
+
+        $('.delete-btn').click(function () {
+            var btn = $(this);
+            layer.confirm('此操作将会删除该问题及其下所有测试用例，是否确认删除？', {
+                btn: ['确认', '取消']
+            }, function (index, layero) {
+                window.location.href = '/testCase/deleteQuestion?assignmentId=#(assignment.assignmentId)&questionId=' + btn.data('questionid');
+            }, function (index) {
+                layer.close(index);
+            });
         });
 
         $('.btn-success').click(function () {
@@ -186,8 +221,14 @@
         });
 
         $('.btn-danger').click(function () {
-            $('#delete-btn').attr('href', '/testCase/delete?assignmentId=#(assignment.assignmentId)&testCaseId=' + $(this).data('id'));
-            $('#deleteCaseModal').modal('toggle');
+            var btn = $(this);
+            layer.confirm('是否确认删除？', {
+                btn: ['确认', '取消']
+            }, function (index, layero) {
+                window.location.href = '/testCase/delete?assignmentId=#(assignment.assignmentId)&testCaseId=' + btn.data('id');
+            }, function (index) {
+                layer.close(index);
+            });
         });
 
         $(".hidden-btn").click(function () {

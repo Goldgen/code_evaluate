@@ -4,8 +4,9 @@ import com.ce.controller.AssignmentController;
 import com.ce.controller.ClassController;
 import com.ce.controller.TestCaseController;
 import com.ce.controller.UserController;
+import com.ce.interceptor.ActionExceptionIntoLogInterceptor;
+import com.ce.interceptor.ServiceExceptionIntoLogInterceptor;
 import com.ce.interceptor.SessionInterceptor;
-import com.ce.model.TestCase;
 import com.ce.model._MappingKit;
 import com.ce.task.CompileTask;
 import com.jfinal.config.Constants;
@@ -100,7 +101,9 @@ public class CoreConfig extends JFinalConfig {
      * 配置全局拦截器
      */
     public void configInterceptor(Interceptors me) {
-        me.add(new SessionInterceptor());
+        me.addGlobalActionInterceptor(new SessionInterceptor());
+        me.addGlobalActionInterceptor(new ActionExceptionIntoLogInterceptor());
+        me.addGlobalServiceInterceptor(new ServiceExceptionIntoLogInterceptor());
     }
 
     /**

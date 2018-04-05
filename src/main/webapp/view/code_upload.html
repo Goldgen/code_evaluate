@@ -3,13 +3,13 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>作业详情</title>
+    <title>作业上传</title>
 
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
 
     #include("_css.html")
-    <link rel="stylesheet" href="/statics/css/dashboard.css" type="text/css">
+
 </head>
 <body>
 
@@ -27,22 +27,117 @@
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <form method="post" enctype="multipart/form-data" action="/assignment/codeUpload">
+
+
+            <form method="post" enctype="multipart/form-data">
                 <label class="text-danger">请确保测试用例编辑完成再上传代码！</label>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    测试用例确认
+                </button>
                 <div class="form-group">
                     <label>请选择代码压缩文件</label>
                     <input type="file" name="code">
                 </div>
                 <input type="hidden" name="assignmentId" value="#(assignment.assignmentId)">
-                <button type="submit" class="btn btn-primary #if(assignment.status!=0)hidden#end">上传</button>
                 <span class="text-danger">#(uploadResult)</span>
-                <span class="text-danger #if(assignment.status==0)hidden#end">代码已上传</span>
+                <span class="text-danger #if(assignment.isEvaluateFinish || assignment.status==-1)hidden#end">上次上传的代码正在分析中，请稍后上传</span>
             </form>
+            <button class="btn btn-primary #if(!assignment.isEvaluateFinish && assignment.status!=-1)hidden#end"
+                    id="submit-btn">上传
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">测试用例确认(无格式)</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tab-content">
+                    <div id="change-content">
+                        #for(question : questionVoList)
+                        <div class="col-md-10">第#(question.questionNo)题</div>
+                        <div class="col-md-12">
+                            <table class="table table-hover" style="margin-left: -5px">
+                                <thead>
+                                <tr>
+                                    <th>测试用例</th>
+                                    <th>答案</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                #for(x : question.testCaseList)
+                                <tr>
+                                    <td>
+                                        #(x.testCaseContent)
+                                    </td>
+                                    <td>
+                                        #(x.answer)
+                                    </td>
+                                </tr>
+                                #end
+                                </tbody>
+                            </table>
+                        </div>
+                        #end
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
         </div>
     </div>
 </div>
 
 #include("_js.html")
 
+<script>
+    $(function () {
+
+        $('#submit-btn').click(function () {
+            var form = new FormData(document.querySelector("form"));
+            $.ajax({
+                url: "/assignment/upload",
+                type: "post",
+                data: form,
+                cache: false,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                success: function (data) {
+                    if (data.resCode === 0) {
+                        layer.msg('系统将按照测试用例批改作业，请稍后查看批改结果');
+                        setTimeout("location.reload()", 2000);
+                    }
+                    if (data.resCode === 1) {
+                        layer.msg(data.errorMsg);
+                    }
+                    if (data.resCode === 2) {
+                        var directoryName = data.data;
+                        layer.confirm(data.errorMsg + '是否确认上传？', {
+                            btn: ['确认', '取消'],
+                            cancel: function () {
+                                $.get("/assignment/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
+                            }
+                        }, function (index, layero) {
+                            layer.msg('系统将按照测试用例批改作业，请稍后查看批改结果');
+                            setTimeout("window.location.href = \"/assignment/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=\" + directoryName;", 2000)
+                        }, function (index) {
+                            $.get("/assignment/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
 </body>
+
 </html>

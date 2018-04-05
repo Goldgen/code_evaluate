@@ -18,6 +18,15 @@ public abstract class BaseQuestion<M extends BaseQuestion<M>> extends Model<M> i
 		return getInt("questionId");
 	}
 
+	public M setQuestionNo(java.lang.Integer questionNo) {
+		set("questionNo", questionNo);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getQuestionNo() {
+		return getInt("questionNo");
+	}
+
 	public M setAssignmentId(java.lang.Integer assignmentId) {
 		set("assignmentId", assignmentId);
 		return (M)this;
@@ -25,6 +34,15 @@ public abstract class BaseQuestion<M extends BaseQuestion<M>> extends Model<M> i
 	
 	public java.lang.Integer getAssignmentId() {
 		return getInt("assignmentId");
+	}
+
+	public M setContent(java.lang.String content) {
+		set("content", content);
+		return (M)this;
+	}
+	
+	public java.lang.String getContent() {
+		return getStr("content");
 	}
 
 }

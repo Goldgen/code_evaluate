@@ -36,13 +36,13 @@ public abstract class BaseStudentQuestion<M extends BaseStudentQuestion<M>> exte
 		return get("isCompilePass");
 	}
 
-	public M setTestCasePassRate(java.lang.Integer testCasePassRate) {
-		set("testCasePassRate", testCasePassRate);
+	public M setTestCaseScore(java.lang.Integer testCaseScore) {
+		set("testCaseScore", testCaseScore);
 		return (M)this;
 	}
 	
-	public java.lang.Integer getTestCasePassRate() {
-		return getInt("testCasePassRate");
+	public java.lang.Integer getTestCaseScore() {
+		return getInt("testCaseScore");
 	}
 
 	public M setEvaluationScore(java.lang.Integer evaluationScore) {

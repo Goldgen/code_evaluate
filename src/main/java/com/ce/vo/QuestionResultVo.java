@@ -1,0 +1,14 @@
+package com.ce.vo;
+
+import com.ce.model.Violation;
+
+import java.util.List;
+
+public class QuestionResultVo {
+    public int questionNo;
+    public boolean isCompilePass;
+    public int testCaseScore;
+    public int evaluateScore;
+    public List<Violation> violationList;
+
+}

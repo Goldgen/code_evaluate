@@ -21,7 +21,7 @@ public class ClassService {
         String sql = "select cl.*,co.courseName,t.termName " +
                 "from class cl inner join term t inner join course co " +
                 "on t.termId=cl.termId and co.courseId=cl.courseId " +
-                "where cl.userId=? ";
+                "where cl.userId=? order by cl.classId desc";
         return dao.find(sql, teacherId);
     }
 

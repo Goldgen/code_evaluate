@@ -4,7 +4,7 @@
     <groupId>com.ce</groupId>
     <artifactId>code_evaluate</artifactId>
     <packaging>war</packaging>
-    <version>3.2</version>
+    <version>1.0</version>
     <name>code_evaluate Maven Webapp</name>
     <url>http://maven.apache.org</url>
 
@@ -134,11 +134,29 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.5</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.ce.config.CoreConfig</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+
         </plugins>
+
     </build>
 </project>

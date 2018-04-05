@@ -17,7 +17,7 @@ public class AssignmentService {
     }
 
     public List<Assignment> findUnEvaluate() {
-        return dao.find("select * from assignment where status = 1");
+        return dao.find("select * from assignment where status > 0 and isEvaluateFinish = 0");
     }
 
     public List<Assignment> findByClassId(String classId) {

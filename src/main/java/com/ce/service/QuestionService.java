@@ -2,13 +2,9 @@ package com.ce.service;
 
 import com.ce.model.Question;
 import com.ce.model.TestCase;
-import com.ce.model.base.BaseTestCase;
 import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.IAtom;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class QuestionService {
 
@@ -16,18 +12,26 @@ public class QuestionService {
 
     private static final TestCase testCaseDao = new TestCase().dao();
 
-    public Question findById(int id) {
-        return questionDao.findById(id);
+    public Question findById(int questionId, int assignmentId) {
+        return questionDao.findById(questionId, assignmentId);
     }
 
-    public void deleteById(int id) {
+    public void deleteById(int questionId) {
 
         Db.tx(() -> {
-            Db.delete("delete from test_case where questionId = ?", id);
+            Db.delete("delete from test_case where questionId = ?", questionId);
             return true;
         });
-        questionDao.deleteById(id);
+        boolean result = questionDao.deleteById(questionId);
+        int a = 1;
 
+    }
 
+    public List<Question> findByAssignmentId(int assignmentId) {
+        return questionDao.find("select * from question where assignmentId = ?", assignmentId);
+    }
+
+    public Question findByAssignmentIdAndQuestionNo(int assignmentId, int questionNo) {
+        return questionDao.findFirst("select * from question where assignmentId = ? and questionNo = ?", assignmentId, questionNo);
     }
 }

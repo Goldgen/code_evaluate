@@ -13,6 +13,10 @@ public class UserController extends Controller {
 
     @Clear
     public void index() {
+        String errorType = getPara("errorType");
+        if (errorType != null && errorType.equals("sessionInvalid")) {
+            setAttr("errorType", "sessionInvalid");
+        }
         render("login.html");
     }
 
@@ -26,12 +30,13 @@ public class UserController extends Controller {
             setAttr("errorType", "idWrong");
         } else if (!user.getPsd().equals(password)) {
             setAttr("errorType", "pwdWrong");
-        } else if(user.getIsTeacher()!=1){
+        } else if (user.getIsTeacher() != 1) {
             setAttr("errorType", "notTeacher");
-        }  else{
+        } else {
             setSessionAttr("userId", userId);
             redirect("class/list");
         }
+
     }
 
     public void logout() {

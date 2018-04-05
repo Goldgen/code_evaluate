@@ -13,11 +13,10 @@ public class SessionInterceptor implements Interceptor {
     public void intercept(Invocation inv) {
         Controller controller = inv.getController();
         //temp
-        controller.setSessionAttr("userId", "10112512345");
+        //controller.setSessionAttr("userId", "10112512345");
         String teacherId = controller.getSessionAttr("userId", "");
         if (teacherId.isEmpty()) {
-            controller.setAttr("errorType", "sessionInvalid");
-            controller.render("login.html");
+            controller.redirect("/?errorType=sessionInvalid", true);
             return;
         } else {
             inv.invoke();

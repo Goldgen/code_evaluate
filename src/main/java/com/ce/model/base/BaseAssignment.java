@@ -99,4 +99,31 @@ public abstract class BaseAssignment<M extends BaseAssignment<M>> extends Model<
 		return getInt("status");
 	}
 
+	public M setIsEvaluateFinish(java.lang.Boolean isEvaluateFinish) {
+		set("isEvaluateFinish", isEvaluateFinish);
+		return (M)this;
+	}
+	
+	public java.lang.Boolean getIsEvaluateFinish() {
+		return get("isEvaluateFinish");
+	}
+
+	public M setDirectoryName(java.lang.String directoryName) {
+		set("directoryName", directoryName);
+		return (M)this;
+	}
+	
+	public java.lang.String getDirectoryName() {
+		return getStr("directoryName");
+	}
+
+	public M setEvaluateTime(java.util.Date evaluateTime) {
+		set("evaluateTime", evaluateTime);
+		return (M)this;
+	}
+	
+	public java.util.Date getEvaluateTime() {
+		return get("evaluateTime");
+	}
+
 }

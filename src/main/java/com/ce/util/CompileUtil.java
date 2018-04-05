@@ -1,39 +1,31 @@
 package com.ce.util;
 
+import com.ce.config.MyConstants;
+import com.jfinal.kit.LogKit;
+import com.jfinal.kit.PathKit;
+
 import java.io.*;
 
 public class CompileUtil {
 
-    public static boolean isCompilePass(String assignmentId, String stuNum, String questionId) {
-        String prefix = questionId;
-        String suffix = "c";
-        String cmd;
-        switch (suffix) {
-            case "c":
-                cmd = "sh compile.sh " + assignmentId + " " + stuNum + " " + prefix;
-                break;
-            case "cpp":
-                cmd = "g++ " + prefix + ".cpp";
-                break;
-            default:
-                return false;
-        }
+    public static boolean isCompilePass(String fatherFilePath, String fileName) {
+        String cmd = "sh " + MyConstants.shellPath + "compile.sh " + fatherFilePath + " " + fileName;
         System.out.println("编译命令是：" + cmd);
         return executeShellCmd(cmd);
     }
 
-    public static void execute(String assignmentId, String stuNum, String questionId, String testCaseId) {
-        String cmd = "sh execute.sh " + assignmentId + " " + stuNum + " " + questionId + " " + testCaseId;
+    public static void execute(String fatherFilePath, String fileName, String inputFileName, String outputFileName) {
+        String cmd = "sh " + MyConstants.shellPath + "execute.sh " + fatherFilePath + " " + fileName + " " + inputFileName + " " + outputFileName;
         System.out.println("执行命令是：" + cmd);
         executeShellCmd(cmd);
     }
 
-    public static void unZipAll(String zipFileName) {
-        executeShellCmd("sh unzipAll.sh " + zipFileName);
+    public static void unZipAll(String fatherFilePath, String oldZipFileName, String newFolderName) {
+        executeShellCmd("sh " + MyConstants.shellPath + "unzipAll.sh " + fatherFilePath + " " + oldZipFileName + " " + newFolderName);
     }
 
-    public static void evaluate(String assignmentId, String stuNum, String questionId) {
-        String cmd = "sh evaluate.sh " + assignmentId + " " + stuNum + " " + questionId ;
+    public static void evaluate(String fatherFilePath, String fileName, String resultFileName) {
+        String cmd = "sh " + MyConstants.shellPath + "evaluate.sh " + fatherFilePath + " " + fileName + " " + resultFileName;
         System.out.println("执行命令是：" + cmd);
         executeShellCmd(cmd);
     }
@@ -44,13 +36,6 @@ public class CompileUtil {
         try {
             Process process = Runtime.getRuntime().exec(cmd);
             process.waitFor();
-//            BufferedReader bin = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//            while (true) {
-//                if (bin.readLine() == null) {
-//                    break;
-//                }
-//            }
-//            bin.close();
 
             BufferedReader bufferError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             StringBuilder errBuilder = new StringBuilder();
@@ -64,13 +49,19 @@ public class CompileUtil {
             }
             bufferError.close();
             errStr = errBuilder.toString();
+            if (!errStr.isEmpty()) {
+                System.out.println("执行命令：" + cmd + "出错,错误为：" + errStr);
+                LogKit.error("执行命令：" + cmd + "出错,错误为：" + errStr);
+            }
             process.destroy();
         } catch (Exception e) {
             e.printStackTrace();
+            LogKit.error("执行命令：" + cmd + "出错");
             System.out.println("执行命令：" + cmd + "出错");
             return false;
         }
         return errStr.isEmpty();
     }
+
 }
 
