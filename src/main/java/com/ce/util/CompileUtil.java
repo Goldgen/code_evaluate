@@ -1,6 +1,7 @@
 package com.ce.util;
 
 import com.ce.config.MyConstants;
+import com.ce.vo.ShellReturnInfo;
 import com.jfinal.kit.LogKit;
 import com.jfinal.kit.PathKit;
 
@@ -8,7 +9,8 @@ import java.io.*;
 
 public class CompileUtil {
 
-    public static boolean isCompilePass(String fatherFilePath, String fileName) {
+
+    public static ShellReturnInfo isCompilePass(String fatherFilePath, String fileName) {
         String cmd = "sh " + MyConstants.shellPath + "compile.sh " + fatherFilePath + " " + fileName;
         System.out.println("编译命令是：" + cmd);
         return executeShellCmd(cmd);
@@ -31,7 +33,8 @@ public class CompileUtil {
     }
 
     //执行shell命令，返回执行中是否有错误
-    private static boolean executeShellCmd(String cmd) {
+    private static ShellReturnInfo executeShellCmd(String cmd) {
+        ShellReturnInfo shellReturnInfo = new ShellReturnInfo();
         String errStr = "";
         try {
             Process process = Runtime.getRuntime().exec(cmd);
@@ -58,9 +61,10 @@ public class CompileUtil {
             e.printStackTrace();
             LogKit.error("执行命令：" + cmd + "出错");
             System.out.println("执行命令：" + cmd + "出错");
-            return false;
         }
-        return errStr.isEmpty();
+        shellReturnInfo.errorInfo = errStr;
+        shellReturnInfo.isPass = errStr.isEmpty();
+        return shellReturnInfo;
     }
 
 }

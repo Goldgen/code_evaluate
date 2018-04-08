@@ -127,8 +127,9 @@
                                 $.get("/assignment/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
                             }
                         }, function (index, layero) {
-                            layer.msg('系统将按照测试用例批改作业，请稍后查看批改结果');
-                            setTimeout("window.location.href = \"/assignment/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=\" + directoryName;", 2000)
+                            layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
+                            var cmd = 'window.location.href = "/assignment/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=' + directoryName+'"';
+                            setTimeout(cmd, 2000)
                         }, function (index) {
                             $.get("/assignment/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
                         });

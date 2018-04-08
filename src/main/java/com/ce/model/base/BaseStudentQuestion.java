@@ -36,6 +36,15 @@ public abstract class BaseStudentQuestion<M extends BaseStudentQuestion<M>> exte
 		return get("isCompilePass");
 	}
 
+	public M setCompileErrorInfo(java.lang.String compileErrorInfo) {
+		set("compileErrorInfo", compileErrorInfo);
+		return (M)this;
+	}
+	
+	public java.lang.String getCompileErrorInfo() {
+		return getStr("compileErrorInfo");
+	}
+
 	public M setTestCaseScore(java.lang.Integer testCaseScore) {
 		set("testCaseScore", testCaseScore);
 		return (M)this;

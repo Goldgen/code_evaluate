@@ -78,7 +78,7 @@ public class AssignmentController extends Controller {
                 render("code_upload.html");
                 break;
             case "execute_result":
-                List<ExecuteResultVo> executeResultVoList = getExecuteResult(assignmentId);
+                List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
                 setAttr("executeResultVoList", executeResultVoList);
                 render("execute_result.html");
                 break;
@@ -176,7 +176,12 @@ public class AssignmentController extends Controller {
         redirect("/assignment/detail/" + assignmentId + "-code_upload");
     }
 
-    public List<ExecuteResultVo> getExecuteResult(int assignmentId) {
+    public void allExcel(){
+        int assignmentId = getParaToInt("assignmentId");
+        List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
+    }
+
+    public List<ExecuteResultVo> getCompleteExecuteResult(int assignmentId) {
         List<ExecuteResultVo> executeResultVoList = new ArrayList<>();
         int questionNum = questionService.findByAssignmentId(assignmentId).size();
         Map<String, List<StudentQuestion>> listMap = studentQuestionService.findByAssignmentId(assignmentId)
@@ -190,6 +195,7 @@ public class AssignmentController extends Controller {
                 QuestionResultVo questionResultVo = new QuestionResultVo();
                 questionResultVo.questionNo = x.get("questionNo");
                 questionResultVo.isCompilePass = x.getIsCompilePass();
+                questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
                 questionResultVo.testCaseScore = x.getTestCaseScore();
                 questionResultVo.evaluateScore = x.getEvaluationScore();
                 List<Integer> violationIds = JSON.parseArray(x.getViolationIds(), Integer.class);
@@ -209,6 +215,7 @@ public class AssignmentController extends Controller {
         Collections.sort(executeResultVoList);
         return executeResultVoList;
     }
+
 
 
 }

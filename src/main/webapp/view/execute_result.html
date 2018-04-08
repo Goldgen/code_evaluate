@@ -34,7 +34,12 @@
             #else if(!assignment.isEvaluateFinish)
             <label class="text-danger">作业未批改完成</label>
             #else
-            <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
+            <div class="col-sm-9">
+                <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-primary btn-sm" id="extract-all-btn">导出EXCEL</button>
+            </div>
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -51,15 +56,63 @@
                     <td>#(executeResult.studentName)</td>
                     <td>#(executeResult.score)</td>
                     <td>
-                        #for(x : executeResult.questionResultList)
-                        <input type="hidden" id="#(executeResult.studentId)-#(x.questionNo)"
-                               data-question-no="#(x.questionNo)"
-                               data-is-compile-pass="#if(x.isCompilePass)是#else否#end"
-                               data-test-case-score="#(x.testCaseScore)" data-evaluate-score="#(x.evaluateScore)">
-                        #end
                         <a href="javascript:void(0)" class="btn btn-info btn-xs detail-info-btn" title="批改详情"
-                           data-toggle="tooltip" data-placement="bottom"><i
+                           data-toggle="tooltip" data-placement="bottom" data-target="##(executeResult.studentId)"><i
                                 class="glyphicon glyphicon-list"></i></a>
+                        <div class="modal fade" id="#(executeResult.studentId)">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title" id="modal-title">批改详情</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>题号</th>
+                                                <th>是否编译通过</th>
+                                                <th>测试用例得分</th>
+                                                <th>静态分析得分</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            #for(x : executeResult.questionResultList)
+                                            <tr>
+                                                <td>#(x.questionNo)</td>
+                                                <td>#if(!x.isCompilePass)<a title="#(x.compileErrorInfo)"
+                                                                            data-toggle="tooltip"
+                                                                            data-placement="bottom">#end#if(x.isCompilePass)是#else否#end#if(!x.isCompilePass)</a>#end
+                                                </td>
+                                                <td>#(x.testCaseScore)</td>
+                                                <td>
+                                                    <div class="hidden">
+                                                        #for(y : x.violationList)
+                                                        <p style="margin-left: 20px;margin-right: 20px;margin-top: 5px">
+                                                            #(y.startLine)行#(y.startColumn)列到#(y.endLine)行#(y.endColumn)列出现错误：<br>
+                                                            #(y.message)</p>
+                                                        #else
+                                                        <p style="margin-left: 20px;margin-right: 20px;margin-top: 5px">
+                                                            无信息</p>
+                                                        #end
+                                                    </div>
+                                                    <a class="violation"
+                                                       title="点击查看评估详情"
+                                                       data-toggle="tooltip"
+                                                       data-placement="bottom">#(x.evaluateScore)</a></td>
+                                            </tr>
+                                            #end
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 #end
@@ -69,35 +122,6 @@
         </div>
     </div>
 </div>
-</div>
-
-<div class="modal fade" id="detailModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="modal-title">批改详情</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>题号</th>
-                        <th>是否编译通过</th>
-                        <th>测试用例得分</th>
-                        <th>静态分析得分</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 
@@ -111,22 +135,21 @@
         $('[data-toggle="tooltip"]').tooltip();
 
         $('.detail-info-btn').click(function () {
-            $('.modal-body').find('tbody').empty();
-            var inputElements = $(this).closest('td').find('input');
-            inputElements.each(function (index, element) {
-                var questionNo = $(element).data('question-no');
-                var isCompilePass = $(element).data('is-compile-pass');
-                var testCaseScore = $(element).data('test-case-score');
-                var evaluateScore = $(element).data('evaluate-score');
-                var html = '<tr>' +
-                    '<td>' + questionNo + '</td>' +
-                    '<td>' + isCompilePass + '</td>\n' +
-                    '<td>' + testCaseScore + '</td>\n' +
-                    '<td>' + evaluateScore + '</td>\n' +
-                    '</tr>';
-                $('.modal-body').find('tbody').append(html);
+            $($(this).data('target')).modal('toggle');
+        });
+
+
+        $('.violation').click(function () {
+            var violationInfo = $(this).data('violation-info');
+            layer.open({
+                type: 1,
+                area: ['600px', '240px'], //宽高
+                content: $(this).prev().html()
             });
-            $('#detailModal').modal('toggle');
+        });
+
+        $('#extract-all-btn').click(function () {
+            $.get("/assignment/allExcel?assignmentId=#(assignment.assignmentId)");
         });
 
 

@@ -12,6 +12,7 @@ import com.ce.util.CompileUtil;
 import com.ce.vo.FileInfo;
 import com.ce.vo.OclintInfoVo;
 import com.ce.vo.QuestionListVo;
+import com.ce.vo.ShellReturnInfo;
 import com.jfinal.kit.PathKit;
 
 import java.util.ArrayList;
@@ -64,11 +65,13 @@ public class CompileTask implements Runnable {
 
                     int questionId = question.getQuestionId();
                     boolean alreadyExist = studentQuestionService.findById(questionId, stuNum) != null;
-                    if (!CompileUtil.isCompilePass(fatherFilePath, fileName)) {
+                    ShellReturnInfo returnInfo = CompileUtil.isCompilePass(fatherFilePath, fileName);
+                    if (!returnInfo.isPass) {
                         StudentQuestion studentQuestion = new StudentQuestion();
                         studentQuestion.setUserId(stuNum);
                         studentQuestion.setQuestionId(questionId);
                         studentQuestion.setIsCompilePass(false);
+                        studentQuestion.setCompileErrorInfo(returnInfo.errorInfo);
                         if (alreadyExist) {
                             studentQuestion.update();
                         } else {
@@ -123,6 +126,7 @@ public class CompileTask implements Runnable {
                     studentQuestion.setUserId(stuNum);
                     studentQuestion.setQuestionId(questionId);
                     studentQuestion.setIsCompilePass(true);
+                    studentQuestion.setCompileErrorInfo("");
                     studentQuestion.setTestCaseScore(testCaseScore);
                     studentQuestion.setEvaluationScore(evaluationScore < 0 ? 0 : evaluationScore);
                     studentQuestion.setViolationIds(JSON.toJSONString(violationIdList));
