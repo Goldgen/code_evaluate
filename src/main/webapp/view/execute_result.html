@@ -17,6 +17,7 @@
 
 
 <div class="container-fluid">
+
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
@@ -28,7 +29,15 @@
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="bread">
+                        <a href="courseTable.do">班级列表</a>
+                        &gt; <a href="/class/list">作业列表</a> &gt;
+                        <span>作业详情</span>
+                    </div>
+                </div>
+            </div>
             #if(assignment.status==-1)
             <label class="text-danger">作业未提交</label>
             #else if(!assignment.isEvaluateFinish)
@@ -38,7 +47,7 @@
                 <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
             </div>
             <div class="col-sm-3">
-                <button class="btn btn-primary btn-sm" id="extract-all-btn">导出EXCEL</button>
+                <a class="btn btn-primary btn-sm" href="/assignment/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL</a>
             </div>
             <table class="table table-hover">
                 <thead>
@@ -63,10 +72,10 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <h4 class="modal-title" id="modal-title">批改详情</h4>
+
+                                        <div class="col-md-10"><h4 class="modal-title" id="modal-title">批改详情</h4></div>
+                                        <div class="col-md-2"><a class="btn btn-primary btn-sm"
+                                                                 href="/assignment/singleExcel?assignmentId=#(assignment.assignmentId)&studentId=#(executeResult.studentId)">导出EXCEL</a></div>
                                     </div>
                                     <div class="modal-body">
                                         <table class="table table-hover">
@@ -148,9 +157,9 @@
             });
         });
 
-        $('#extract-all-btn').click(function () {
-            $.get("/assignment/allExcel?assignmentId=#(assignment.assignmentId)");
-        });
+        // $('#extract-all-btn').click(function () {
+        //     $.get("/assignment/allExcel?assignmentId=#(assignment.assignmentId)");
+        // });
 
 
     });

@@ -9,6 +9,7 @@ import com.ce.model.base.BaseStudentQuestion;
 import com.ce.service.*;
 import com.ce.util.CommonUtil;
 import com.ce.util.CompileUtil;
+import com.ce.util.ExcelUtil;
 import com.ce.util.FileUtil;
 import com.ce.vo.ClassListVo;
 import com.ce.vo.ExecuteResultVo;
@@ -19,6 +20,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.kit.PathKit;
 import com.jfinal.upload.UploadFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collector;
@@ -176,9 +178,53 @@ public class AssignmentController extends Controller {
         redirect("/assignment/detail/" + assignmentId + "-code_upload");
     }
 
-    public void allExcel(){
+    public void allExcel() {
         int assignmentId = getParaToInt("assignmentId");
         List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
+        HttpServletResponse response = getResponse();
+        String fileName = "作业" + assignmentId + "成绩表";
+        List<String> headList = new ArrayList<>();
+        headList.add("学号");
+        headList.add("姓名");
+        headList.add("得分");
+        List<Map<String, Object>> dataList = new ArrayList<>();
+        for (ExecuteResultVo vo : executeResultVoList) {
+            Map<String, Object> temp = new HashMap<>();
+            temp.put("学号", vo.studentId);
+            temp.put("姓名", vo.studentName);
+            temp.put("得分", vo.score);
+            dataList.add(temp);
+        }
+        ExcelUtil.exportXlsx(response, fileName, headList, dataList);
+        renderNull();
+    }
+
+    public void singleExcel() {
+        int assignmentId = getParaToInt("assignmentId");
+        String studentId = getPara("studentId");
+        ExecuteResultVo executeResultVo = getCompleteExecuteResult(assignmentId)
+                .stream().filter(x -> x.studentId.equals(studentId)).findFirst().orElse(null);
+        HttpServletResponse response = getResponse();
+        String fileName = "作业" + assignmentId + "学号" + studentId + "成绩表";
+        List<String> headList = new ArrayList<>();
+        headList.add("题号");
+        headList.add("是否编译通过");
+        headList.add("测试用例得分");
+        headList.add("静态分析得分");
+        List<Map<String, Object>> dataList = new ArrayList<>();
+        if (executeResultVo != null) {
+            for (QuestionResultVo vo : executeResultVo.questionResultList) {
+                Map<String, Object> temp = new HashMap<>();
+                temp.put("题号", vo.questionNo);
+                temp.put("是否编译通过", vo.isCompilePass ? "是" : "否");
+                temp.put("测试用例得分", vo.testCaseScore);
+                temp.put("静态分析得分", vo.evaluateScore);
+                dataList.add(temp);
+            }
+        }
+        ExcelUtil.exportXlsx(response, fileName, headList, dataList);
+        renderNull();
+
     }
 
     public List<ExecuteResultVo> getCompleteExecuteResult(int assignmentId) {
@@ -215,7 +261,6 @@ public class AssignmentController extends Controller {
         Collections.sort(executeResultVoList);
         return executeResultVoList;
     }
-
 
 
 }

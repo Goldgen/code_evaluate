@@ -91,9 +91,6 @@ span#new-msg{
 }
 /* top navigation END */
 
-.container.main{
-	margin-top: 60px;
-}
 
 nav{
 	text-align: center;	
@@ -200,4 +197,13 @@ p.loading{
 	color: #666;
 	font-weight: bold;
 	margin-top: 20px;
+}
+
+.bread {
+	display: inline-block;
+	margin-bottom: 0.8em;
+	padding: 4px 8px 0;
+	background-color: #eee;
+	border: 2px solid #f2f2f2;
+	border-radius: 4px;
 }
