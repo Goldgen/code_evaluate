@@ -23,16 +23,20 @@ public class FileUtil {
 
 
     public static void main(String[] args) {
-        int nums[] = {1, 2, 3, 1, 4};
-        int x = 0;
-        int y = 0;
-
-        for (int i = 0; i < nums.length; i++) {
+        int prices[] = {1, 1, 2, 3};
+        int profit = 0;
+        int len = prices.length;
+        for (int i = 0; i < len; i++) {
+            int temp = prices[i];
+            if (prices[i + 1] > temp) {
+                profit += prices[i + 1] - prices[i];
+            }
+        }
+        for (int i = 0; i < len; i++) {
 
         }
 
 
-        System.out.println();
         //executeShellCmd("sh src/main/webapp/shell/compile.sh src/main/webapp/upload/126/10142510169 1.c");
 
     }
