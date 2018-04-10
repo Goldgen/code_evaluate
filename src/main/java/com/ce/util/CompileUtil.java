@@ -32,8 +32,14 @@ public class CompileUtil {
         executeShellCmd(cmd);
     }
 
+    public static void similarityTest(String fatherFilePath, int questionNo, String questionFilesPath) {
+        String cmd = "sh " + MyConstants.shellPath + "similarityTest.sh " + fatherFilePath + " " + questionNo + " \"" + questionFilesPath + "\"";
+        System.out.println("执行命令是：" + cmd);
+        executeShellCmd(cmd);
+    }
+
     //执行shell命令，返回执行中是否有错误
-    private static ShellReturnInfo executeShellCmd(String cmd) {
+    public static ShellReturnInfo executeShellCmd(String cmd) {
         ShellReturnInfo shellReturnInfo = new ShellReturnInfo();
         String errStr = "";
         try {
@@ -53,14 +59,12 @@ public class CompileUtil {
             bufferError.close();
             errStr = errBuilder.toString();
             if (!errStr.isEmpty()) {
-                System.out.println("执行命令：" + cmd + "出错,错误为：" + errStr);
                 LogKit.error("执行命令：" + cmd + "出错,错误为：" + errStr);
             }
             process.destroy();
         } catch (Exception e) {
             e.printStackTrace();
             LogKit.error("执行命令：" + cmd + "出错");
-            System.out.println("执行命令：" + cmd + "出错");
         }
         shellReturnInfo.errorInfo = errStr;
         shellReturnInfo.isPass = errStr.isEmpty();

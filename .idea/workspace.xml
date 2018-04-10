@@ -7,7 +7,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0dd7b390-a9d6-4038-914a-7e0ddeac247c" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_findbugs_annotations_2_0_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__it_zielke_moji_1_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ce/service/SimilarityService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/exe/1.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/exe/2.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/exe/3.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/exe/sim_c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/exe/sim_c++" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/exe/sim_java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/shell/similarityTest.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/code_evaluate_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/code_evaluate_war_exploded.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code_evaluate.iml" beforeDir="false" afterPath="$PROJECT_DIR$/code_evaluate.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ce/model/_MappingKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ce/model/_MappingKit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ce/service/StudentQuestionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ce/service/StudentQuestionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ce/task/CompileTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ce/task/CompileTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ce/util/CompileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ce/util/CompileUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ce/util/FileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ce/util/FileUtil.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -23,114 +40,56 @@
       <file leaf-file-name="CompileTask.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/task/CompileTask.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="573">
-              <caret line="128" column="60" selection-start-line="128" selection-start-column="60" selection-end-line="128" selection-end-column="60" />
+            <state relative-caret-position="-38">
+              <caret line="45" column="42" lean-forward="true" selection-start-line="45" selection-start-column="42" selection-end-line="45" selection-end-column="42" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="execute_result.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/view/execute_result.html">
+      <file leaf-file-name="CompileUtil.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/util/CompileUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
-              <caret line="39" column="18" lean-forward="true" selection-start-line="31" selection-start-column="12" selection-end-line="39" selection-end-column="18" />
-              <folding>
-                <element signature="n#style#0;n#p#0;n#div#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#p#1;n#div#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="220">
+              <caret line="35" column="143" selection-start-line="35" selection-start-column="143" selection-end-line="35" selection-end-column="143" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="code_upload.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/view/code_upload.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="441">
-              <caret line="38" column="18" selection-start-line="38" selection-start-column="18" selection-end-line="38" selection-end-column="18" />
-              <folding>
-                <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
-                <element signature="n#style#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test_case_edit.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/view/test_case_edit.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="505">
-              <caret line="37" column="18" selection-start-line="37" selection-start-column="18" selection-end-line="37" selection-end-column="18" />
-              <folding>
-                <element signature="n#style#0;n#a#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#table#0;n#div#2;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="_navbar.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/view/_navbar.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AssignmentController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/controller/AssignmentController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2265">
-              <caret line="67" column="40" selection-start-line="67" selection-start-column="30" selection-end-line="67" selection-end-column="40" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FileUtil.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/util/FileUtil.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="35" column="12" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
-              <folding>
-                <element signature="method#addTxtFile#0;class#FileUtil#0" />
-                <element signature="method#isNumeric#0;class#FileUtil#0" />
-                <element signature="method#replaceUseless#0;class#FileUtil#0" />
-                <element signature="method#executeShellCmd#0;class#FileUtil#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClassController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/controller/ClassController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="17" column="57" selection-start-line="17" selection-start-column="57" selection-end-line="17" selection-end-column="57" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ExecuteResultVo.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/vo/ExecuteResultVo.java">
+      <file leaf-file-name="similarityTest.sh" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/shell/similarityTest.sh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
-              <caret line="6" column="27" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="27" />
+              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExcelUtil.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/util/ExcelUtil.java">
+      <file leaf-file-name="compile.sh" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/shell/compile.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="34" column="41" lean-forward="true" selection-start-line="34" selection-start-column="41" selection-end-line="34" selection-end-column="41" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="90">
+              <caret line="5" column="35" lean-forward="true" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="1.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219/10142510168/1.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="108">
+              <caret line="6" column="16" lean-forward="true" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="1.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219/10142510169/1.c">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="1.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219/10142510167/1.c">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -169,6 +128,7 @@
       <find>unionFolderName</find>
       <find>controller</find>
       <find>60</find>
+      <find>StudentQuestion</find>
     </findStrings>
     <replaceStrings>
       <replace>-execute_result</replace>
@@ -191,13 +151,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/result.json" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/vo/OclintInfoVo.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/config/FileUtil.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/config/JsonRenderClass.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/config/JsonInfo.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/service/StudentClassService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/service/UserService.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/view/_js.html" />
         <option value="$PROJECT_DIR$/src/main/webapp/view/_css.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/vo/FileInfo.java" />
@@ -223,14 +176,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/ce/vo/QuestionListVo.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/service/TestCaseService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/config/CoreConfig.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/database.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/service/AssignmentService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/service/StudentQuestionService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/vo/ShellReturnInfo.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/util/CompileUtil.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/ce/task/CompileTask.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/vo/QuestionResultVo.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/util/ExcelUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/controller/AssignmentController.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/view/_navbar.html" />
@@ -241,7 +189,19 @@
         <option value="$PROJECT_DIR$/src/main/webapp/view/code_upload.html" />
         <option value="$PROJECT_DIR$/src/main/webapp/view/test_case_edit.html" />
         <option value="$PROJECT_DIR$/src/main/webapp/view/similarity_analysis.html" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/webapp/exe/1.c" />
+        <option value="$PROJECT_DIR$/src/main/webapp/exe/3.c" />
+        <option value="$PROJECT_DIR$/src/main/webapp/exe/2.c" />
+        <option value="$PROJECT_DIR$/src/main/webapp/shell/similarityTest.shell" />
+        <option value="$PROJECT_DIR$/src/main/resources/database.properties" />
+        <option value="$PROJECT_DIR$/src/main/java/com/ce/vo/SimilarityInfo.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/ce/service/StudentQuestionService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/ce/service/SimilarityService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/ce/task/CompileTask.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/ce/util/FileUtil.java" />
+        <option value="$PROJECT_DIR$/src/main/webapp/shell/similarityTest.sh" />
+        <option value="$PROJECT_DIR$/src/main/java/com/ce/util/CompileUtil.java" />
       </list>
     </option>
   </component>
@@ -279,9 +239,11 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="2560" />
-    <option name="height" value="1440" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="69" />
+    <option name="y" value="-4" />
+    <option name="width" value="1855" />
+    <option name="height" value="1204" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -291,9 +253,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -410,6 +369,14 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="webapp" type="462c0819:PsiDirectoryNode" />
+              <item name="exe" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code_evaluate" type="b2602c69:ProjectViewProjectNode" />
+              <item name="code_evaluate" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="webapp" type="462c0819:PsiDirectoryNode" />
               <item name="shell" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -418,14 +385,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="webapp" type="462c0819:PsiDirectoryNode" />
-              <item name="statics" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="code_evaluate" type="b2602c69:ProjectViewProjectNode" />
-              <item name="code_evaluate" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="webapp" type="462c0819:PsiDirectoryNode" />
               <item name="upload" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -435,7 +394,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="webapp" type="462c0819:PsiDirectoryNode" />
               <item name="upload" type="462c0819:PsiDirectoryNode" />
-              <item name="18_04_05_16_11_56bade030e-0cf5-43b0-aee4-0bb130178a9a" type="462c0819:PsiDirectoryNode" />
+              <item name="18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="code_evaluate" type="b2602c69:ProjectViewProjectNode" />
@@ -444,7 +403,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="webapp" type="462c0819:PsiDirectoryNode" />
               <item name="upload" type="462c0819:PsiDirectoryNode" />
-              <item name="18_04_05_16_11_56bade030e-0cf5-43b0-aee4-0bb130178a9a" type="462c0819:PsiDirectoryNode" />
+              <item name="18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219" type="462c0819:PsiDirectoryNode" />
               <item name="10142510166" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -453,12 +412,46 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="webapp" type="462c0819:PsiDirectoryNode" />
-              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="upload" type="462c0819:PsiDirectoryNode" />
+              <item name="18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219" type="462c0819:PsiDirectoryNode" />
+              <item name="10142510167" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code_evaluate" type="b2602c69:ProjectViewProjectNode" />
+              <item name="code_evaluate" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="webapp" type="462c0819:PsiDirectoryNode" />
+              <item name="upload" type="462c0819:PsiDirectoryNode" />
+              <item name="18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219" type="462c0819:PsiDirectoryNode" />
+              <item name="10142510168" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code_evaluate" type="b2602c69:ProjectViewProjectNode" />
+              <item name="code_evaluate" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="webapp" type="462c0819:PsiDirectoryNode" />
+              <item name="upload" type="462c0819:PsiDirectoryNode" />
+              <item name="18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219" type="462c0819:PsiDirectoryNode" />
+              <item name="10142510169" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="code_evaluate" type="b2602c69:ProjectViewProjectNode" />
+              <item name="code_evaluate" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="webapp" type="462c0819:PsiDirectoryNode" />
+              <item name="upload" type="462c0819:PsiDirectoryNode" />
+              <item name="18_04_10_17_07_14c8f573de-18fe-48bd-9e48-73918b06ccda" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -481,6 +474,7 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="392" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="extract.method.default.visibility" value="private" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -489,11 +483,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/webapp/exe" />
       <recent name="$PROJECT_DIR$/src/main/webapp/shell" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/webapp/statics/plugin" />
       <recent name="$PROJECT_DIR$/src/main/webapp/statics/js" />
-      <recent name="$PROJECT_DIR$/src/main/webapp/statics/css" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -508,7 +502,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.FileUtil">
+  <component name="RunManager" selected="Application.CoreConfig">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
     </configuration>
@@ -742,8 +736,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.FileUtil" />
         <item itemvalue="Application.CoreConfig" />
+        <item itemvalue="Application.FileUtil" />
         <item itemvalue="Application._JFinalTableGenerator" />
         <item itemvalue="JAR Application.code_evaluate-jar-with-dependencies.jar" />
       </list>
@@ -782,6 +776,11 @@
       <workItem from="1522808519324" duration="12213000" />
       <workItem from="1522904930650" duration="6461000" />
       <workItem from="1522928286671" duration="12278000" />
+      <workItem from="1523253999775" duration="243000" />
+      <workItem from="1523254988317" duration="635000" />
+      <workItem from="1523258235295" duration="1088000" />
+      <workItem from="1523261769956" duration="603000" />
+      <workItem from="1523324335407" duration="18751000" />
     </task>
     <task id="LOCAL-00001" summary="finish base function">
       <created>1520388261441</created>
@@ -811,50 +810,57 @@
       <option name="project" value="LOCAL" />
       <updated>1523175795867</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="finish base function">
+      <created>1523253665863</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1523253665863</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="144274000" />
+    <option name="totallyTimeSpent" value="165824000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="64" y="-11" width="1857" height="1212" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.14625" side_tool="true" weight="0.42117646" />
       <window_info anchor="bottom" id="Application Servers" order="13" />
-      <window_info anchor="bottom" id="JRebel Console" order="12" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.241875" />
       <window_info anchor="bottom" id="Database Changes" order="14" show_stripe_button="false" />
-      <window_info anchor="bottom" id="JRebel Executor" order="8" weight="0.3620283" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="8" />
       <window_info anchor="right" id="Database" order="4" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39976415" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.39963505" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="13" weight="0.32941177" />
+      <window_info anchor="bottom" id="Messages" order="13" weight="0.32937956" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
       <window_info id="Image Layers" order="4" />
       <window_info anchor="bottom" id="Java Enterprise" order="9" />
       <window_info anchor="right" id="Capture Analysis" order="6" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.32941177" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.85375" visible="true" weight="0.2759434" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.85375" weight="0.310219" />
       <window_info anchor="bottom" id="Terminal" order="11" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.39652777" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.29326147" />
       <window_info id="Web" order="5" side_tool="true" />
-      <window_info id="JRebel" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32846716" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="JRebel Executor" order="8" weight="0.3620283" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info id="JRebel" order="6" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32900944" />
+      <window_info anchor="bottom" id="JRebel Console" order="12" side_tool="true" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -895,282 +901,16 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="48" />
+      <option name="time" value="49" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/com/jfinal/jfinal/3.3/jfinal-3.3-sources.jar!/com/jfinal/aop/InterceptorManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="207" column="31" selection-start-line="207" selection-start-column="12" selection-end-line="207" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/jfinal/jfinal/3.3/jfinal-3.3-sources.jar!/com/jfinal/config/Interceptors.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/config/JsonInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/interceptor/ActionExceptionIntoLogInterceptor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="49" column="5" selection-start-line="13" selection-start-column="4" selection-end-line="49" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/interceptor/ServiceExceptionIntoLogInterceptor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="89" selection-start-line="9" selection-start-column="89" selection-end-line="9" selection-end-column="89" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/jfinal/jfinal/3.3/jfinal-3.3-sources.jar!/com/jfinal/upload/MultipartRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="150" column="33" selection-start-line="150" selection-start-column="33" selection-end-line="150" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/jfinal/cos/2017.5/cos-2017.5.jar!/com/oreilly/servlet/MultipartRequest.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="137" column="18" selection-start-line="137" selection-start-column="18" selection-end-line="137" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar!/javax/servlet/ServletRequest.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="29" column="11" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/view/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-310" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/interceptor/SessionInterceptor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/shell/compile.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="9" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/controller/UserController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/code_evaluate/shell/unzipAll.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="5" lean-forward="true" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/shell/unzipAll.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/code_evaluate.log_2018-03-11.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="1089" column="38" lean-forward="true" selection-start-line="1089" selection-start-column="38" selection-end-line="1094" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/ClassService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="23" column="59" selection-start-line="23" selection-start-column="59" selection-end-line="23" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/model/base/BaseQuestion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-199">
-          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/vo/QuestionListVo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="10" column="25" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/config/CoreConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="56" column="57" selection-start-line="56" selection-start-column="57" selection-end-line="56" selection-end-column="57" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/log4j.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/database.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="14" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/TestCaseService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="34" column="27" lean-forward="true" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/controller/TestCaseController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-334">
-          <caret line="28" column="37" selection-start-line="28" selection-start-column="37" selection-end-line="28" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/AssignmentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="19" column="91" selection-start-line="19" selection-start-column="91" selection-end-line="19" selection-end-column="91" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/jfinal/jfinal/3.3/jfinal-3.3-sources.jar!/com/jfinal/plugin/activerecord/Model.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="669" selection-start-line="669" selection-end-line="669" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/vo/ShellReturnInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/util/CompileUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/StudentQuestionService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="12" column="46" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/vo/QuestionResultVo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="12" column="21" lean-forward="true" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/model/Violation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/model/base/BaseViolation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="98" column="30" selection-start-line="98" selection-start-column="23" selection-end-line="98" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="597">
-          <caret line="128" lean-forward="true" selection-start-line="128" selection-end-line="128" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi/3.9/poi-3.9.jar!/org/apache/poi/ss/usermodel/Workbook.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1191">
-          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/jfinal/jfinal/3.3/jfinal-3.3-sources.jar!/com/jfinal/core/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="847" column="21" selection-start-line="847" selection-start-column="11" selection-end-line="847" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-server/8.1.8.v20121106/jetty-server-8.1.8.v20121106.jar!/org/eclipse/jetty/server/Response.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-348">
-          <caret line="525" lean-forward="true" selection-start-line="525" selection-end-line="525" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/task/CompileTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="128" column="60" selection-start-line="128" selection-start-column="60" selection-end-line="128" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/util/ExcelUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="34" column="41" lean-forward="true" selection-start-line="34" selection-start-column="41" selection-end-line="34" selection-end-column="41" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/vo/ExecuteResultVo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="6" column="27" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="27" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/view/_css.html">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/statics/css/public.css">
       <provider selected="true" editor-type-id="text-editor">
@@ -1186,13 +926,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/config/MyConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/view/_navbar.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -1202,8 +935,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/view/execute_result.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="39" column="18" lean-forward="true" selection-start-line="31" selection-start-column="12" selection-end-line="39" selection-end-column="18" />
+        <state relative-caret-position="2394">
+          <caret line="133" selection-start-line="133" selection-end-line="133" />
           <folding>
             <element signature="n#style#0;n#p#0;n#div#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#p#1;n#div#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#td#3;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1213,8 +946,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/view/code_upload.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="38" column="18" selection-start-line="38" selection-start-column="18" selection-end-line="38" selection-end-column="18" />
+        <state relative-caret-position="1476">
+          <caret line="126" column="32" selection-start-line="126" selection-start-column="32" selection-end-line="126" selection-end-column="45" />
           <folding>
             <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
             <element signature="n#style#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1240,12 +973,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="505">
           <caret line="37" column="18" selection-start-line="37" selection-start-column="18" selection-end-line="37" selection-end-column="18" />
-          <folding>
-            <element signature="n#style#0;n#a#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#table#0;n#div#2;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1256,23 +983,263 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/controller/AssignmentController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/model/base/BaseViolation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2265">
-          <caret line="67" column="40" selection-start-line="67" selection-start-column="30" selection-end-line="67" selection-end-column="40" />
+        <state relative-caret-position="521">
+          <caret line="98" column="30" selection-start-line="98" selection-start-column="23" selection-end-line="98" selection-end-column="30" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="666">
+          <caret line="139" column="52" lean-forward="true" selection-start-line="139" selection-start-column="52" selection-end-line="139" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_09_14_26_30cad0d101-ad36-40a7-a500-5a961e8de2f9/10142510168/2_result.json" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/util/ExcelUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1008">
+          <caret line="66" column="38" selection-start-line="66" selection-start-column="38" selection-end-line="66" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/it/zielke/moji/1.0.2/moji-1.0.2.jar!/it/zielke/moji/SocketClient.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="648">
+          <caret line="36" column="19" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/config/MyConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="41" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/exe/3.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="702">
+          <caret line="39" column="1" selection-start-line="39" selection-start-column="1" selection-end-line="39" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/exe/1.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="774">
+          <caret line="43" column="1" selection-end-line="43" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/exe/2.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/exe/a.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/util/Map.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/util/HashMap.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="141" column="13" selection-start-line="141" selection-start-column="13" selection-end-line="141" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/controller/AssignmentController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="438">
+          <caret line="234" column="83" selection-start-line="234" selection-start-column="8" selection-end-line="234" selection-end-column="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/database.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/util/regex/Pattern.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="84" column="25" selection-start-line="84" selection-start-column="21" selection-end-line="84" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/vo/SimilarityInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="29" selection-start-line="5" selection-start-column="29" selection-end-line="5" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/util/stream/Stream.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="91" column="16" selection-start-line="91" selection-start-column="16" selection-end-line="91" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/jfinal/jfinal/3.3/jfinal-3.3.jar!/com/jfinal/plugin/activerecord/Db.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="369" column="27" selection-start-line="369" selection-start-column="27" selection-end-line="369" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/jfinal/jfinal/3.3/jfinal-3.3.jar!/com/jfinal/plugin/activerecord/DbPro.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1088">
+          <caret line="853" column="31" selection-start-line="853" selection-start-column="24" selection-end-line="853" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/QuestionService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/AssignmentService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="19" column="91" selection-start-line="19" selection-start-column="91" selection-end-line="19" selection-end-column="91" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/StudentQuestionService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#250#251#0" expanded="true" />
+            <element signature="e#291#292#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/ViolationService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/service/SimilarityService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="30" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168/1_output_16.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/lang/Runtime.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-27">
+          <caret line="76" column="19" selection-start-line="76" selection-start-column="19" selection-end-line="76" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168/1_result.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/util/FileUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="35" column="12" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
+        <state relative-caret-position="930">
+          <caret line="143" column="13" selection-start-line="143" selection-start-column="13" selection-end-line="143" selection-end-column="13" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="method#addTxtFile#0;class#FileUtil#0" />
+            <element signature="method#getSubDirectoryName#0;class#FileUtil#0" />
+            <element signature="method#getCOrCppFilesName#0;class#FileUtil#0" />
             <element signature="method#isNumeric#0;class#FileUtil#0" />
             <element signature="method#replaceUseless#0;class#FileUtil#0" />
-            <element signature="method#executeShellCmd#0;class#FileUtil#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219/10142510169/1.c">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219/10142510167/1.c">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219/similarity2.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/shell/evaluate.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219/similarity1.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/shell/execute.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_04_34303e33ca-7c68-44c0-a2c7-b04c7bb9d219/10142510168/1.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="16" lean-forward="true" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/shell/compile.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="35" lean-forward="true" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_07_14c8f573de-18fe-48bd-9e48-73918b06ccda/similarity2.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload/18_04_10_17_07_14c8f573de-18fe-48bd-9e48-73918b06ccda/similarity1.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/shell/similarityTest.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/task/CompileTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-38">
+          <caret line="45" column="42" lean-forward="true" selection-start-line="45" selection-start-column="42" selection-end-line="45" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/ce/util/CompileUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="35" column="143" selection-start-line="35" selection-start-column="143" selection-end-line="35" selection-end-column="143" />
         </state>
       </provider>
     </entry>

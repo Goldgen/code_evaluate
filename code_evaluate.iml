@@ -43,6 +43,24 @@
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.16" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.44" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:druid:1.0.29" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.alibaba:jconsole:1.8.0">
+        <CLASSES>
+          <root url="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/lib/jconsole.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.alibaba:tools:1.8.0">
+        <CLASSES>
+          <root url="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/lib/tools.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: com.jfinal:cos:2017.5" level="project" />
     <orderEntry type="library" name="Maven: it.sauronsoftware.cron4j:cron4j:2.2.5" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
@@ -55,5 +73,7 @@
     <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml-schemas:3.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlbeans:xmlbeans:2.3.0" level="project" />
     <orderEntry type="library" name="Maven: stax:stax-api:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: it.zielke:moji:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:annotations:2.0.1" level="project" />
   </component>
 </module>

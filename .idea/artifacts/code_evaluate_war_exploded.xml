@@ -34,6 +34,8 @@
           <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml-schemas:3.9" />
           <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:2.3.0" />
           <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
+          <element id="library" level="project" name="Maven: it.zielke:moji:1.0.2" />
+          <element id="library" level="project" name="Maven: com.google.code.findbugs:annotations:2.0.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

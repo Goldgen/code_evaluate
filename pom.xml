@@ -124,6 +124,12 @@
             <version>${poi.version}</version>
         </dependency>
 
+        <!--相似度分析-->
+        <dependency>
+            <groupId>it.zielke</groupId>
+            <artifactId>moji</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 
     </dependencies>
 

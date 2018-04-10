@@ -43,6 +43,8 @@ public class _MappingKit {
 		arp.addMapping("province", "provinceId", Province.class);
 		arp.addMapping("question", "questionId", Question.class);
 		arp.addMapping("request", "id", Request.class);
+		// Composite Primary Key order: questionId,userId1,userId2
+		arp.addMapping("similarity", "questionId,userId1,userId2", Similarity.class);
 		arp.addMapping("source", "sourceId", Source.class);
 		// Composite Primary Key order: sourceId,userId
 		arp.addMapping("source_score", "sourceId,userId", SourceScore.class);

@@ -3,21 +3,16 @@ package com.ce.task;
 import com.alibaba.fastjson.JSON;
 import com.ce.config.MyConstants;
 import com.ce.model.*;
-import com.ce.service.QuestionService;
-import com.ce.service.StudentQuestionService;
+import com.ce.service.*;
 import com.ce.util.FileUtil;
-import com.ce.service.AssignmentService;
-import com.ce.service.TestCaseService;
 import com.ce.util.CompileUtil;
-import com.ce.vo.FileInfo;
-import com.ce.vo.OclintInfoVo;
-import com.ce.vo.QuestionListVo;
-import com.ce.vo.ShellReturnInfo;
+import com.ce.vo.*;
 import com.jfinal.kit.PathKit;
+import com.jfinal.plugin.activerecord.Db;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CompileTask implements Runnable {
 
@@ -25,6 +20,7 @@ public class CompileTask implements Runnable {
     private static TestCaseService testCaseService = new TestCaseService();
     private static QuestionService questionService = new QuestionService();
     private static StudentQuestionService studentQuestionService = new StudentQuestionService();
+    private static SimilarityService similarityService = new SimilarityService();
 
 
     //TODO 路径问题加以整理
@@ -39,8 +35,16 @@ public class CompileTask implements Runnable {
             assignment.update();
             String assignmentDirectoryPath = MyConstants.uploadPath + directoryName + "/";
             System.out.println("正在生成输入文件" + assignmentId);
+
+            //预先记录相似度分析的文件名
+            Map<Integer, Temp> questionFilesPathMap = new TreeMap<>();
+
             List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
             for (QuestionListVo vo : questionVoList) {
+                Temp temp = new Temp();
+                temp.questionId = vo.questionId;
+                temp.questionFilesPath = "";
+                questionFilesPathMap.put(vo.questionNo, temp);
                 for (TestCase testCase : vo.testCaseList) {
                     //创建测试用例文件
                     String inputFilePath = assignmentDirectoryPath + vo.questionNo + "_input_" + testCase.getTestCaseId() + ".txt";
@@ -48,15 +52,24 @@ public class CompileTask implements Runnable {
                 }
             }
 
-            //编译
+
             //获取一个作业下面所有提交作业的学生学号
             List<String> stuNumList = FileUtil.getSubDirectoryName(assignmentDirectoryPath);
             for (String stuNum : stuNumList) {
+
                 List<FileInfo> fileInfoList = FileUtil.getCOrCppFilesName(assignmentDirectoryPath, stuNum);
                 for (FileInfo fileInfo : fileInfoList) {
                     String fileName = fileInfo.fileName;
                     String prefix = fileInfo.prefix;
+                    String suffix = fileInfo.suffix;
                     int questionNo = Integer.parseInt(prefix);
+
+                    Temp tempInfo = questionFilesPathMap.get(questionNo);
+                    if (tempInfo != null) {
+                        tempInfo.questionFilesPath += " ./" + stuNum + "/" + prefix + "." + suffix;
+                        questionFilesPathMap.replace(questionNo, tempInfo);
+                    }
+
                     System.out.println("正在编译学号" + stuNum + "下" + fileName + "文件");
                     String fatherFilePath = assignmentDirectoryPath + stuNum;
                     Question question = questionService.findByAssignmentIdAndQuestionNo(assignmentId, questionNo);
@@ -65,6 +78,7 @@ public class CompileTask implements Runnable {
 
                     int questionId = question.getQuestionId();
                     boolean alreadyExist = studentQuestionService.findById(questionId, stuNum) != null;
+                    //编译
                     ShellReturnInfo returnInfo = CompileUtil.isCompilePass(fatherFilePath, fileName);
                     if (!returnInfo.isPass) {
                         StudentQuestion studentQuestion = new StudentQuestion();
@@ -83,6 +97,7 @@ public class CompileTask implements Runnable {
                     List<TestCase> testCaseList = questionVoList.stream().filter(x -> x.questionId == questionId)
                             .findFirst().orElse(new QuestionListVo()).testCaseList;
 
+                    //执行，比较测试用例和输出
                     System.out.println("正在执行学号" + stuNum + " 第" + questionId + "题文件");
                     int testCasePassNum = 0;
                     for (TestCase testCase : testCaseList) {
@@ -96,6 +111,7 @@ public class CompileTask implements Runnable {
                     }
                     int testCaseScore = (testCasePassNum / testCaseList.size()) * 50;
 
+                    //静态分析
                     System.out.println("正在分析学号" + stuNum + " 第" + questionId + "题文件");
                     String resultFileName = prefix + "_result.json";
                     CompileUtil.evaluate(fatherFilePath, fileName, resultFileName);
@@ -137,8 +153,48 @@ public class CompileTask implements Runnable {
                     }
                 }
             }
+
+            //相似度分析
+            List<Similarity> similarityList = new ArrayList<>();
+            for (Map.Entry<Integer, Temp> entry : questionFilesPathMap.entrySet()) {
+                CompileUtil.similarityTest(assignmentDirectoryPath, entry.getKey(), entry.getValue().questionFilesPath);
+                String content = FileUtil.readFile(assignmentDirectoryPath + "similarity" + entry.getKey() + ".txt");
+                Pattern pattern = Pattern.compile("\\./(.*?)/1\\.c consists for (.*?) % of \\./(.*?)/1\\.c");
+                Matcher matcher = pattern.matcher(content);
+                //System.out.println(matcher.matches());
+                while (matcher.find()) {
+                    String studentId1 = matcher.group(1);
+                    String studentId2 = matcher.group(3);
+                    Similarity test = similarityList.stream().filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2))
+                            .findFirst().orElse(null);
+                    if (test != null) {
+                        test.setToSimilarity(Integer.parseInt(matcher.group(2)));
+                    } else {
+                        Similarity info = new Similarity();
+                        info.setQuestionId(entry.getValue().questionId);
+                        info.setUserId1(matcher.group(1));
+                        info.setUserId2(matcher.group(3));
+                        info.setFromSimilarity(Integer.parseInt(matcher.group(2)));
+                        similarityList.add(info);
+                    }
+                }
+            }
+            for (Similarity similarity : similarityList) {
+                if (similarityService.findById(similarity.getQuestionId(), similarity.getUserId2(), similarity.getUserId1()) != null) {
+                    similarity.update();
+                } else {
+                    similarity.save();
+                }
+            }
+            //相似度分析end
+
             assignment.setIsEvaluateFinish(true);
             assignment.update();
         }
+    }
+
+    class Temp {
+        String questionFilesPath;
+        int questionId;
     }
 }
