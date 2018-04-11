@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>题库维护</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_css.html")
+</head>
+<body>
+
+#include("_navbar.html")
+
+<div class="container main">
+    <div class="row">
+        <div class="col-md-9">
+
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bread">
+                            <span>题库维护</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row read-option" style="margin-top: -20px">
+                    <div class="col-md-4">
+                        <h2>题库列表</h2>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="search-content" type="text" style="margin-top: 23px" placeholder="请输入题目内容">
+                        <a class="btn btn-primary search-btn" href="javascript:void(0)">
+                            搜索
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-primary add-test-btn" style="margin-top: 20px">
+                            新增题目
+                        </a>
+                    </div>
+                </div>
+                <div id="tab-content">
+                    <div id="change-content">
+                        <div class="col-md-12">
+                            <table class="table table-hover" style="margin-left: -5px">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>内容</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                #for(testList : testLists)
+                                <tbody id="test-list#(for.index + 1)" class="#if(for.index>0)hidden#end">
+                                #for(test : testList)
+                                <tr>
+                                    <td>
+                                        #(test.testId)
+                                    </td>
+                                    <td>
+                                        #(test.content)
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)" class="btn btn-success btn-xs edit-test-btn"
+                                           title="修改"
+                                           data-toggle="tooltip" data-placement="bottom"
+                                           data-id="#(test.testId)" data-content="#(test.content)">
+                                            <i class="glyphicon glyphicon-edit"></i></a>
+                                        <a href="javascript:void(0)" class="btn btn-danger btn-xs delete-test-btn"
+                                           title="删除"
+                                           data-toggle="tooltip" data-placement="bottom"
+                                           data-id="#(test.testId)">
+                                            <i class="glyphicon glyphicon-trash"></i></a>
+                                        <a href="/testDb/caseList?testId=#(test.testId)"
+                                           class="btn btn-info btn-xs edit-test-case-btn"
+                                           title="编辑测试用例" data-toggle="tooltip" data-placement="bottom">
+                                            <i class="glyphicon glyphicon-list"></i></a>
+                                    </td>
+                                </tr>
+                                #end
+                                </tbody>
+                                #end
+                            </table>
+                        </div>
+                    </div>
+                    <div id="pageTool"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--问题模态框-->
+<div class="modal fade" id="testModel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">新增题目</h4>
+            </div>
+            <form class="form-horizontal" id="test-form" method="post" action="/testDb/addTest">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <input type="hidden" name="testId" id="testId" value="0">
+                        <label class="col-sm-2 control-label">题目内容</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="6" name="content" id="test-content"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--测试用例模态框-->
+
+
+#include("_js.html")
+
+</body>
+<script>
+    var addUrl = '/testDb/addTest';
+    var editUrl = '/testDb/editTest';
+
+    $(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+
+        var page = new Paging();
+        var totalCount =#(totalCount);
+        page.init({
+            target: $('#pageTool'),
+            pagesize: 10,
+            count: totalCount,
+            current: 1,
+            callback: function (pagecount, size, count) {
+                $('tbody').addClass('hidden');
+                $('#test-list' + pagecount).removeClass('hidden');
+                page.render({count: totalCount, current: pagecount});
+            }
+        });
+
+        $('.search-btn').click(function () {
+            var content = $('#search-content').val();
+            window.location.href = "/testDb/list?content=" + content;
+        });
+
+        $('.add-test-btn').click(function () {
+            $('#test-form').attr('action', addUrl);
+            $('#question-content').val('');
+            $('#testModel').modal('toggle');
+            console.log('1111');
+        });
+
+        $('.edit-test-btn').click(function () {
+            $('#test-form').attr('action', editUrl);
+            $('#testId').val($(this).data('id'));
+            $('#test-content').val($(this).data('content'));
+            $('#testModel').modal('toggle');
+        });
+
+        $('.delete-test-btn').click(function () {
+            var btn = $(this);
+            layer.confirm('此操作将会删除该问题及其下所有测试用例，是否确认删除？', {
+                btn: ['确认', '取消']
+            }, function (index, layero) {
+                window.location.href = '/testDb/deleteTest?testId=' + btn.data('id');
+            }, function (index) {
+                layer.close(index);
+            });
+        });
+
+
+    });
+</script>
+</html>

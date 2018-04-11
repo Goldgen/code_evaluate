@@ -65,6 +65,8 @@ public class _MappingKit {
 		arp.addMapping("student_question", "questionId,userId", StudentQuestion.class);
 		arp.addMapping("term", "termId", Term.class);
 		arp.addMapping("test_case", "testCaseId", TestCase.class);
+		arp.addMapping("test_db", "testId", TestDb.class);
+		arp.addMapping("test_db_test_case", "testCaseId", TestDbTestCase.class);
 		arp.addMapping("token", "id", Token.class);
 		arp.addMapping("topic", "topicId", Topic.class);
 		// Composite Primary Key order: path,topicId

@@ -11,10 +11,7 @@ import com.ce.util.CommonUtil;
 import com.ce.util.CompileUtil;
 import com.ce.util.ExcelUtil;
 import com.ce.util.FileUtil;
-import com.ce.vo.ClassListVo;
-import com.ce.vo.ExecuteResultVo;
-import com.ce.vo.QuestionListVo;
-import com.ce.vo.QuestionResultVo;
+import com.ce.vo.*;
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.PathKit;
@@ -41,6 +38,7 @@ public class AssignmentController extends Controller {
     private static TestCaseService testCaseService = new TestCaseService();
 
     private static ViolationService violationService = new ViolationService();
+    private static SimilarityService similarityService = new SimilarityService();
 
     public void list() {
         String classId = getPara(0);
@@ -85,6 +83,8 @@ public class AssignmentController extends Controller {
                 render("execute_result.html");
                 break;
             case "similarity_analysis":
+                List<SimilarityResultVo> similarityResultVoList = getSimilarityResult(assignmentId);
+                setAttr("similarityResultVoList", similarityResultVoList);
                 render("similarity_analysis.html");
                 break;
             default:
@@ -262,5 +262,37 @@ public class AssignmentController extends Controller {
         return executeResultVoList;
     }
 
+
+    public List<SimilarityResultVo> getSimilarityResult(int assignmentId) {
+        List<SimilarityResultVo> similarityResultVoList = new ArrayList<>();
+        Map<Integer, List<Similarity>> listMap = similarityService.findByAssignmentId(assignmentId)
+                .stream().collect(Collectors.groupingBy(Similarity::getQuestionId));
+        for (Map.Entry<Integer, List<Similarity>> entry : listMap.entrySet()) {
+            SimilarityResultVo similarityResultVo = new SimilarityResultVo();
+            similarityResultVo.questionId = entry.getKey();
+            Question question = questionService.findById(entry.getKey());
+            similarityResultVo.questionNo = question == null ? 0 : question.getQuestionNo();
+            List<SimilarityVo> similarityVoList = entry.getValue().stream().map(x -> {
+                SimilarityVo similarityVo = new SimilarityVo();
+                similarityVo.userId1 = x.getUserId1();
+                similarityVo.userId2 = x.getUserId2();
+                User user1 = userService.findByUserId(x.getUserId1());
+                User user2 = userService.findByUserId(x.getUserId2());
+                similarityVo.userName1 = user1 == null ? "" : user1.getUserName();
+                similarityVo.userName2 = user2 == null ? "" : user2.getUserName();
+                similarityVo.similarity = x.getFromSimilarity() > x.getToSimilarity() ? x.getFromSimilarity() : x.getToSimilarity();
+                return similarityVo;
+            }).collect(Collectors.toList());
+            similarityResultVo.lowSimilarityVoList = similarityVoList
+                    .stream().filter(x -> x.similarity > 10 && x.similarity <= 30).collect(Collectors.toList());
+            similarityResultVo.mediumSimilarityVoList = similarityVoList
+                    .stream().filter(x -> x.similarity > 30 && x.similarity <= 50).collect(Collectors.toList());
+            similarityResultVo.highSimilarityVoList = similarityVoList
+                    .stream().filter(x -> x.similarity > 50).collect(Collectors.toList());
+            similarityResultVoList.add(similarityResultVo);
+        }
+        Collections.sort(similarityResultVoList);
+        return similarityResultVoList;
+    }
 
 }

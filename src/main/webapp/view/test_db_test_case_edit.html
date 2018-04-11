@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>题库测试用例维护</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_css.html")
+</head>
+<body>
+
+#include("_navbar.html")
+
+<div class="container main">
+    <div class="row">
+        <div class="col-md-9">
+
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="bread">
+                            <a href="/testDb/list">题库维护</a>&gt;
+                            <span>题库测试用例维护</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row read-option" style="margin-top: -20px">
+                    <div class="col-md-8">
+                        <h2>测试用例列表</h2>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-primary add-case-btn" style="margin-top: 20px" data-testid="#(testId)">
+                            新增测试用例
+                        </a>
+                    </div>
+                </div>
+                <div id="tab-content">
+                    <div id="change-content">
+                        <div class="col-md-12">
+                            <table class="table table-hover" style="margin-left: -5px">
+                                <thead>
+                                <tr>
+                                    <th>测试用例</th>
+                                    <th>答案</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                #for(testCase : testCaseList)
+                                <tr>
+                                    <td>
+                                        <pre>#(testCase.testCaseContent)</pre>
+                                    </td>
+                                    <td>
+                                        <pre>#(testCase.answer)</pre>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)" class="btn btn-success btn-xs edit-case-btn"
+                                           title="修改"
+                                           data-toggle="tooltip" data-placement="bottom" data-testid="#(testId)"
+                                           data-id="#(testCase.testCaseId)" data-content="#(testCase.testCaseContent)"
+                                           data-answer="#(testCase.answer)">
+                                            <i class="glyphicon glyphicon-edit"></i></a>
+                                        <a href="javascript:void(0)" class="btn btn-danger btn-xs delete-case-btn"
+                                           title="删除" data-testid="#(testId)"
+                                           data-toggle="tooltip" data-placement="bottom"
+                                           data-id="#(testCase.testCaseId)">
+                                            <i class="glyphicon glyphicon-trash"></i></a>
+                                    </td>
+                                </tr>
+                                #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="pageTool"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--测试用例模态框-->
+<div class="modal fade" id="caseModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modal-title">新增测试用例</h4>
+            </div>
+            <form class="form-horizontal" id="modal-form" method="post" action="/testCaseDb/addCase">
+                <div class="modal-body">
+                    <input type="hidden" name="testCaseId" id="testCaseId" value="0">
+                    <input class="hidden" name="testId" id="testId" value="0">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">测试用例</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="6" name="content" id="content"></textarea>
+                            <span class="text-danger" style="display: none;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">答案</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="6" name="answer" id="answer"></textarea>
+                            <span class="text-danger" style="display: none;"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+#include("_js.html")
+
+</body>
+<script>
+    var addUrl = '/testDb/addCase';
+    var editUrl = '/testDb/editCase';
+
+    $(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+
+        $('.add-case-btn').click(function () {
+            $('#modal-form').attr('action', addUrl);
+            $('#modal-title').html('新增测试用例');
+            $('#testId').val($(this).data('testid'));
+            $('#content').val('');
+            $('#answer').val('');
+            $('#caseModal').modal('toggle');
+        });
+
+        $('.edit-case-btn').click(function () {
+            $('#modal-form').attr('action', editUrl);
+            $('#modal-title').html('修改测试用例');
+            $('#testId').val($(this).data('testid'));
+            $('#testCaseId').val($(this).data('id'));
+            $('#content').val($(this).data('content'));
+            $('#answer').val($(this).data('answer'));
+            $('#caseModal').modal('toggle');
+        });
+
+        $('.delete-case-btn').click(function () {
+            var btn = $(this);
+            layer.confirm('是否确认删除？', {
+                btn: ['确认', '取消']
+            }, function (index, layero) {
+                window.location.href = '/testDb/deleteCase?testCaseId=' + btn.data('id')+'&testId='+ btn.data('testid');
+            }, function (index) {
+                layer.close(index);
+            });
+        });
+
+
+    });
+</script>
+</html>

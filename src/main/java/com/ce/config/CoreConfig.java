@@ -1,9 +1,6 @@
 package com.ce.config;
 
-import com.ce.controller.AssignmentController;
-import com.ce.controller.ClassController;
-import com.ce.controller.TestCaseController;
-import com.ce.controller.UserController;
+import com.ce.controller.*;
 import com.ce.interceptor.ActionExceptionIntoLogInterceptor;
 import com.ce.interceptor.ServiceExceptionIntoLogInterceptor;
 import com.ce.interceptor.SessionInterceptor;
@@ -65,6 +62,7 @@ public class CoreConfig extends JFinalConfig {
         me.add("/class", ClassController.class, "/view");
         me.add("/assignment", AssignmentController.class, "/view");
         me.add("/testCase", TestCaseController.class, "/view");
+        me.add("/testDb", TestDbController.class, "/view");
         me.add("/", UserController.class, "/view");
     }
 
