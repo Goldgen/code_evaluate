@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class FileUtil {
 
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 //        Pattern pattern = Pattern.compile("\\./(.*?)/1\\.c consists for (.*?) % of \\./(.*?)/1\\.c");
 //        Matcher matcher = pattern.matcher("./10142510168/1.c consists for 100 % of ./10142510166/1.c material\n" +
 //                "./10142510166/1.c consists for 100 % of ./10142510168/1.c material");
@@ -26,7 +26,23 @@ public class FileUtil {
 //            System.out.println(matcher.group(3));
 //        }
 
-        CompileUtil.executeShellCmd("sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/shell/evaluate.sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168 1.c 1_result.json");
+//        CompileUtil.executeShellCmd("sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/shell/evaluate.sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168 1.c 1_result.json");
+
+        int[] nums = {1, 2, 3, 4, 5, 4, 2, 4, 4};
+        int len = nums.length;
+        int max = 0;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] > max)
+                max = nums[i];
+        }
+
+        int[] recoder = new int[max];
+        for (int i = 0; i < max; i++) {
+            recoder[i] = 0;
+        }
+        for (int i = 0; i < len; i++) {
+            recoder[nums[i]] += 1;
+        }
 
 
     }

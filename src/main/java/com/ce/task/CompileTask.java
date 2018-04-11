@@ -66,7 +66,11 @@ public class CompileTask implements Runnable {
 
                     Temp tempInfo = questionFilesPathMap.get(questionNo);
                     if (tempInfo != null) {
-                        tempInfo.questionFilesPath += " ./" + stuNum + "/" + prefix + "." + suffix;
+                        if (tempInfo.questionFilesPath.isEmpty()) {
+                            tempInfo.questionFilesPath += "./" + stuNum + "/" + prefix + "." + suffix;
+                        } else {
+                            tempInfo.questionFilesPath += " ./" + stuNum + "/" + prefix + "." + suffix;
+                        }
                         questionFilesPathMap.replace(questionNo, tempInfo);
                     }
 
@@ -159,13 +163,15 @@ public class CompileTask implements Runnable {
             for (Map.Entry<Integer, Temp> entry : questionFilesPathMap.entrySet()) {
                 CompileUtil.similarityTest(assignmentDirectoryPath, entry.getKey(), entry.getValue().questionFilesPath);
                 String content = FileUtil.readFile(assignmentDirectoryPath + "similarity" + entry.getKey() + ".txt");
-                Pattern pattern = Pattern.compile("\\./(.*?)/1\\.c consists for (.*?) % of \\./(.*?)/1\\.c");
+                System.out.println(content);
+                Pattern pattern = Pattern.compile("\\./(.*?)/" + entry.getKey() + "\\.c consists for (.*?) % of \\./(.*?)/" + entry.getKey() + "\\.c");
                 Matcher matcher = pattern.matcher(content);
                 //System.out.println(matcher.matches());
                 while (matcher.find()) {
                     String studentId1 = matcher.group(1);
                     String studentId2 = matcher.group(3);
-                    Similarity test = similarityList.stream().filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2))
+                    Similarity test = similarityList.stream()
+                            .filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2) && x.getQuestionId() == entry.getValue().questionId)
                             .findFirst().orElse(null);
                     if (test != null) {
                         test.setToSimilarity(Integer.parseInt(matcher.group(2)));
@@ -180,7 +186,7 @@ public class CompileTask implements Runnable {
                 }
             }
             for (Similarity similarity : similarityList) {
-                if (similarityService.findById(similarity.getQuestionId(), similarity.getUserId2(), similarity.getUserId1()) != null) {
+                if (similarityService.findById(similarity.getQuestionId(), similarity.getUserId1(), similarity.getUserId2()) != null) {
                     similarity.update();
                 } else {
                     similarity.save();

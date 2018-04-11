@@ -6,6 +6,7 @@ import com.jfinal.kit.LogKit;
 import com.jfinal.kit.PathKit;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class CompileUtil {
 
@@ -33,9 +34,9 @@ public class CompileUtil {
     }
 
     public static void similarityTest(String fatherFilePath, int questionNo, String questionFilesPath) {
-        String cmd = "sh " + MyConstants.shellPath + "similarityTest.sh " + fatherFilePath + " " + questionNo + " \"" + questionFilesPath + "\"";
-        System.out.println("执行命令是：" + cmd);
-        executeShellCmd(cmd);
+        String[] cmds = new String[]{MyConstants.shellPath + "similarityTest.sh",fatherFilePath,String.valueOf(questionNo),questionFilesPath};
+        System.out.println("执行命令是：" + Arrays.toString(cmds));
+        executeShellCmd(cmds,MyConstants.shellPath + "similarityTest.sh");
     }
 
     //执行shell命令，返回执行中是否有错误
@@ -43,6 +44,8 @@ public class CompileUtil {
         ShellReturnInfo shellReturnInfo = new ShellReturnInfo();
         String errStr = "";
         try {
+
+
             Process process = Runtime.getRuntime().exec(cmd);
             process.waitFor();
 
@@ -62,9 +65,48 @@ public class CompileUtil {
                 LogKit.error("执行命令：" + cmd + "出错,错误为：" + errStr);
             }
             process.destroy();
+
         } catch (Exception e) {
             e.printStackTrace();
             LogKit.error("执行命令：" + cmd + "出错");
+        }
+        shellReturnInfo.errorInfo = errStr;
+        shellReturnInfo.isPass = errStr.isEmpty();
+        return shellReturnInfo;
+    }
+
+    public static ShellReturnInfo executeShellCmd(String[] cmds,String scriptPath) {
+        ShellReturnInfo shellReturnInfo = new ShellReturnInfo();
+        String errStr = "";
+        try {
+            //解决脚本没有执行权限
+            ProcessBuilder builder = new ProcessBuilder("/bin/chmod", "755",scriptPath);
+            Process ps = builder.start();
+            ps.waitFor();
+
+            Process process = Runtime.getRuntime().exec(cmds);
+            process.waitFor();
+
+            BufferedReader bufferError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            StringBuilder errBuilder = new StringBuilder();
+            while (true) {
+                String temp = bufferError.readLine();
+                if (temp == null) {
+                    break;
+                } else {
+                    errBuilder.append(temp);
+                }
+            }
+            bufferError.close();
+            errStr = errBuilder.toString();
+            if (!errStr.isEmpty()) {
+                LogKit.error("执行命令：" + Arrays.toString(cmds) + "出错,错误为：" + errStr);
+            }
+            process.destroy();
+            ps.destroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogKit.error("执行命令：" + Arrays.toString(cmds) + "出错");
         }
         shellReturnInfo.errorInfo = errStr;
         shellReturnInfo.isPass = errStr.isEmpty();
