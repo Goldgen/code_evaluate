@@ -44,7 +44,7 @@
                     <a class="btn btn-primary add-question-btn" style="margin-top: 20px">
                         新增题目
                     </a>
-                    <a class="btn btn-primary add-question-from-db-btn" style="margin-top: 20px">
+                    <a class="btn btn-primary " href="/testCase/addFromDb?assignmentId=#(assignment.assignmentId)&questionNo=#(questionSize + 1)" style="margin-top: 20px">
                         从题库新增题目
                     </a>
                 </div>
@@ -109,7 +109,6 @@
 
                     #end
                 </div>
-                <div id="pageTool"></div>
             </div>
         </div>
     </div>
@@ -186,6 +185,7 @@
     </div>
 </div>
 
+
 #include("_js.html")
 
 </body>
@@ -200,7 +200,10 @@
         $('.add-question-btn').click(function () {
             $('#question-content').val('');
             $('#questionModel').modal('toggle');
-            console.log('1111');
+        });
+
+        $('.add-question-from-db-btn').click(function () {
+            $('#testDbModal').modal('toggle');
         });
 
         $('.add-btn').click(function () {

@@ -3,13 +3,17 @@ package com.ce.controller;
 import com.ce.model.Assignment;
 import com.ce.model.Question;
 import com.ce.model.TestCase;
+import com.ce.model.TestDb;
 import com.ce.service.AssignmentService;
 import com.ce.service.QuestionService;
 import com.ce.service.TestCaseService;
+import com.ce.service.TestDbService;
+import com.ce.util.CommonUtil;
 import com.jfinal.core.Controller;
 
 import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class TestCaseController extends Controller {
 
@@ -18,6 +22,8 @@ public class TestCaseController extends Controller {
     private static TestCaseService testCaseService = new TestCaseService();
 
     private static QuestionService questionService = new QuestionService();
+
+    private static TestDbService testDbService = new TestDbService();
 
     public void addQuestion() {
         int assignmentId = getParaToInt("assignmentId");
@@ -30,6 +36,24 @@ public class TestCaseController extends Controller {
         question.save();
 
         redirect("/assignment/detail/" + assignmentId + "-test_case_edit");
+    }
+
+    public void addFromDb() {
+        int assignmentId = getParaToInt("assignmentId");
+        int questionNo = getParaToInt("questionNo");
+
+        String content = getPara("content");
+        List<TestDb> testList = testDbService.getAll();
+        if (content != null && !content.isEmpty()) {
+            testList = testList.stream().filter(x -> x.getContent().contains(content)).collect(Collectors.toList());
+        }
+        int totalCount = testList.size();
+        List<List<TestDb>> result = CommonUtil.split(testList, 10); //把列表拆分成10个一组
+        setAttr("totalCount", totalCount);
+        setAttr("testLists", result);
+        setAttr("assignmentId",assignmentId);
+        setAttr("questionNo",questionNo);
+        render("add_from_db.html");
     }
 
     public void deleteQuestion() {
@@ -77,6 +101,8 @@ public class TestCaseController extends Controller {
 
         redirect("/assignment/detail/" + assignmentId + "-test_case_edit");
     }
+
+
 
 
 }
