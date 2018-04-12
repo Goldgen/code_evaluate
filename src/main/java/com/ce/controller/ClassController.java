@@ -14,18 +14,26 @@ public class ClassController extends Controller {
     private static ClassService classService = new ClassService();
 
     public void list() {
-        String teacherId = getSessionAttr("userId", "");
-        List<ClassListVo> classList = classService.findAllByTeacherId(teacherId).stream().map(x->{
-            ClassListVo vo=new ClassListVo();
-            vo.classId=x.getClassId();
-            vo.courseName=x.getStr("courseName");
-            vo.termName=x.getStr("termName");
+        String userId = getSessionAttr("userId", "");
+        String userType = getSessionAttr("userType", "student");
+        List<Class> classList;
+        if (userType.equals("teacher")) {
+            classList = classService.findAllByTeacherId(userId);
+        } else {
+            classList = classService.findAllByStudentId(userId);
+        }
+
+        List<ClassListVo> classListVoList = classList.stream().map(x -> {
+            ClassListVo vo = new ClassListVo();
+            vo.classId = x.getClassId();
+            vo.courseName = x.getStr("courseName");
+            vo.termName = x.getStr("termName");
             return vo;
         }).collect(Collectors.toList());
-        int totalCount=classList.size();
-        List<List<ClassListVo>> result= CommonUtil.split(classList,10); //把列表拆分成10个一组
+        int totalCount = classListVoList.size();
+        List<List<ClassListVo>> result = CommonUtil.split(classListVoList, 10); //把列表拆分成10个一组
         setAttr("totalCount", totalCount);
-        setAttr("classLists",result);
+        setAttr("classLists", result);
         render("class_list.html");
     }
 

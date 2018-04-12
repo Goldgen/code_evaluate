@@ -38,10 +38,12 @@
                         <div class="col-md-12">
                             <input type="hidden" id="assignmentId" value="#(assignmentId)">
                             <input type="hidden" id="questionNo" value="#(questionNo)">
+                            <input type="hidden" id="totalCount" value="#(totalCount)">
                             <table class="table table-hover" style="margin-left: -5px">
                                 <thead>
                                 <tr>
                                     <th>选择</th>
+                                    <th>生成的题号</th>
                                     <th>ID</th>
                                     <th>内容</th>
                                 </tr>
@@ -51,15 +53,19 @@
                                 #for(test : testList)
                                 <tr>
                                     <td>
-                                        <input type="checkbox" id="checkbox#(test.testId)" value="#(test.testId)">
+                                        <label for="checkbox#(test.testId)"></label><input type="checkbox"
+                                                                                           id="checkbox#(test.testId)"
+                                                                                           class="my-checkbox"
+                                                                                           question-no="0"
+                                                                                           value="#(test.testId)">
                                     </td>
+                                    <td>选中生成</td>
                                     <td>
                                         #(test.testId)
                                     </td>
-                                    <td>
-                                        #(test.content)
+                                    <td style="max-width: 300px">
+                                        <p style="word-wrap:break-word">#(test.content)</p>
                                     </td>
-
                                 </tr>
                                 #end
                                 </tbody>
@@ -76,7 +82,6 @@
 </div>
 
 
-
 #include("_js.html")
 
 </body>
@@ -89,8 +94,11 @@
         $('[data-toggle="tooltip"]').tooltip();
 
 
+        var assignmentId = $('#assignmentId').val();
+        var questionNo = parseInt($('#questionNo').val());
+        var totalCount = parseInt($('#totalCount').val());
         var page = new Paging();
-        var totalCount =#(totalCount);
+
         page.init({
             target: $('#pageTool'),
             pagesize: 10,
@@ -108,26 +116,45 @@
             window.location.href = "/testCase/addFromDb?assignmentId=#(assignmentId)&questionNo=#(questionNo)&content=" + content;
         });
 
-        $('#confirm-add-btn').click(function () {
-            var num=0;
-            var testId;
-            $("input[type='checkbox']:checkbox:checked").each(function(){
-                num++;
-                testId=$(this).val();
-            });
-            if(num>1){
-                alert("最多只能选中一个！");
+        $('.my-checkbox').click(function () {
+            if (this.checked !== true) {
+                $(this).attr("question-no", 0);
+                $(this).closest('td').next().html('选中生成');
             }
-            else if(num===0){
-                alert("请选择题目！");
-            }else{
+            setQuestionNo();
+        });
 
+        $('#confirm-add-btn').click(function () {
+            var questionInfoList = new Array();
+            $("input[type='checkbox']:checkbox:checked").each(function () {
+                var questionInfo = new Object();
+                questionInfo.testId = $(this).val();
+                questionInfo.questionNo = $(this).attr("question-no");
+                questionInfoList.push(questionInfo);
+            });
+            if (questionInfoList.length === 0) {
+                layer.alert("请至少选择一道题目！");
+            } else {
+                var json = JSON.stringify(questionInfoList);
+                layer.confirm('将有' + questionInfoList.length + '道题目添加，是否确认？', {
+                    btn: ['确认', '取消']
+                }, function (index, layero) {
+                    window.location.href = "/testCase/batchAdd?assignmentId=" + assignmentId + "&questionInfoList=" + json;
+                }, function (index) {
+
+                });
             }
         });
 
-
-
+        function setQuestionNo() {
+            $("input[type='checkbox']:checkbox:checked").each(function (index, element) {
+                $(this).attr("question-no", questionNo + 1 + index);
+                $(this).closest('td').next().html(questionNo + 1 + index);
+            });
+        }
 
     });
+
+
 </script>
 </html>

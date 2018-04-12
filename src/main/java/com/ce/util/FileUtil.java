@@ -1,6 +1,7 @@
 package com.ce.util;
 
 import com.ce.vo.FileInfo;
+import com.jfinal.kit.LogKit;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -50,8 +51,7 @@ public class FileUtil {
     public static void addTxtFile(String filePath, String content) {
         Path path = Paths.get(filePath);
         try {
-            Files.createFile(path);
-            Files.write(path, content.getBytes());
+            Files.write(path, content.getBytes(), StandardOpenOption.CREATE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,13 +60,7 @@ public class FileUtil {
     public static boolean compareFileWithString(String filePath, String compareStr) {
         String fileStr = replaceUseless(readFile(filePath));
         compareStr = replaceUseless(compareStr);
-        if (fileStr.equals(compareStr)) {
-            System.out.println(filePath + "与答案比对结果相同");
-            return true;
-        } else {
-            System.out.println(filePath + "与答案比对结果不同");
-            return false;
-        }
+        return fileStr.equals(compareStr);
     }
 
     //返回一个路径下面所有文件夹的名称（忽略非学号的）
@@ -108,7 +102,7 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("获得的所有学号" + folderNameList);
+        LogKit.info("获得的所有学号" + folderNameList);
         return folderNameList;
     }
 
@@ -186,7 +180,7 @@ public class FileUtil {
     private static String replaceUseless(String str) {
         String dest = "";
         if (str != null) {
-            Pattern p = Pattern.compile("[\t\r\n]");
+            Pattern p = Pattern.compile("[\t\r]");
             Matcher m = p.matcher(str);
             dest = m.replaceAll("");
         }

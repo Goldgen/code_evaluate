@@ -21,11 +21,11 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="/assignment/detail/#(assignment.assignmentId)-test_case_edit">测试用例编辑</a></li>
-                <li><a href="/assignment/detail/#(assignment.assignmentId)-code_upload">作业上传</a></li>
+                <li class="#if(userType==0)hidden#end"><a href="/assignment/detail/#(assignment.assignmentId)-test_case_edit">测试用例编辑</a></li>
+                <li class="#if(userType==0)hidden#end"><a href="/assignment/detail/#(assignment.assignmentId)-code_upload">作业上传</a></li>
                 <li class="active"><a href="/assignment/detail/#(assignment.assignmentId)-execute_result">批改结果查看</a>
                 </li>
-                <li><a href="/assignment/detail/#(assignment.assignmentId)-similarity_analysis">相似度分析</a></li>
+                <li class="#if(userType==0)hidden#end"><a href="/assignment/detail/#(assignment.assignmentId)-similarity_analysis">相似度分析</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -38,9 +38,22 @@
                     </div>
                 </div>
             </div>
-            #if(assignment.status==-1)
+            #if(userType==0)
+
+            #if(assignment.assignmentStatus==3)
+            <div class="col-sm-9">
+                <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
+            </div>
+            #include("_execute_result_table.html")
+            #else
+            <label class="text-danger">作业未发布</label>
+            #end
+
+            #else
+
+            #if(assignment.assignmentStatus==0)
             <label class="text-danger">作业未提交</label>
-            #else if(!assignment.isEvaluateFinish)
+            #else if(assignment.assignmentStatus==1)
             <label class="text-danger">作业未批改完成</label>
             #else
             <div class="col-sm-9">
@@ -48,86 +61,18 @@
             </div>
             <div class="col-sm-3">
                 <a class="btn btn-primary btn-sm" href="/assignment/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL</a>
-            </div>
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>学号</th>
-                    <th>姓名</th>
-                    <th>总分</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                #for(executeResult : executeResultVoList)
-                <tr>
-                    <td>#(executeResult.studentId)</td>
-                    <td>#(executeResult.studentName)</td>
-                    <td>#(executeResult.score)</td>
-                    <td>
-                        <a href="javascript:void(0)" class="btn btn-info btn-xs detail-info-btn" title="批改详情"
-                           data-toggle="tooltip" data-placement="bottom" data-target="##(executeResult.studentId)"><i
-                                class="glyphicon glyphicon-list"></i></a>
-                        <div class="modal fade" id="#(executeResult.studentId)">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-
-                                        <div class="col-md-10"><h4 class="modal-title" id="modal-title">批改详情</h4></div>
-                                        <div class="col-md-2"><a class="btn btn-primary btn-sm"
-                                                                 href="/assignment/singleExcel?assignmentId=#(assignment.assignmentId)&studentId=#(executeResult.studentId)">导出EXCEL</a></div>
-                                    </div>
-                                    <div class="modal-body">
-                                        <table class="table table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>题号</th>
-                                                <th>是否编译通过</th>
-                                                <th>测试用例得分</th>
-                                                <th>静态分析得分</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            #for(x : executeResult.questionResultList)
-                                            <tr>
-                                                <td>#(x.questionNo)</td>
-                                                <td>#if(!x.isCompilePass)<a title="#(x.compileErrorInfo)"
-                                                                            data-toggle="tooltip"
-                                                                            data-placement="bottom">#end#if(x.isCompilePass)是#else否#end#if(!x.isCompilePass)</a>#end
-                                                </td>
-                                                <td>#(x.testCaseScore)</td>
-                                                <td>
-                                                    <div class="hidden">
-                                                        #for(y : x.violationList)
-                                                        <p style="margin-left: 20px;margin-right: 20px;margin-top: 5px">
-                                                            #(y.startLine)行#(y.startColumn)列到#(y.endLine)行#(y.endColumn)列出现错误：<br>
-                                                            #(y.message)</p>
-                                                        #else
-                                                        <p style="margin-left: 20px;margin-right: 20px;margin-top: 5px">
-                                                            无信息</p>
-                                                        #end
-                                                    </div>
-                                                    <a class="violation"
-                                                       title="点击查看评估详情"
-                                                       data-toggle="tooltip"
-                                                       data-placement="bottom">#(x.evaluateScore)</a></td>
-                                            </tr>
-                                            #end
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                #if(assignment.assignmentStatus==3)
+                <label class="text-danger">已发布</label>
+                #else
+                <a class="btn btn-primary btn-sm confirm-release-btn">确认发布</a>
                 #end
-                </tbody>
-            </table>
+            </div>
+            #include("_execute_result_table.html")
             #end
+
+            #end
+
+
         </div>
     </div>
 </div>
@@ -149,7 +94,6 @@
 
 
         $('.violation').click(function () {
-            var violationInfo = $(this).data('violation-info');
             layer.open({
                 type: 1,
                 area: ['600px', '240px'], //宽高
@@ -157,11 +101,22 @@
             });
         });
 
-        // $('#extract-all-btn').click(function () {
-        //     $.get("/assignment/allExcel?assignmentId=#(assignment.assignmentId)");
-        // });
+        $('.compile-error').click(function () {
+            layer.open({
+                type: 1,
+                area: ['400px', '240px'], //宽高
+                content: $(this).prev().html()
+            });
+        });
 
-
+        $('.confirm-release-btn').click(function () {
+            layer.confirm('是否确认发布吗？', {
+                btn: ['确认', '取消']
+            }, function (index, layero) {
+                window.location.href = "/assignment/confirmRelease?assignmentId=#(assignment.assignmentId)";
+            }, function (index) {
+            });
+        })
     });
 </script>
 </html>

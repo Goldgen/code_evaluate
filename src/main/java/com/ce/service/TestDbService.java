@@ -3,6 +3,7 @@ package com.ce.service;
 import com.ce.model.TestDb;
 import com.jfinal.plugin.activerecord.Db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestDbService {
@@ -11,6 +12,21 @@ public class TestDbService {
 
     public TestDb findById(int id) {
         return dao.findById(id);
+    }
+
+    public List<TestDb> findByIds(List<Integer> idList) {
+        if (idList.isEmpty())
+            return new ArrayList<>();
+        String idListStr = "(";
+        for (int id : idList) {
+            if (id == idList.get(idList.size() - 1)) {
+                idListStr += id + ")";
+            } else {
+                idListStr += id + ",";
+            }
+
+        }
+        return dao.find("select * from test_db where testId in " + idListStr);
     }
 
     public void deleteById(int id) {

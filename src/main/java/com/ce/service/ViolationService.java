@@ -23,7 +23,6 @@ public class ViolationService {
             } else {
                 idListStr += id + ",";
             }
-
         }
         return dao.find("select * from violation where violationId in " + idListStr);
     }

@@ -7,6 +7,7 @@ import com.ce.service.*;
 import com.ce.util.FileUtil;
 import com.ce.util.CompileUtil;
 import com.ce.vo.*;
+import com.jfinal.kit.LogKit;
 import com.jfinal.kit.PathKit;
 import com.jfinal.plugin.activerecord.Db;
 
@@ -30,23 +31,20 @@ public class CompileTask implements Runnable {
         for (Assignment assignment : assignments) {
             int assignmentId = assignment.getAssignmentId();
             String directoryName = assignment.getDirectoryName();
-            assignment.setIsEvaluateFinish(false);
-            assignment.setEvaluateTime(new Date());
-            assignment.update();
+            assignmentService.update(assignmentId, new Date());
             String assignmentDirectoryPath = MyConstants.uploadPath + directoryName + "/";
-            System.out.println("正在生成输入文件" + assignmentId);
 
             //预先记录相似度分析的文件名
             Map<Integer, Temp> questionFilesPathMap = new TreeMap<>();
 
             List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+            //创建测试用例文件
             for (QuestionListVo vo : questionVoList) {
                 Temp temp = new Temp();
                 temp.questionId = vo.questionId;
                 temp.questionFilesPath = "";
                 questionFilesPathMap.put(vo.questionNo, temp);
                 for (TestCase testCase : vo.testCaseList) {
-                    //创建测试用例文件
                     String inputFilePath = assignmentDirectoryPath + vo.questionNo + "_input_" + testCase.getTestCaseId() + ".txt";
                     FileUtil.addTxtFile(inputFilePath, testCase.getTestCaseContent());
                 }
@@ -74,7 +72,7 @@ public class CompileTask implements Runnable {
                         questionFilesPathMap.replace(questionNo, tempInfo);
                     }
 
-                    System.out.println("正在编译学号" + stuNum + "下" + fileName + "文件");
+                    LogKit.info("正在编译学号" + stuNum + "下" + fileName + "文件");
                     String fatherFilePath = assignmentDirectoryPath + stuNum;
                     Question question = questionService.findByAssignmentIdAndQuestionNo(assignmentId, questionNo);
                     if (question == null)
@@ -102,7 +100,7 @@ public class CompileTask implements Runnable {
                             .findFirst().orElse(new QuestionListVo()).testCaseList;
 
                     //执行，比较测试用例和输出
-                    System.out.println("正在执行学号" + stuNum + " 第" + questionId + "题文件");
+                    LogKit.info("正在执行学号" + stuNum + " 第" + questionId + "题文件");
                     int testCasePassNum = 0;
                     for (TestCase testCase : testCaseList) {
                         String inputFileName = question.getQuestionNo() + "_input_" + testCase.getTestCaseId() + ".txt";
@@ -116,7 +114,7 @@ public class CompileTask implements Runnable {
                     int testCaseScore = (testCasePassNum / testCaseList.size()) * 50;
 
                     //静态分析
-                    System.out.println("正在分析学号" + stuNum + " 第" + questionId + "题文件");
+                    LogKit.info("正在分析学号" + stuNum + " 第" + questionId + "题文件");
                     String resultFileName = prefix + "_result.json";
                     CompileUtil.evaluate(fatherFilePath, fileName, resultFileName);
                     String evaluateFilePath = fatherFilePath + "/" + questionId + "_result.json";
@@ -163,10 +161,8 @@ public class CompileTask implements Runnable {
             for (Map.Entry<Integer, Temp> entry : questionFilesPathMap.entrySet()) {
                 CompileUtil.similarityTest(assignmentDirectoryPath, entry.getKey(), entry.getValue().questionFilesPath);
                 String content = FileUtil.readFile(assignmentDirectoryPath + "similarity" + entry.getKey() + ".txt");
-                System.out.println(content);
                 Pattern pattern = Pattern.compile("\\./(.*?)/" + entry.getKey() + "\\.c consists for (.*?) % of \\./(.*?)/" + entry.getKey() + "\\.c");
                 Matcher matcher = pattern.matcher(content);
-                //System.out.println(matcher.matches());
                 while (matcher.find()) {
                     String studentId1 = matcher.group(1);
                     String studentId2 = matcher.group(3);
@@ -194,8 +190,7 @@ public class CompileTask implements Runnable {
             }
             //相似度分析end
 
-            assignment.setIsEvaluateFinish(true);
-            assignment.update();
+            assignmentService.update(assignmentId,2);
         }
     }
 

@@ -44,7 +44,9 @@
                     <a class="btn btn-primary add-question-btn" style="margin-top: 20px">
                         新增题目
                     </a>
-                    <a class="btn btn-primary " href="/testCase/addFromDb?assignmentId=#(assignment.assignmentId)&questionNo=#(questionSize + 1)" style="margin-top: 20px">
+                    <a class="btn btn-primary "
+                       href="/testCase/addFromDb?assignmentId=#(assignment.assignmentId)&questionNo=#(questionSize)"
+                       style="margin-top: 20px">
                         从题库新增题目
                     </a>
                 </div>
@@ -72,7 +74,7 @@
                         </a>
                     </div>
                     <div class="col-md-12">
-                        <p>题目内容：#(question.content)</p>
+                        <p style="word-wrap:break-word">题目内容：#(question.content)</p>
                         <table class="table table-hover" style="margin-left: -5px">
                             <thead>
                             <tr>
@@ -202,9 +204,6 @@
             $('#questionModel').modal('toggle');
         });
 
-        $('.add-question-from-db-btn').click(function () {
-            $('#testDbModal').modal('toggle');
-        });
 
         $('.add-btn').click(function () {
             $('#modal-form').attr('action', addUrl);
@@ -254,7 +253,7 @@
                 $(this).attr('title', '隐藏');
                 $(this).find('.glyphicon-chevron-down').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
             }
-            $(this).closest('div').next().toggle(200);
+            $(this).closest('div').next().toggle();
         });
 
     });

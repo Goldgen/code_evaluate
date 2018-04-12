@@ -79,6 +79,12 @@ public class AssignmentController extends Controller {
                 break;
             case "execute_result":
                 List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
+                String userId = getSessionAttr("userId", "");
+                String userType = getSessionAttr("userType", "student");
+                if (userType.equals("student")) {
+                    executeResultVoList = executeResultVoList
+                            .stream().filter(x -> x.studentId.equals(userId)).collect(Collectors.toList());
+                }
                 setAttr("executeResultVoList", executeResultVoList);
                 render("execute_result.html");
                 break;
@@ -90,6 +96,12 @@ public class AssignmentController extends Controller {
             default:
                 break;
         }
+    }
+
+    public void confirmRelease() {
+        int assignmentId = getParaToInt("assignmentId");
+        assignmentService.update(assignmentId, 3);
+        redirect("/assignment/detail/" + assignmentId + "-execute_result");
     }
 
     public void upload() {
@@ -106,13 +118,7 @@ public class AssignmentController extends Controller {
             return;
         }
 
-        //重命名
-//        String unionFileName = FileUtil.generateFileName(uploadFile.getOriginalFileName());
-//        String filePath = PathKit.getWebRootPath() + "/upload/" + unionFileName;
-//        uploadFile.getFile().renameTo(new File(filePath));
-
         StringBuilder errorMsg = new StringBuilder();
-        String assignmentIdStr = Integer.toString(assignmentId);
 
         String unionFolderName = FileUtil.generateFolderName();
 
@@ -142,15 +148,7 @@ public class AssignmentController extends Controller {
             return;
         }
         //修改作业状态
-        Assignment assignment = assignmentService.findById(assignmentId);
-        if (assignment.getStatus() == -1) {
-            assignment.setStatus(1);
-        } else {
-            assignment.setStatus(assignment.getStatus() + 1);
-        }
-        assignment.setIsEvaluateFinish(false);
-        assignment.setDirectoryName(unionFolderName);
-        assignment.update();
+        assignmentService.update(assignmentId, 1, unionFolderName);
         renderJson(json);
     }
 
@@ -166,15 +164,8 @@ public class AssignmentController extends Controller {
     public void confirmUpload() {
         int assignmentId = getParaToInt("assignmentId");
         String directoryName = getPara("directoryName");
-        Assignment assignment = assignmentService.findById(assignmentId);
-        if (assignment.getStatus() == -1) {
-            assignment.setStatus(1);
-        } else {
-            assignment.setStatus(assignment.getStatus() + 1);
-        }
-        assignment.setIsEvaluateFinish(false);
-        assignment.setDirectoryName(directoryName);
-        assignment.update();
+        //修改作业状态
+        assignmentService.update(assignmentId, 1, directoryName);
         redirect("/assignment/detail/" + assignmentId + "-code_upload");
     }
 

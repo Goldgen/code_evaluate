@@ -31,16 +31,25 @@ public class UserController extends Controller {
         } else if (!user.getPsd().equals(password)) {
             setAttr("errorType", "pwdWrong");
         } else if (user.getIsTeacher() != 1) {
-            setAttr("errorType", "notTeacher");
+            setSessionAttr("userId", userId);
+            setSessionAttr("userType", "student");
+            redirect("class/list");
         } else {
             setSessionAttr("userId", userId);
+            setSessionAttr("userType", "teacher");
             redirect("class/list");
         }
+
 
     }
 
     public void logout() {
         removeSessionAttr("userId");
         redirect("login");
+    }
+
+    @Clear
+    public void noAuthority() {
+        render("no_authority.html");
     }
 }

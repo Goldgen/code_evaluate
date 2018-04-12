@@ -90,22 +90,13 @@ public abstract class BaseAssignment<M extends BaseAssignment<M>> extends Model<
 		return getStr("answer");
 	}
 
-	public M setStatus(java.lang.Integer status) {
-		set("status", status);
+	public M setAssignmentStatus(java.lang.Integer assignmentStatus) {
+		set("assignmentStatus", assignmentStatus);
 		return (M)this;
 	}
 	
-	public java.lang.Integer getStatus() {
-		return getInt("status");
-	}
-
-	public M setIsEvaluateFinish(java.lang.Boolean isEvaluateFinish) {
-		set("isEvaluateFinish", isEvaluateFinish);
-		return (M)this;
-	}
-	
-	public java.lang.Boolean getIsEvaluateFinish() {
-		return get("isEvaluateFinish");
+	public java.lang.Integer getAssignmentStatus() {
+		return getInt("assignmentStatus");
 	}
 
 	public M setDirectoryName(java.lang.String directoryName) {

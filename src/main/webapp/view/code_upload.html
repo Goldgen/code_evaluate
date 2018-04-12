@@ -47,9 +47,9 @@
                 </div>
                 <input type="hidden" name="assignmentId" value="#(assignment.assignmentId)">
                 <span class="text-danger">#(uploadResult)</span>
-                <span class="text-danger #if(assignment.isEvaluateFinish || assignment.status==-1)hidden#end">上次上传的代码正在分析中，请稍后上传</span>
+                <span class="text-danger #if(assignment.assignmentStatus!=1)hidden#end">上次上传的代码正在分析中，请稍后上传</span>
             </form>
-            <button class="btn btn-primary #if(!assignment.isEvaluateFinish && assignment.status!=-1)hidden#end"
+            <button class="btn btn-primary #if(assignment.assignmentStatus==1)hidden#end"
                     id="submit-btn">上传
             </button>
         </div>
@@ -120,11 +120,11 @@
                 dataType: "json",
                 success: function (data) {
                     if (data.resCode === 0) {
-                        layer.msg('系统将按照测试用例批改作业，请稍后查看批改结果');
-                        setTimeout("location.reload()", 2000);
+                        layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
+                        setTimeout("location.reload()", 1000);
                     }
                     if (data.resCode === 1) {
-                        layer.msg(data.errorMsg);
+                        layer.alert(data.errorMsg);
                     }
                     if (data.resCode === 2) {
                         var directoryName = data.data;
@@ -136,7 +136,7 @@
                         }, function (index, layero) {
                             layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
                             var cmd = 'window.location.href = "/assignment/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=' + directoryName+'"';
-                            setTimeout(cmd, 2000)
+                            setTimeout(cmd, 1000)
                         }, function (index) {
                             $.get("/assignment/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
                         });

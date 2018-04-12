@@ -35,9 +35,9 @@
                     </div>
                 </div>
             </div>
-            #if(assignment.status==-1)
+            #if(assignment.assignmentStatus==0)
             <label class="text-danger">作业未提交</label>
-            #else if(!assignment.isEvaluateFinish)
+            #else if(assignment.assignmentStatus==1)
             <label class="text-danger">作业未批改完成</label>
             #else
             <div class="col-sm-9">
