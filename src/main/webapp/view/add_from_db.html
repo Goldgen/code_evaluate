@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>从题库增加</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_css.html")
+</head>
+<body>
+
+#include("_navbar.html")
+
+<div class="container main">
+    <div class="row">
+        <div class="col-md-9">
+
+            <div>
+                <div class="row read-option" style="margin-top: -20px">
+                    <div class="col-md-4">
+                        <h2>题库列表</h2>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="search-content" type="text" style="margin-top: 23px" placeholder="请输入题目内容">
+                        <a class="btn btn-primary search-btn" href="javascript:void(0)">
+                            搜索
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary" id="confirm-add-btn" style="margin-top: 20px">确认增加</button>
+                    </div>
+                </div>
+                <div id="tab-content">
+                    <div id="change-content">
+                        <div class="col-md-12">
+                            <input type="hidden" id="assignmentId" value="#(assignmentId)">
+                            <input type="hidden" id="questionNo" value="#(questionNo)">
+                            <input type="hidden" id="totalCount" value="#(totalCount)">
+                            <table class="table table-hover" style="margin-left: -5px">
+                                <thead>
+                                <tr>
+                                    <th>选择</th>
+                                    <th>生成的题号</th>
+                                    <th>ID</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                #for(testList : testLists)
+                                <tbody id="test-list#(for.index + 1)" class="#if(for.index>0)hidden#end">
+                                #for(test : testList)
+                                <tr>
+                                    <td>
+                                        <label for="checkbox#(test.testId)"></label><input type="checkbox"
+                                                                                           id="checkbox#(test.testId)"
+                                                                                           class="my-checkbox"
+                                                                                           question-no="0"
+                                                                                           value="#(test.testId)">
+                                    </td>
+                                    <td>选中生成</td>
+                                    <td>
+                                        #(test.testId)
+                                    </td>
+                                    <td style="max-width: 300px">
+                                        <p style="word-wrap:break-word">#(test.content)</p>
+                                    </td>
+                                </tr>
+                                #end
+                                </tbody>
+                                #end
+                            </table>
+
+                        </div>
+                    </div>
+                    <div id="pageTool"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+#include("_js.html")
+
+</body>
+<script>
+    var addUrl = '/testDb/addTest';
+    var editUrl = '/testDb/editTest';
+
+    $(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+
+        var assignmentId = $('#assignmentId').val();
+        var questionNo = parseInt($('#questionNo').val());
+        var totalCount = parseInt($('#totalCount').val());
+        var page = new Paging();
+
+        page.init({
+            target: $('#pageTool'),
+            pagesize: 10,
+            count: totalCount,
+            current: 1,
+            callback: function (pagecount, size, count) {
+                $('tbody').addClass('hidden');
+                $('#test-list' + pagecount).removeClass('hidden');
+                page.render({count: totalCount, current: pagecount});
+            }
+        });
+
+        $('.search-btn').click(function () {
+            var content = $('#search-content').val();
+            window.location.href = "/testCase/addFromDb?assignmentId=#(assignmentId)&questionNo=#(questionNo)&content=" + content;
+        });
+
+        $('.my-checkbox').click(function () {
+            if (this.checked !== true) {
+                $(this).attr("question-no", 0);
+                $(this).closest('td').next().html('选中生成');
+            }
+            setQuestionNo();
+        });
+
+        $('#confirm-add-btn').click(function () {
+            var questionInfoList = new Array();
+            $("input[type='checkbox']:checkbox:checked").each(function () {
+                var questionInfo = new Object();
+                questionInfo.testId = $(this).val();
+                questionInfo.questionNo = $(this).attr("question-no");
+                questionInfoList.push(questionInfo);
+            });
+            if (questionInfoList.length === 0) {
+                layer.alert("请至少选择一道题目！");
+            } else {
+                var json = JSON.stringify(questionInfoList);
+                layer.confirm('将有' + questionInfoList.length + '道题目添加，是否确认？', {
+                    btn: ['确认', '取消']
+                }, function (index, layero) {
+                    window.location.href = "/testCase/batchAdd?assignmentId=" + assignmentId + "&questionInfoList=" + json;
+                }, function (index) {
+
+                });
+            }
+        });
+
+        function setQuestionNo() {
+            $("input[type='checkbox']:checkbox:checked").each(function (index, element) {
+                $(this).attr("question-no", questionNo + 1 + index);
+                $(this).closest('td').next().html(questionNo + 1 + index);
+            });
+        }
+
+    });
+
+
+</script>
+</html>

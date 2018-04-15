@@ -12,8 +12,8 @@ public class QuestionService {
 
     private static final TestCase testCaseDao = new TestCase().dao();
 
-    public Question findById(int questionId, int assignmentId) {
-        return questionDao.findById(questionId, assignmentId);
+    public Question findById(int questionId) {
+        return questionDao.findById(questionId);
     }
 
     public void deleteById(int questionId) {
@@ -22,8 +22,7 @@ public class QuestionService {
             Db.delete("delete from test_case where questionId = ?", questionId);
             return true;
         });
-        boolean result = questionDao.deleteById(questionId);
-        int a = 1;
+        questionDao.deleteById(questionId);
 
     }
 

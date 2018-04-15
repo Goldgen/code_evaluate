@@ -1,15 +1,9 @@
 package com.ce.util;
 
-import com.alibaba.fastjson.JSON;
-import com.ce.config.MyConstants;
-import com.ce.model.Violation;
 import com.ce.vo.FileInfo;
-import com.ce.vo.OclintInfoVo;
-import com.jfinal.kit.PathKit;
+import com.jfinal.kit.LogKit;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DateFormat;
@@ -22,26 +16,42 @@ import java.util.regex.Pattern;
 public class FileUtil {
 
 
-    public static void main(String[] args) {
-        int nums[] = {1, 2, 3, 1, 4};
-        int x = 0;
-        int y = 0;
+    public static void main(String[] args) throws Exception {
+//        Pattern pattern = Pattern.compile("\\./(.*?)/1\\.c consists for (.*?) % of \\./(.*?)/1\\.c");
+//        Matcher matcher = pattern.matcher("./10142510168/1.c consists for 100 % of ./10142510166/1.c material\n" +
+//                "./10142510166/1.c consists for 100 % of ./10142510168/1.c material");
+//        //System.out.println(matcher.matches());
+//        while (matcher.find()){
+//            System.out.println(matcher.group(1));
+//            System.out.println(matcher.group(2));
+//            System.out.println(matcher.group(3));
+//        }
 
-        for (int i = 0; i < nums.length; i++) {
+//        CompileUtil.executeShellCmd("sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/shell/evaluate.sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168 1.c 1_result.json");
 
+        int[] nums = {1, 2, 3, 4, 5, 4, 2, 4, 4};
+        int len = nums.length;
+        int max = 0;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] > max)
+                max = nums[i];
         }
 
+        int[] recoder = new int[max];
+        for (int i = 0; i < max; i++) {
+            recoder[i] = 0;
+        }
+        for (int i = 0; i < len; i++) {
+            recoder[nums[i]] += 1;
+        }
 
-        System.out.println();
-        //executeShellCmd("sh src/main/webapp/shell/compile.sh src/main/webapp/upload/126/10142510169 1.c");
 
     }
 
     public static void addTxtFile(String filePath, String content) {
         Path path = Paths.get(filePath);
         try {
-            Files.createFile(path);
-            Files.write(path, content.getBytes());
+            Files.write(path, content.getBytes(), StandardOpenOption.CREATE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,13 +60,7 @@ public class FileUtil {
     public static boolean compareFileWithString(String filePath, String compareStr) {
         String fileStr = replaceUseless(readFile(filePath));
         compareStr = replaceUseless(compareStr);
-        if (fileStr.equals(compareStr)) {
-            System.out.println(filePath + "与答案比对结果相同");
-            return true;
-        } else {
-            System.out.println(filePath + "与答案比对结果不同");
-            return false;
-        }
+        return fileStr.equals(compareStr);
     }
 
     //返回一个路径下面所有文件夹的名称（忽略非学号的）
@@ -98,7 +102,7 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("获得的所有学号" + folderNameList);
+        LogKit.info("获得的所有学号" + folderNameList);
         return folderNameList;
     }
 
@@ -176,7 +180,7 @@ public class FileUtil {
     private static String replaceUseless(String str) {
         String dest = "";
         if (str != null) {
-            Pattern p = Pattern.compile("[\t\r\n]");
+            Pattern p = Pattern.compile("[\t\r]");
             Matcher m = p.matcher(str);
             dest = m.replaceAll("");
         }
@@ -195,23 +199,6 @@ public class FileUtil {
     }
 
     /**
-     * new文件名= 时间 + 全球唯一编号
-     *
-     * @param fileName old文件名
-     * @return new文件名
-     */
-    public static String generateFileName(String fileName) {
-        //时间
-        DateFormat df = new SimpleDateFormat("yy_MM_dd_HH_mm_ss");
-        String formatDate = df.format(new Date());
-        //全球唯一编号
-        String uuid = UUID.randomUUID().toString();
-        int position = fileName.lastIndexOf(".");
-        String extension = fileName.substring(position);
-        return formatDate + uuid + extension;
-    }
-
-    /**
      * new文件夹名= 时间 + 全球唯一编号
      *
      * @return new文件夹名
@@ -225,45 +212,4 @@ public class FileUtil {
         return formatDate + uuid;
     }
 
-    //执行shell命令，返回执行中是否有错误
-    private static boolean executeShellCmd(String cmd) {
-        String errStr = "";
-        try {
-            Process process = Runtime.getRuntime().exec(cmd);
-            process.waitFor();
-            BufferedReader bin = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder outputBuilder = new StringBuilder();
-            while (true) {
-                String temp = bin.readLine();
-                if (temp == null) {
-                    break;
-                } else {
-                    outputBuilder.append(temp);
-                }
-            }
-            bin.close();
-            String outputStr = outputBuilder.toString();
-            System.out.println(outputStr);
-
-            BufferedReader bufferError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder errBuilder = new StringBuilder();
-            while (true) {
-                String temp = bufferError.readLine();
-                if (temp == null) {
-                    break;
-                } else {
-                    errBuilder.append(temp);
-                }
-            }
-            bufferError.close();
-            errStr = errBuilder.toString();
-            System.out.println(errStr);
-            process.destroy();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("执行命令：" + cmd + "出错");
-            return false;
-        }
-        return errStr.isEmpty();
-    }
 }

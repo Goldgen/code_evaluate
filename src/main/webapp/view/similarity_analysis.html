@@ -21,7 +21,8 @@
                 <li><a href="/assignment/detail/#(assignment.assignmentId)-test_case_edit">测试用例编辑</a></li>
                 <li><a href="/assignment/detail/#(assignment.assignmentId)-code_upload">作业上传</a></li>
                 <li><a href="/assignment/detail/#(assignment.assignmentId)-execute_result">批改结果查看</a></li>
-                <li class="active"><a href="/assignment/detail/#(assignment.assignmentId)-similarity_analysis">相似度分析</a></li>
+                <li class="active"><a href="/assignment/detail/#(assignment.assignmentId)-similarity_analysis">相似度分析</a>
+                </li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -34,38 +35,111 @@
                     </div>
                 </div>
             </div>
-            <a class="btn btn-primary">新增</a>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>题号</th>
-                        <th>测试用例</th>
-                        <th>答案</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>34</td>
-                        <td>qqq</td>
-                        <td>fff</td>
-                        <td>
-                            <a href="javascript:void(0)" class="btn btn-success btn-xs edit-answer" title="编辑"><i
-                                    class="glyphicon glyphicon-edit"></i></a>
-                            <a href="javascript:void(0)" class="btn btn-danger btn-xs" title="删除"><i
-                                    class="glyphicon glyphicon-trash"></i></a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            #if(assignment.assignmentStatus==0)
+            <label class="text-danger">作业未提交</label>
+            #else if(assignment.assignmentStatus==1)
+            <label class="text-danger">作业未批改完成</label>
+            #else
+            <div class="col-sm-9">
+                <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
             </div>
+            <div class="row">
+                #for(similarityResultVo : similarityResultVoList)
+                <div class="col-md-10"><h3>第#(similarityResultVo.questionNo)题</h3></div>
+
+                <div class="col-md-2" style="margin-top: 20px">
+                    <a class="btn btn-info btn-xs hidden-btn" data-toggle="tooltip" data-placement="bottom" title="隐藏">
+                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                    </a>
+                </div>
+                <div>
+                    <div class="col-md-4">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">相似度50%～100%</h3>
+                            </div>
+                            <div class="panel-body">
+                                #for(x : similarityResultVo.highSimilarityVoList)
+                                <label data-toggle="tooltip" data-placement="bottom"
+                                       title="#(x.userId1)">#(x.userName1)</label>
+                                与
+                                <label data-toggle="tooltip" data-placement="bottom"
+                                       title="#(x.userId2)">#(x.userName2)</label>
+                                的相似度为#(x.similarity)%<br>
+                                #else
+                                无数据
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">相似度30%～50%</h3>
+                            </div>
+                            <div class="panel-body">
+                                #for(x : similarityResultVo.mediumSimilarityVoList)
+                                <label data-toggle="tooltip" data-placement="bottom"
+                                       title="#(x.userId1)">#(x.userName1)</label>
+                                与
+                                <label data-toggle="tooltip" data-placement="bottom"
+                                       title="#(x.userId2)">#(x.userName2)</label>
+                                的相似度为#(x.similarity)%<br>
+                                #else
+                                无数据
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">相似度10%～30%</h3>
+                            </div>
+                            <div class="panel-body">
+                                #for(x : similarityResultVo.lowSimilarityVoList)
+                                <label data-toggle="tooltip" data-placement="bottom"
+                                       title="#(x.userId1)">#(x.userName1)</label>
+                                与
+                                <label data-toggle="tooltip" data-placement="bottom"
+                                       title="#(x.userId2)">#(x.userName2)</label>
+                                的相似度为#(x.similarity)%<br>
+                                #else
+                                无数据
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                #end
+            </div>
+            #end
         </div>
     </div>
 </div>
 
 
 #include("_js.html")
+<script>
+
+    $(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+
+        $(".hidden-btn").click(function () {
+            if ($(this).attr('title') === '隐藏') {
+                $(this).attr('title', '显示');
+                $(this).find('.glyphicon-chevron-up').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            } else {
+                $(this).attr('title', '隐藏');
+                $(this).find('.glyphicon-chevron-down').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            }
+            $(this).closest('div').next().toggle();
+        });
+
+    });
+</script>
 
 </body>
 </html>

@@ -40,9 +40,14 @@
                 <div class="col-md-3">
                     <h2>测试用例列表</h2>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <a class="btn btn-primary add-question-btn" style="margin-top: 20px">
                         新增题目
+                    </a>
+                    <a class="btn btn-primary "
+                       href="/testCase/addFromDb?assignmentId=#(assignment.assignmentId)&questionNo=#(questionSize)"
+                       style="margin-top: 20px">
+                        从题库新增题目
                     </a>
                 </div>
             </div>
@@ -69,7 +74,7 @@
                         </a>
                     </div>
                     <div class="col-md-12">
-                        <p>题目内容：#(question.content)</p>
+                        <p style="word-wrap:break-word">题目内容：#(question.content)</p>
                         <table class="table table-hover" style="margin-left: -5px">
                             <thead>
                             <tr>
@@ -106,7 +111,6 @@
 
                     #end
                 </div>
-                <div id="pageTool"></div>
             </div>
         </div>
     </div>
@@ -183,6 +187,7 @@
     </div>
 </div>
 
+
 #include("_js.html")
 
 </body>
@@ -197,8 +202,8 @@
         $('.add-question-btn').click(function () {
             $('#question-content').val('');
             $('#questionModel').modal('toggle');
-            console.log('1111');
         });
+
 
         $('.add-btn').click(function () {
             $('#modal-form').attr('action', addUrl);
@@ -248,7 +253,7 @@
                 $(this).attr('title', '隐藏');
                 $(this).find('.glyphicon-chevron-down').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
             }
-            $(this).closest('div').next().toggle(200);
+            $(this).closest('div').next().toggle();
         });
 
     });

@@ -60,10 +60,6 @@
 
     </div>
 
-    <hr>
-    <footer>
-        <p>© Olin</p>
-    </footer>
 </div>
 
 #include("_js.html")
@@ -75,7 +71,7 @@
         var page = new Paging();
         var totalCount=#(totalCount);
         page.init({
-            target: $('#pageTool'), pagesize: 15, count: totalCount, current: 1, callback: function (pagecount, size, count) {
+            target: $('#pageTool'), pagesize: 10, count: totalCount, current: 1, callback: function (pagecount, size, count) {
                 $('tbody').addClass('hidden');
                 $('#class-list'+pagecount).removeClass('hidden');
                 page.render({count: totalCount, current: pagecount});

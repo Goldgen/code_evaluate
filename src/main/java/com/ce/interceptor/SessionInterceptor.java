@@ -14,14 +14,19 @@ public class SessionInterceptor implements Interceptor {
         Controller controller = inv.getController();
         //temp
         //controller.setSessionAttr("userId", "10112512345");
-        String teacherId = controller.getSessionAttr("userId", "");
-        if (teacherId.isEmpty()) {
+        String userId = controller.getSessionAttr("userId", "");
+        if (userId.isEmpty()) {
             controller.redirect("/?errorType=sessionInvalid", true);
-            return;
         } else {
-            inv.invoke();
-            User user = userService.findByUserId(teacherId);
-            controller.setAttr("user", user);
+            User user = userService.findByUserId(userId);
+            String url = controller.getRequest().getRequestURI();
+            if (url.contains("testDb") || url.contains("test_case_edit") || url.contains("code_upload") || url.contains("similarity_analysis"))
+                controller.redirect("/noAuthority");
+            else {
+                inv.invoke();
+                controller.setAttr("user", user);
+                controller.setAttr("userType", user.getIsTeacher());
+            }
         }
     }
 }
