@@ -111,7 +111,7 @@ public class CompileTask implements Runnable {
                             testCasePassNum++;
                         }
                     }
-                    int testCaseScore = (testCasePassNum / testCaseList.size()) * 50;
+                    int testCaseScore = (testCasePassNum / testCaseList.size()) * 70;
 
                     //静态分析
                     LogKit.info("正在分析学号" + stuNum + " 第" + questionId + "题文件");

@@ -22,12 +22,9 @@ public class ExcelUtil {
      */
     public static void exportXlsx(HttpServletResponse response, String fileName,
                                   List<String> headList, List<Map<String, Object>> dataList) {
-
         Workbook workbook = exportXlsx(fileName, headList, dataList);
         response.setContentType("application/binary;charset=ISO8859_1");
-
         OutputStream outputStream = null;
-
         try {
             outputStream = response.getOutputStream();
             String fn = new String(fileName.getBytes(), "ISO8859_1");
@@ -44,7 +41,6 @@ public class ExcelUtil {
                 }
             }
         }
-
     }
 
     /**

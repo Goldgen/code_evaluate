@@ -105,7 +105,6 @@ public class AssignmentController extends Controller {
     }
 
     public void upload() {
-
         //上传文件
         UploadFile uploadFile = getFile();
         int assignmentId = getParaToInt("assignmentId");
@@ -119,7 +118,6 @@ public class AssignmentController extends Controller {
         }
 
         StringBuilder errorMsg = new StringBuilder();
-
         String unionFolderName = FileUtil.generateFolderName();
 
         CompileUtil.unZipAll(MyConstants.uploadPath, uploadFile.getOriginalFileName(), unionFolderName);

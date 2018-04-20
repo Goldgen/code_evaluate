@@ -39,8 +39,6 @@ public class UserController extends Controller {
             setSessionAttr("userType", "teacher");
             redirect("class/list");
         }
-
-
     }
 
     public void logout() {

@@ -29,23 +29,71 @@ public class FileUtil {
 
 //        CompileUtil.executeShellCmd("sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/shell/evaluate.sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168 1.c 1_result.json");
 
-        int[] nums = {1, 2, 3, 4, 5, 4, 2, 4, 4};
-        int len = nums.length;
-        int max = 0;
-        for (int i = 0; i < len; i++) {
-            if (nums[i] > max)
-                max = nums[i];
-        }
+        int[][] matrix = new int[][]{
+                {5, 1, 9, 11},
+                {2, 4, 8, 10},
+                {13, 3, 6, 7},
+                {15, 14, 12, 16}
+        };
+        rotate(matrix);
+        for (int x = 0; x < matrix.length; x++) {
+            for (int y = 0; y < matrix.length; y++) {
+                System.out.print(matrix[x][y]);
+                if (y == matrix.length - 1) System.out.print("\n");
+            }
 
-        int[] recoder = new int[max];
-        for (int i = 0; i < max; i++) {
-            recoder[i] = 0;
         }
-        for (int i = 0; i < len; i++) {
-            recoder[nums[i]] += 1;
+    }
+
+    public static void rotate(int[][] matrix) {
+        int n = matrix.length;
+        int index = (n - 1) / 2;
+        if (n % 2 == 0) {
+            for (int i = 2; i <= n; i += 2) {
+                index -= (i - 2) % 2;
+                for (int j = 1; j <= i - 1; j++) {
+                    int x = index; //行
+                    int y = index; //列
+                    int pre = matrix[x][y];
+                    int max = index + i - 1;
+                    do {
+                        if (x == index && y < max) {
+                            y += 1;
+                            int now = matrix[x][y];
+                            matrix[x][y] = pre;
+                            pre = now;
+                            continue;
+                        }
+                        if (x < max && y == max) {
+                            x += 1;
+                            int now = matrix[x][y];
+                            matrix[x][y] = pre;
+                            pre = now;
+                            continue;
+                        }
+                        if (x == max && y > index) {
+                            y -= 1;
+                            int now = matrix[x][y];
+                            matrix[x][y] = pre;
+                            pre = now;
+                            continue;
+                        }
+                        if (x > index && y == index) {
+                            x -= 1;
+                            int now = matrix[x][y];
+                            matrix[x][y] = pre;
+                            pre = now;
+                            continue;
+                        }
+
+                    } while (x != index || y != index);
+                }
+            }
+        } else {
+            for (int i = 1; i <= n; i += 2) {
+
+            }
         }
-
-
     }
 
     public static void addTxtFile(String filePath, String content) {
