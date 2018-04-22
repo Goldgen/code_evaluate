@@ -106,9 +106,9 @@ public class FileUtil {
     }
 
     public static boolean compareFileWithString(String filePath, String compareStr) {
-        String fileStr = replaceUseless(readFile(filePath));
+        String fileStr = readFile(filePath);
         compareStr = replaceUseless(compareStr);
-        return fileStr.equals(compareStr);
+        return fileStr.contains(compareStr);
     }
 
     //返回一个路径下面所有文件夹的名称（忽略非学号的）

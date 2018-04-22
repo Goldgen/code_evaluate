@@ -40,7 +40,7 @@ public class CompileUtil {
         ShellReturnInfo shellReturnInfo = new ShellReturnInfo();
         String errStr = "";
         try {
-            LogKit.info("执行命令是：" + cmd);
+            System.out.println("执行命令是：" + cmd);
             Process process = Runtime.getRuntime().exec(cmd);
             process.waitFor();
             BufferedReader bufferError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -55,6 +55,9 @@ public class CompileUtil {
             }
             bufferError.close();
             errStr = errBuilder.toString();
+            if (!errStr.isEmpty()) {
+                LogKit.error("执行命令：" + cmd + "出错,错误为：" + errStr);
+            }
             process.destroy();
 
         } catch (Exception e) {

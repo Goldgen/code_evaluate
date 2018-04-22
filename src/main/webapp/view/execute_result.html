@@ -55,6 +55,8 @@
             <label class="text-danger">作业未提交</label>
             #else if(assignment.assignmentStatus==1)
             <label class="text-danger">作业未批改完成</label>
+            #else if(assignment.assignmentStatus==-1)
+            <label class="text-danger">作业批改出错，请重新上传</label>
             #else
             <div class="col-sm-9">
                 <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>

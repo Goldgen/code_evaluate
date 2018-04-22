@@ -7,6 +7,9 @@ import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class UserController extends Controller {
 
     private static UserService userService = new UserService();

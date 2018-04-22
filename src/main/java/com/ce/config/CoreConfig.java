@@ -1,5 +1,6 @@
 package com.ce.config;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.ce.controller.*;
 import com.ce.interceptor.ActionExceptionIntoLogInterceptor;
 import com.ce.interceptor.ServiceExceptionIntoLogInterceptor;
@@ -77,6 +78,22 @@ public class CoreConfig extends JFinalConfig {
     public void configPlugin(Plugins me) {
         // 配置 druid 数据库连接池插件
         DruidPlugin druidPlugin = new DruidPlugin(PropKit.get("jdbcUrl"), PropKit.get("user"), PropKit.get("password").trim());
+
+        druidPlugin.setInitialSize(PropKit.getInt("initialSize"));
+        druidPlugin.setMinIdle(PropKit.getInt("minIdle"));
+        druidPlugin.setMaxActive(PropKit.getInt("maxActive"));
+
+        druidPlugin.setMaxWait(PropKit.getLong("maxWait"));
+
+        druidPlugin.setTimeBetweenConnectErrorMillis(PropKit.getLong("timeBetweenEvictionRunsMillis"));
+        druidPlugin.setMinEvictableIdleTimeMillis(PropKit.getLong("minEvictableIdleTimeMillis"));
+        druidPlugin.setValidationQuery(PropKit.get("validationQuery"));
+        druidPlugin.setTestWhileIdle(PropKit.getBoolean("testWhileIdle"));
+        druidPlugin.setTestOnBorrow(PropKit.getBoolean("testOnBorrow"));
+        druidPlugin.setTestOnReturn(PropKit.getBoolean("testOnReturn"));
+
+        druidPlugin.setFilters(PropKit.get("filters"));
+
         me.add(druidPlugin);
 
         // 配置ActiveRecord插件
