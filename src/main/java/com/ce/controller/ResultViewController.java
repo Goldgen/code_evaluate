@@ -1,35 +1,25 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.config.JsonInfo;
-import com.ce.config.MyConstants;
 import com.ce.model.*;
-import com.ce.model.Class;
-import com.ce.model.base.BaseStudentQuestion;
 import com.ce.service.*;
-import com.ce.util.CommonUtil;
-import com.ce.util.CompileUtil;
 import com.ce.util.ExcelUtil;
-import com.ce.util.FileUtil;
-import com.ce.vo.*;
+import com.ce.vo.ExecuteResultVo;
+import com.ce.vo.QuestionResultVo;
+import com.ce.vo.SimilarityResultVo;
+import com.ce.vo.SimilarityVo;
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;
-import com.jfinal.kit.PathKit;
-import com.jfinal.upload.UploadFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class AssignmentController extends Controller {
+public class ResultViewController extends Controller {
 
     private static AssignmentService assignmentService = new AssignmentService();
 
     private static QuestionService questionService = new QuestionService();
-
-    private static ClassService classService = new ClassService();
 
     private static UserService userService = new UserService();
 
@@ -40,131 +30,36 @@ public class AssignmentController extends Controller {
     private static ViolationService violationService = new ViolationService();
     private static SimilarityService similarityService = new SimilarityService();
 
-    public void list() {
-        String classId = getPara(0);
-
-        List<Assignment> assignmentList = assignmentService.findByClassId(classId);
-        int totalCount = assignmentList.size();
-        List<List<Assignment>> result = CommonUtil.split(assignmentList, 10); //把列表拆分成10个一组
-
-        Class classInfo = classService.findSingleByClassId(classId);
-        ClassListVo vo = new ClassListVo();
-        vo.classId = classInfo.getClassId();
-        vo.courseName = classInfo.getStr("courseName");
-        vo.termName = classInfo.getStr("termName");
-
-        setAttr("totalCount", totalCount);
-        setAttr("assignmentLists", result);
-        setAttr("classInfo", vo);
-        render("assignment_list.html");
-    }
-
-    public void detail() {
+    @ActionKey("/execute")
+    public void executeResult() {
         int assignmentId = getParaToInt(0);
-        String tabType = getPara(1);
         Assignment assignment = assignmentService.findById(assignmentId);
         setAttr("assignment", assignment);
-        switch (tabType) {
-            case "test_case_edit":
-                List<QuestionListVo> questionVoList1 = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
-                setAttr("questionSize", questionVoList1.size());
-                setAttr("questionVoList", questionVoList1);
-                render("test_case_edit.html");
-                break;
-            case "code_upload":
-                //int status = getParaToInt("status");
-                List<QuestionListVo> questionVoList2 = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
-                setAttr("questionVoList", questionVoList2);
-                render("code_upload.html");
-                break;
-            case "execute_result":
-                List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
-                String userId = getSessionAttr("userId", "");
-                String userType = getSessionAttr("userType", "student");
-                if (userType.equals("student")) {
-                    executeResultVoList = executeResultVoList
-                            .stream().filter(x -> x.studentId.equals(userId)).collect(Collectors.toList());
-                }
-                setAttr("executeResultVoList", executeResultVoList);
-                render("execute_result.html");
-                break;
-            case "similarity_analysis":
-                List<SimilarityResultVo> similarityResultVoList = getSimilarityResult(assignmentId);
-                setAttr("similarityResultVoList", similarityResultVoList);
-                render("similarity_analysis.html");
-                break;
-            default:
-                break;
+        List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
+        String userId = getSessionAttr("userId", "");
+        String userType = getSessionAttr("userType", "student");
+        if (userType.equals("student")) {
+            executeResultVoList = executeResultVoList
+                    .stream().filter(x -> x.studentId.equals(userId)).collect(Collectors.toList());
         }
+        setAttr("executeResultVoList", executeResultVoList);
+        render("execute_result.html");
+    }
+
+    @ActionKey("/similarity")
+    public void similarityResult() {
+        int assignmentId = getParaToInt(0);
+        Assignment assignment = assignmentService.findById(assignmentId);
+        setAttr("assignment", assignment);
+        List<SimilarityResultVo> similarityResultVoList = getSimilarityResult(assignmentId);
+        setAttr("similarityResultVoList", similarityResultVoList);
+        render("similarity_analysis.html");
     }
 
     public void confirmRelease() {
         int assignmentId = getParaToInt("assignmentId");
         assignmentService.update(assignmentId, 3);
         redirect("/assignment/detail/" + assignmentId + "-execute_result");
-    }
-
-    public void upload() {
-        //上传文件
-        UploadFile uploadFile = getFile();
-        int assignmentId = getParaToInt("assignmentId");
-        JsonInfo json = new JsonInfo(0);
-        if (!uploadFile.getOriginalFileName().endsWith(".zip")) {
-            uploadFile.getFile().delete();
-            json.setResCode(1);
-            json.setErrorMsg("仅支持zip文件！");
-            renderJson(json);
-            return;
-        }
-
-        StringBuilder errorMsg = new StringBuilder();
-        String unionFolderName = FileUtil.generateFolderName();
-
-        CompileUtil.unZipAll(MyConstants.uploadPath, uploadFile.getOriginalFileName(), unionFolderName);
-        String assignmentDirectoryPath = MyConstants.uploadPath + unionFolderName + "/";
-        List<String> stuNumList = FileUtil.getSubDirectoryName(assignmentDirectoryPath);
-        for (String stuNum : stuNumList) {
-            List<String> questionNoList = FileUtil.getCOrCppFilesName(assignmentDirectoryPath, stuNum)
-                    .stream().map(x -> x.prefix).collect(Collectors.toList());
-            List<String> allQuestionNoList = questionService.findByAssignmentId(assignmentId)
-                    .stream().map(x -> x.getQuestionNo().toString()).collect(Collectors.toList());
-            allQuestionNoList.removeAll(questionNoList);
-            if (!allQuestionNoList.isEmpty()) {
-                errorMsg.append("学号").append(stuNum).append("未提交的题号：");
-                for (String questionId : allQuestionNoList) {
-                    errorMsg.append(questionId).append(" ");
-                }
-                errorMsg.append("<br>");
-            }
-        }
-
-        if (!errorMsg.toString().isEmpty()) {
-            json.setResCode(2);
-            json.setData(unionFolderName);
-            json.setErrorMsg(errorMsg.toString());
-            renderJson(json);
-            return;
-        }
-        //修改作业状态
-        assignmentService.update(assignmentId, 1, unionFolderName);
-        renderJson(json);
-    }
-
-    public void cancelUpload() {
-        String assignmentId = getPara("assignmentId");
-        String directoryName = getPara("directoryName");
-        FileUtil.deleteDirectory(MyConstants.uploadPath + directoryName);
-
-        JsonInfo json = new JsonInfo(0);
-        renderJson(json);
-    }
-
-    public void confirmUpload() {
-        int assignmentId = getParaToInt("assignmentId");
-        String directoryName = getPara("directoryName");
-        //修改作业状态
-        assignmentService.update(assignmentId, 1, directoryName);
-        redirect("/assignment/detail/" + assignmentId + "-code_upload");
     }
 
     public void allExcel() {
@@ -283,5 +178,4 @@ public class AssignmentController extends Controller {
         Collections.sort(similarityResultVoList);
         return similarityResultVoList;
     }
-
 }

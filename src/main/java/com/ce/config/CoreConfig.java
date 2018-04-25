@@ -1,6 +1,5 @@
 package com.ce.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.ce.controller.*;
 import com.ce.interceptor.ActionExceptionIntoLogInterceptor;
 import com.ce.interceptor.ServiceExceptionIntoLogInterceptor;
@@ -60,11 +59,13 @@ public class CoreConfig extends JFinalConfig {
      */
     public void configRoute(Routes me) {
         //me.setBaseViewPath("/view");
-        me.add("/class", ClassController.class, "/view");
-        me.add("/assignment", AssignmentController.class, "/view");
-        me.add("/testCase", TestCaseController.class, "/view");
-        me.add("/testDb", TestDbController.class, "/view");
         me.add("/", UserController.class, "/view");
+        me.add("/info", BaseInfoController.class, "/view");
+        me.add("/upload", UploadController.class, "/view");
+        me.add("/review", ResultViewController.class, "/view");
+        me.add("/question", QuestionController.class, "/view");
+        me.add("/testDb", TestDbController.class, "/view");
+
     }
 
     public void configEngine(Engine me) {

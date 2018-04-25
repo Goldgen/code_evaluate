@@ -5,6 +5,7 @@ import com.ce.model.*;
 import com.ce.service.*;
 import com.ce.util.CommonUtil;
 import com.ce.vo.QuestionInfoVo;
+import com.ce.vo.QuestionListVo;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-public class TestCaseController extends Controller {
+public class QuestionController extends Controller {
 
     private static AssignmentService assignmentService = new AssignmentService();
 
@@ -25,6 +26,16 @@ public class TestCaseController extends Controller {
 
     private static TestDbTestCaseService testDbTestCaseService = new TestDbTestCaseService();
 
+    public void index() {
+        int assignmentId = getParaToInt(0);
+        Assignment assignment = assignmentService.findById(assignmentId);
+        setAttr("assignment", assignment);
+        List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+        setAttr("questionSize", questionVoList.size());
+        setAttr("questionVoList", questionVoList);
+        render("test_case_edit.html");
+    }
+
     public void addQuestion() {
         int assignmentId = getParaToInt("assignmentId");
         int questionNo = getParaToInt("questionNo");
@@ -35,10 +46,10 @@ public class TestCaseController extends Controller {
         question.setContent(content);
         question.save();
 
-        redirect("/assignment/detail/" + assignmentId + "-test_case_edit");
+        redirect("/question/" + assignmentId );
     }
 
-    public void addFromDb() {
+    public void addQuestionFromDb() {
         int assignmentId = getParaToInt("assignmentId");
         int questionNo = getParaToInt("questionNo");
 
@@ -56,7 +67,7 @@ public class TestCaseController extends Controller {
         render("add_from_db.html");
     }
 
-    public void batchAdd() {
+    public void batchAddQuestion() {
 
         int assignmentId = getParaToInt("assignmentId");
         String testIdListJson = getPara("questionInfoList");
@@ -80,7 +91,7 @@ public class TestCaseController extends Controller {
             Db.batchSave(testCaseList, 1000);
         }
 
-        redirect("/assignment/detail/" + assignmentId + "-test_case_edit");
+        redirect("/question/" + assignmentId );
     }
 
     public void deleteQuestion() {
@@ -89,10 +100,10 @@ public class TestCaseController extends Controller {
 
         questionService.deleteById(questionId);
 
-        redirect("/assignment/detail/" + assignmentId + "-test_case_edit");
+        redirect("/question/" + assignmentId );
     }
 
-    public void add() {
+    public void addTestCase() {
         int assignmentId = getParaToInt("assignmentId");
         int questionId = getParaToInt("questionId");
         String content = getPara("content");
@@ -104,10 +115,10 @@ public class TestCaseController extends Controller {
         testCase.setAnswer(answer);
         testCase.save();
 
-        redirect("/assignment/detail/" + assignmentId + "-test_case_edit");
+        redirect("/question/" + assignmentId );
     }
 
-    public void edit() {
+    public void editTestCase() {
         int assignmentId = getParaToInt("assignmentId");
         String content = getPara("content");
         String answer = getPara("answer");
@@ -118,15 +129,15 @@ public class TestCaseController extends Controller {
         testCase.setAnswer(answer);
         testCase.update();
 
-        redirect("/assignment/detail/" + assignmentId + "-test_case_edit");
+        redirect("/question/" + assignmentId );
     }
 
-    public void delete() {
+    public void deleteTestCase() {
         int assignmentId = getParaToInt("assignmentId");
         int testCaseId = getParaToInt("testCaseId");
         testCaseService.deleteById(testCaseId);
 
-        redirect("/assignment/detail/" + assignmentId + "-test_case_edit");
+        redirect("/question/" + assignmentId );
     }
 
 

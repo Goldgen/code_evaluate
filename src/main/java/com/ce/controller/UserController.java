@@ -40,7 +40,7 @@ public class UserController extends Controller {
         } else {
             setSessionAttr("userId", userId);
             setSessionAttr("userType", "teacher");
-            redirect("class/list");
+            redirect("info/classes");
         }
     }
 

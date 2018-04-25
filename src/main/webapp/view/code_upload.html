@@ -20,18 +20,18 @@
 
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="/assignment/detail/#(assignment.assignmentId)-test_case_edit">测试用例编辑</a></li>
-                <li class="active"><a href="/assignment/detail/#(assignment.assignmentId)-code_upload">作业上传</a></li>
-                <li><a href="/assignment/detail/#(assignment.assignmentId)-execute_result">批改结果查看</a></li>
-                <li><a href="/assignment/detail/#(assignment.assignmentId)-similarity_analysis">相似度分析</a></li>
+                <li><a href="/question/#(assignment.assignmentId)">测试用例编辑</a></li>
+                <li class="active"><a href="/upload/#(assignment.assignmentId)">作业上传</a></li>
+                <li><a href="/execute/#(assignment.assignmentId)">批改结果查看</a></li>
+                <li><a href="/similarity/#(assignment.assignmentId)">相似度分析</a>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="row">
                 <div class="col-md-12">
                     <div class="bread">
-                        <a href="/class/list">班级列表</a>
-                        &gt; <a href="/assignment/list/#(assignment.classId)">作业列表</a> &gt;
+                        <a href="/info/classes">班级列表</a>
+                        &gt; <a href="/info/assignments/#(assignment.classId)">作业列表</a> &gt;
                         <span>作业详情</span>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
         $('#submit-btn').click(function () {
             var form = new FormData(document.querySelector("form"));
             $.ajax({
-                url: "/assignment/upload",
+                url: "/upload/receive",
                 type: "post",
                 data: form,
                 cache: false,
@@ -131,14 +131,14 @@
                         layer.confirm(data.errorMsg + '是否确认上传？', {
                             btn: ['确认', '取消'],
                             cancel: function () {
-                                $.get("/assignment/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
+                                $.get("/upload/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
                             }
                         }, function (index, layero) {
                             layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
-                            var cmd = 'window.location.href = "/assignment/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=' + directoryName+'"';
+                            var cmd = 'window.location.href = "/upload/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=' + directoryName+'"';
                             setTimeout(cmd, 1000)
                         }, function (index) {
-                            $.get("/assignment/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
+                            $.get("/upload/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
                         });
                     }
                 }
