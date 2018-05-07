@@ -121,7 +121,19 @@ public class ResultViewController extends Controller {
             executeResultVo.studentId = entry.getKey();
             User student = userService.findByUserId(entry.getKey());
             executeResultVo.studentName = student == null ? "无姓名" : student.getUserName();
-            executeResultVo.questionResultList = entry.getValue().stream().map(x -> {
+//            executeResultVo.questionResultList = entry.getValue().stream().map(x -> {
+//                QuestionResultVo questionResultVo = new QuestionResultVo();
+//                questionResultVo.questionNo = x.get("questionNo");
+//                questionResultVo.isCompilePass = x.getIsCompilePass();
+//                questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
+//                questionResultVo.testCaseScore = x.getTestCaseScore();
+//                questionResultVo.evaluateScore = x.getEvaluationScore();
+//                List<Integer> violationIds = JSON.parseArray(x.getViolationIds(), Integer.class);
+//                questionResultVo.violationList = violationService.findByIds(violationIds);
+//                return questionResultVo;
+//            }).collect(Collectors.toList());
+
+            executeResultVo.questionResultList = entry.getValue().stream().filter(x -> ((int) x.get("questionNo")) == 1).map(x -> {
                 QuestionResultVo questionResultVo = new QuestionResultVo();
                 questionResultVo.questionNo = x.get("questionNo");
                 questionResultVo.isCompilePass = x.getIsCompilePass();
@@ -138,7 +150,7 @@ public class ResultViewController extends Controller {
                 score += questionResultVo.evaluateScore;
                 score += questionResultVo.testCaseScore;
             }
-            score = score / questionNum;
+            //score = score / questionNum;
             executeResultVo.score = score;
             executeResultVoList.add(executeResultVo);
         }

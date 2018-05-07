@@ -62,7 +62,7 @@
                 <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
             </div>
             <div class="col-sm-3">
-                <a class="btn btn-primary btn-sm" href="/assignment/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL</a>
+                <a class="btn btn-primary btn-sm" href="/review/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL</a>
                 #if(assignment.assignmentStatus==3)
                 <label class="text-danger">已发布</label>
                 #else

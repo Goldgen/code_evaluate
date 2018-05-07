@@ -46,7 +46,7 @@ public class UserController extends Controller {
 
     public void logout() {
         removeSessionAttr("userId");
-        redirect("login");
+        redirect("/");
     }
 
     @Clear
