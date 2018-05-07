@@ -21,13 +21,14 @@ public class SessionInterceptor implements Interceptor {
             User user = userService.findByUserId(userId);
             if (user.getIsTeacher() == 0) {
                 String url = controller.getRequest().getRequestURI();
-                if (url.contains("testDb") || url.contains("test_case_edit") || url.contains("code_upload") || url.contains("similarity_analysis"))
+                if (url.contains("testDb") || url.contains("test_case_edit") || url.contains("code_upload") || url.contains("similarity_analysis")){
                     controller.redirect("/noAuthority");
-            } else {
-                inv.invoke();
-                controller.setAttr("user", user);
-                controller.setAttr("userType", user.getIsTeacher());
+                    return;
+                }
             }
+            inv.invoke();
+            controller.setAttr("user", user);
+            controller.setAttr("userType", user.getIsTeacher());
         }
     }
 }

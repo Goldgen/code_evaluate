@@ -9,8 +9,5 @@
         <module name="code_evaluate" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="code_evaluate" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

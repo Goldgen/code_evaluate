@@ -36,7 +36,7 @@ public class UserController extends Controller {
         } else if (user.getIsTeacher() != 1) {
             setSessionAttr("userId", userId);
             setSessionAttr("userType", "student");
-            redirect("class/list");
+            redirect("info/classes");
         } else {
             setSessionAttr("userId", userId);
             setSessionAttr("userType", "teacher");

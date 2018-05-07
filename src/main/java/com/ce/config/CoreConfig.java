@@ -52,6 +52,7 @@ public class CoreConfig extends JFinalConfig {
         // 加载少量必要配置，随后可用PropKit.get(...)获取值
         PropKit.use("database.properties");
         me.setDevMode(PropKit.getBoolean("devMode", false));
+        me.setError404View("/view/404.html");
     }
 
     /**

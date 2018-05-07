@@ -21,6 +21,7 @@ public class BaseInfoController extends Controller {
         String userId = getSessionAttr("userId", "");
         String userType = getSessionAttr("userType", "student");
         List<Class> classList;
+        System.out.println(userType);
         if (userType.equals("teacher")) {
             classList = classService.findAllByTeacherId(userId);
         } else {
