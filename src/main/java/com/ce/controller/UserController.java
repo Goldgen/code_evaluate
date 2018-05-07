@@ -2,7 +2,6 @@ package com.ce.controller;
 
 import com.ce.model.User;
 import com.ce.service.UserService;
-import com.ce.validator.LoginValidator;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
@@ -24,7 +23,6 @@ public class UserController extends Controller {
     }
 
     @Clear
-    @Before(LoginValidator.class)
     public void login() {
         String userId = getPara("userId");
         String password = getPara("password");
