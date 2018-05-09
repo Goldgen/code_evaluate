@@ -1,6 +1,6 @@
 package com.ce.service;
 
-import com.ce.model.TestDb;
+import com.ce.model.first.TestDb;
 import com.jfinal.plugin.activerecord.Db;
 
 import java.util.ArrayList;

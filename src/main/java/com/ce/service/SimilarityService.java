@@ -1,6 +1,6 @@
 package com.ce.service;
 
-import com.ce.model.Similarity;
+import com.ce.model.first.Similarity;
 
 import java.util.List;
 

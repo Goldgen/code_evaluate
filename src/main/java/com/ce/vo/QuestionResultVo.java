@@ -1,6 +1,6 @@
 package com.ce.vo;
 
-import com.ce.model.Violation;
+import com.ce.model.first.Violation;
 
 import java.util.List;
 

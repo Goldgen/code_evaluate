@@ -4,7 +4,6 @@ import com.ce.controller.*;
 import com.ce.interceptor.ActionExceptionIntoLogInterceptor;
 import com.ce.interceptor.ServiceExceptionIntoLogInterceptor;
 import com.ce.interceptor.SessionInterceptor;
-import com.ce.model._MappingKit;
 import com.ce.task.CompileTask;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
@@ -79,30 +78,43 @@ public class CoreConfig extends JFinalConfig {
      */
     public void configPlugin(Plugins me) {
         // 配置 druid 数据库连接池插件
-        DruidPlugin druidPlugin = new DruidPlugin(PropKit.get("jdbcUrl"), PropKit.get("user"), PropKit.get("password").trim());
-
-        druidPlugin.setInitialSize(PropKit.getInt("initialSize"));
-        druidPlugin.setMinIdle(PropKit.getInt("minIdle"));
-        druidPlugin.setMaxActive(PropKit.getInt("maxActive"));
-
-        druidPlugin.setMaxWait(PropKit.getLong("maxWait"));
-
-        druidPlugin.setTimeBetweenConnectErrorMillis(PropKit.getLong("timeBetweenEvictionRunsMillis"));
-        druidPlugin.setMinEvictableIdleTimeMillis(PropKit.getLong("minEvictableIdleTimeMillis"));
-        druidPlugin.setValidationQuery(PropKit.get("validationQuery"));
-        druidPlugin.setTestWhileIdle(PropKit.getBoolean("testWhileIdle"));
-        druidPlugin.setTestOnBorrow(PropKit.getBoolean("testOnBorrow"));
-        druidPlugin.setTestOnReturn(PropKit.getBoolean("testOnReturn"));
-
-        druidPlugin.setFilters(PropKit.get("filters"));
-
-        me.add(druidPlugin);
-
+        DruidPlugin firstDruidPlugin = new DruidPlugin(PropKit.get("first.url"), PropKit.get("first.user"), PropKit.get("first.password").trim());
+        firstDruidPlugin.setInitialSize(PropKit.getInt("initialSize"));
+        firstDruidPlugin.setMinIdle(PropKit.getInt("minIdle"));
+        firstDruidPlugin.setMaxActive(PropKit.getInt("maxActive"));
+        firstDruidPlugin.setMaxWait(PropKit.getLong("maxWait"));
+        firstDruidPlugin.setTimeBetweenConnectErrorMillis(PropKit.getLong("timeBetweenEvictionRunsMillis"));
+        firstDruidPlugin.setMinEvictableIdleTimeMillis(PropKit.getLong("minEvictableIdleTimeMillis"));
+        firstDruidPlugin.setValidationQuery(PropKit.get("validationQuery"));
+        firstDruidPlugin.setTestWhileIdle(PropKit.getBoolean("testWhileIdle"));
+        firstDruidPlugin.setTestOnBorrow(PropKit.getBoolean("testOnBorrow"));
+        firstDruidPlugin.setTestOnReturn(PropKit.getBoolean("testOnReturn"));
+        firstDruidPlugin.setFilters(PropKit.get("filters"));
+        me.add(firstDruidPlugin);
         // 配置ActiveRecord插件
-        ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
+        ActiveRecordPlugin firstArp = new ActiveRecordPlugin("first", firstDruidPlugin);
         // 所有映射在 MappingKit 中自动化搞定
-        _MappingKit.mapping(arp);
-        me.add(arp);
+        com.ce.model.first._MappingKit.mapping(firstArp);
+        me.add(firstArp);
+
+        DruidPlugin secondDruidPlugin = new DruidPlugin(PropKit.get("second.url"), PropKit.get("second.user"), PropKit.get("second.password").trim());
+        secondDruidPlugin.setInitialSize(PropKit.getInt("initialSize"));
+        secondDruidPlugin.setMinIdle(PropKit.getInt("minIdle"));
+        secondDruidPlugin.setMaxActive(PropKit.getInt("maxActive"));
+        secondDruidPlugin.setMaxWait(PropKit.getLong("maxWait"));
+        secondDruidPlugin.setTimeBetweenConnectErrorMillis(PropKit.getLong("timeBetweenEvictionRunsMillis"));
+        secondDruidPlugin.setMinEvictableIdleTimeMillis(PropKit.getLong("minEvictableIdleTimeMillis"));
+        secondDruidPlugin.setValidationQuery(PropKit.get("validationQuery"));
+        secondDruidPlugin.setTestWhileIdle(PropKit.getBoolean("testWhileIdle"));
+        secondDruidPlugin.setTestOnBorrow(PropKit.getBoolean("testOnBorrow"));
+        secondDruidPlugin.setTestOnReturn(PropKit.getBoolean("testOnReturn"));
+        secondDruidPlugin.setFilters(PropKit.get("filters"));
+        me.add(secondDruidPlugin);
+        // 配置ActiveRecord插件
+        ActiveRecordPlugin secondArp = new ActiveRecordPlugin("second", secondDruidPlugin);
+        // 所有映射在 MappingKit 中自动化搞定
+        com.ce.model.second._MappingKit.mapping(secondArp);
+        me.add(secondArp);
 
         Cron4jPlugin cp = new Cron4jPlugin();
         cp.addTask("*/1 * * * *", new CompileTask());
@@ -110,8 +122,12 @@ public class CoreConfig extends JFinalConfig {
 
     }
 
-    public static DruidPlugin createDruidPlugin() {
-        return new DruidPlugin(PropKit.get("jdbcUrl"), PropKit.get("user"), PropKit.get("password").trim());
+    public static DruidPlugin createFirstDruidPlugin() {
+        return new DruidPlugin(PropKit.get("first.url"), PropKit.get("first.user"), PropKit.get("first.password").trim());
+    }
+
+    public static DruidPlugin createSecondDruidPlugin() {
+        return new DruidPlugin(PropKit.get("second.url"), PropKit.get("second.user"), PropKit.get("second.password").trim());
     }
 
     /**

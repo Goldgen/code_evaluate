@@ -1,8 +1,6 @@
 package com.ce.service;
 
-import com.ce.model.TestDb;
-import com.ce.model.TestDbTestCase;
-import com.jfinal.plugin.activerecord.Db;
+import com.ce.model.first.TestDbTestCase;
 
 import java.util.List;
 

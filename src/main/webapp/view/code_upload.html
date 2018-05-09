@@ -20,12 +20,10 @@
 
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="/question/#(assignment.assignmentId)">测试用例编辑</a></li>
-                <li class="active"><a href="/upload/#(assignment.assignmentId)">作业上传</a></li>
-                <li><a href="/execute/#(assignment.assignmentId)">批改结果查看</a></li>
-                <li><a href="/similarity/#(assignment.assignmentId)">相似度分析</a>
+                #include("_sidebar.html")
             </ul>
         </div>
+        <input type="hidden" id="assignmentId" value="#(assignment.assignmentId)">
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="row">
                 <div class="col-md-12">
@@ -36,22 +34,32 @@
                     </div>
                 </div>
             </div>
-            <form method="post" enctype="multipart/form-data">
-                <label class="text-danger">请确保测试用例编辑完成再上传代码！</label>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                    测试用例确认
-                </button>
+            <form method="post" enctype="multipart/form-data" style="margin-top: 20px">
                 <div class="form-group">
-                    <label>请选择代码压缩文件</label>
-                    <input type="file" name="code">
+                    <label class="text-danger">您可以多次上传代码，以最后一次的批改结果为准</label>
                 </div>
-                <input type="hidden" name="assignmentId" value="#(assignment.assignmentId)">
-                <span class="text-danger">#(uploadResult)</span>
-                <span class="text-danger #if(assignment.assignmentStatus!=1)hidden#end">上次上传的代码正在分析中，请稍后上传</span>
+                <div class="form-group">
+                    <label class="text-danger">提交前请先确认问题，仅支持zip文件！</label>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="layui-btn layui-btn-normal" data-toggle="modal" data-target="#myModal">
+                        问题确认
+                    </button>
+                </div>
+
+                #if(upload==null || upload.status!=1)
+                <div class="form-group">
+                    <button type="button" class="layui-btn layui-btn-normal" id="upload-btn">
+                        <i class="layui-icon"></i>
+                        请选择
+                    </button>
+                </div>
+                #else
+                <div class="form-group">
+                    <label class="text-danger">上次上传的代码正在分析中，请稍后上传</label>
+                </div>
+                #end
             </form>
-            <button class="btn btn-primary #if(assignment.assignmentStatus==1)hidden#end"
-                    id="submit-btn">上传
-            </button>
         </div>
     </div>
 </div>
@@ -63,35 +71,13 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">测试用例确认(无格式)</h4>
+                <h4 class="modal-title" id="myModalLabel">问题确认</h4>
             </div>
             <div class="modal-body">
                 <div id="tab-content">
                     <div id="change-content">
                         #for(question : questionVoList)
-                        <div class="col-md-10">第#(question.questionNo)题</div>
-                        <div class="col-md-12">
-                            <table class="table table-hover" style="margin-left: -5px">
-                                <thead>
-                                <tr>
-                                    <th>测试用例</th>
-                                    <th>答案</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                #for(x : question.testCaseList)
-                                <tr>
-                                    <td>
-                                        #(x.testCaseContent)
-                                    </td>
-                                    <td>
-                                        #(x.answer)
-                                    </td>
-                                </tr>
-                                #end
-                                </tbody>
-                            </table>
-                        </div>
+                        <div class="col-md-12"><p>第#(question.questionNo)题:#(question.content)</p></div>
                         #end
                     </div>
                 </div>
@@ -108,17 +94,20 @@
 <script>
     $(function () {
 
-        $('#submit-btn').click(function () {
-            var form = new FormData(document.querySelector("form"));
-            $.ajax({
-                url: "/upload/receive",
-                type: "post",
-                data: form,
-                cache: false,
-                processData: false,
-                contentType: false,
-                dataType: "json",
-                success: function (data) {
+        layui.use('upload', function () {
+            var upload = layui.upload;
+
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#upload-btn',
+                url: '/upload/receive',
+                accept: 'file',
+                exts: 'zip',
+                before: function (input) {
+                    this.data = {'assignmentId': $('#assignmentId').val()};
+                },
+                done: function (data) {
+                    //上传完毕回调
                     if (data.resCode === 0) {
                         layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
                         setTimeout("location.reload()", 1000);
@@ -126,24 +115,51 @@
                     if (data.resCode === 1) {
                         layer.alert(data.errorMsg);
                     }
-                    if (data.resCode === 2) {
-                        var directoryName = data.data;
-                        layer.confirm(data.errorMsg + '是否确认上传？', {
-                            btn: ['确认', '取消'],
-                            cancel: function () {
-                                $.get("/upload/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
-                            }
-                        }, function (index, layero) {
-                            layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
-                            var cmd = 'window.location.href = "/upload/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=' + directoryName+'"';
-                            setTimeout(cmd, 1000)
-                        }, function (index) {
-                            $.get("/upload/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
-                        });
-                    }
+                },
+                error: function () {
+                    //请求异常回调
+                    layer.alert('作业上传失败，请重新上传');
                 }
             });
         });
+
+
+        // $('#submit-btn').click(function () {
+        //     var form = new FormData(document.querySelector("form"));
+        //     $.ajax({
+        //         url: "/upload/receive",
+        //         type: "post",
+        //         data: form,
+        //         cache: false,
+        //         processData: false,
+        //         contentType: false,
+        //         dataType: "json",
+        //         success: function (data) {
+        //             if (data.resCode === 0) {
+        //                 layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
+        //                 setTimeout("location.reload()", 1000);
+        //             }
+        //             if (data.resCode === 1) {
+        //                 layer.alert(data.errorMsg);
+        //             }
+        //             if (data.resCode === 2) {
+        //                 var directoryName = data.data;
+        //                 layer.confirm(data.errorMsg + '是否确认上传？', {
+        //                     btn: ['确认', '取消'],
+        //                     cancel: function () {
+        //                         $.get("/upload/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
+        //                     }
+        //                 }, function (index, layero) {
+        //                     layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
+        //                     var cmd = 'window.location.href = "/upload/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=' + directoryName+'"';
+        //                     setTimeout(cmd, 1000)
+        //                 }, function (index) {
+        //                     $.get("/upload/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
+        //                 });
+        //             }
+        //         }
+        //     });
+        // });
     });
 </script>
 </body>

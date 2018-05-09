@@ -4,7 +4,7 @@ cd $1
 filename="${2%.*}"
 extension="${2##*.}"
 if [ "${extension}"x = "c"x ]; then
-    gcc $2 -o ${filename}.out
+    gcc $2 -o ${filename}.out -lm
 fi
 if [ "${extension}"x = "cpp"x ]; then
     g++ $2 prefix -o  ${filename}.out

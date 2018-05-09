@@ -1,7 +1,7 @@
 package com.ce.service;
 
-import com.ce.model.Question;
-import com.ce.model.TestCase;
+import com.ce.model.first.Question;
+import com.ce.model.first.TestCase;
 import com.jfinal.plugin.activerecord.Db;
 
 import java.util.List;

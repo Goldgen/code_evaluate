@@ -1,6 +1,6 @@
 package com.ce.service;
 
-import com.ce.model.Violation;
+import com.ce.model.first.Violation;
 
 import java.util.ArrayList;
 import java.util.List;

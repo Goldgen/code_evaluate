@@ -1,0 +1,11 @@
+#if(userType==0)
+<!--学生-->
+<li class="#if(sidebar==2)active#end"><a href="/upload/#(assignment.assignmentId)">作业上传</a></li>
+<li class="#if(sidebar==3)active#end"><a href="/execute/#(assignment.assignmentId)">批改结果查看</a></li>
+#else
+<!--老师-->
+<li class="#if(sidebar==1)active#end"><a href="/question/#(assignment.assignmentId)">测试用例编辑</a></li>
+<li class="#if(sidebar==3)active#end"><a href="/execute/#(assignment.assignmentId)">批改结果查看</a>
+</li>
+<li class="#if(sidebar==4)active#end"><a href="/similarity/#(assignment.assignmentId)">相似度分析</a></li>
+#end

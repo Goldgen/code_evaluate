@@ -1,7 +1,7 @@
 package com.ce.controller;
 
-import com.ce.model.Assignment;
-import com.ce.model.Class;
+import com.ce.model.second.Assignment;
+import com.ce.model.second.Class;
 import com.ce.service.AssignmentService;
 import com.ce.service.ClassService;
 import com.ce.util.CommonUtil;

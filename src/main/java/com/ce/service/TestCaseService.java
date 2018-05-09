@@ -1,12 +1,10 @@
 package com.ce.service;
 
-import com.ce.model.Question;
-import com.ce.model.TestCase;
-import com.ce.model.base.BaseTestCase;
+import com.ce.model.first.Question;
+import com.ce.model.first.TestCase;
 import com.ce.vo.QuestionListVo;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TestCaseService {
 

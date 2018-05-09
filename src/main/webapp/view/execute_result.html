@@ -22,7 +22,7 @@
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
                 <li class="#if(userType==0)hidden#end"><a  href="/question/#(assignment.assignmentId)">测试用例编辑</a></li>
-                <li class="#if(userType==0)hidden#end"><a href="/upload/#(assignment.assignmentId)">作业上传</a></li>
+                <li class="#if(userType==1)hidden#end"><a href="/upload/#(assignment.assignmentId)">作业上传</a></li>
                 <li class="active"><a href="/execute/#(assignment.assignmentId)">批改结果查看</a>
                 </li>
                 <li class="#if(userType==0)hidden#end"><a href="/similarity/#(assignment.assignmentId)">相似度分析</a></li>
@@ -59,7 +59,7 @@
             <label class="text-danger">作业批改出错，请重新上传</label>
             #else
             <div class="col-sm-9">
-                <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
+
             </div>
             <div class="col-sm-3">
                 <a class="btn btn-primary btn-sm" href="/review/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL</a>

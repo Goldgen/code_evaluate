@@ -2,16 +2,16 @@ package com.ce.controller;
 
 import com.ce.config.JsonInfo;
 import com.ce.config.MyConstants;
-import com.ce.model.Assignment;
-import com.ce.service.AssignmentService;
-import com.ce.service.QuestionService;
-import com.ce.service.TestCaseService;
+import com.ce.model.first.Upload;
+import com.ce.model.second.Assignment;
+import com.ce.service.*;
 import com.ce.util.CompileUtil;
 import com.ce.util.FileUtil;
 import com.ce.vo.QuestionListVo;
 import com.jfinal.core.Controller;
 import com.jfinal.upload.UploadFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,23 +21,41 @@ public class UploadController extends Controller {
 
     private static QuestionService questionService = new QuestionService();
 
+    private static StudentQuestionService studentQuestionService = new StudentQuestionService();
+
     private static TestCaseService testCaseService = new TestCaseService();
+
+    private static UploadService uploadService = new UploadService();
 
     public void index() {
         int assignmentId = getParaToInt(0);
-        String tabType = getPara(1);
+        String userId = getSessionAttr("userId");
         Assignment assignment = assignmentService.findById(assignmentId);
         setAttr("assignment", assignment);
+        Upload upload = uploadService.findById(assignmentId, userId);
+
+        setAttr("upload", upload);
         List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
         setAttr("questionVoList", questionVoList);
         render("code_upload.html");
     }
 
-    public void receive() {
-        //上传文件
+    public void receive() throws IOException, InterruptedException {
+
         UploadFile uploadFile = getFile();
         int assignmentId = getParaToInt("assignmentId");
+        Assignment assignment = assignmentService.findById(assignmentId);
         JsonInfo json = new JsonInfo(0);
+
+        Upload upload = uploadService.findById(assignmentId, getSessionAttr("userId"));
+        if (upload != null && upload.getStatus() == 1) {
+            uploadFile.getFile().delete();
+            json.setResCode(1);
+            json.setErrorMsg("上次上传的作业仍在批改中，请暂时不要上传！");
+            renderJson(json);
+            return;
+        }
+
         if (!uploadFile.getOriginalFileName().endsWith(".zip")) {
             uploadFile.getFile().delete();
             json.setResCode(1);
@@ -46,40 +64,24 @@ public class UploadController extends Controller {
             return;
         }
 
-        StringBuilder errorMsg = new StringBuilder();
-        String unionFolderName = FileUtil.generateFolderName();
 
-        CompileUtil.unZipAll(MyConstants.uploadPath, uploadFile.getOriginalFileName(), unionFolderName);
+        String unionFolderName = assignment.getUploadDirectory();
+
+        if (unionFolderName.isEmpty()) {
+            unionFolderName = FileUtil.generateFolderName();
+        }
+
         String assignmentDirectoryPath = MyConstants.uploadPath + unionFolderName + "/";
-        List<String> stuNumList = FileUtil.getSubDirectoryName(assignmentDirectoryPath);
-        for (String stuNum : stuNumList) {
-            List<String> questionNoList = FileUtil.getCOrCppFilesName(assignmentDirectoryPath, stuNum)
-                    .stream().map(x -> x.prefix).collect(Collectors.toList());
-            List<String> allQuestionNoList = questionService.findByAssignmentId(assignmentId)
-                    .stream().map(x -> x.getQuestionNo().toString()).collect(Collectors.toList());
-            allQuestionNoList.removeAll(questionNoList);
-            if (!allQuestionNoList.isEmpty()) {
-                errorMsg.append("学号").append(stuNum).append("未提交的题号：");
-                for (String questionId : allQuestionNoList) {
-                    errorMsg.append(questionId).append(" ");
-                }
-                errorMsg.append("<br>");
-            }
-        }
+        String stuNum = getSessionAttr("userId");
+        CompileUtil.unZip(assignmentDirectoryPath, uploadFile.getOriginalFileName(), stuNum);
+        assignmentService.update(assignmentId, unionFolderName);
 
-        if (!errorMsg.toString().isEmpty()) {
-            json.setResCode(2);
-            json.setData(unionFolderName);
-            json.setErrorMsg(errorMsg.toString());
-            renderJson(json);
-            return;
-        }
-        //修改作业状态
-        assignmentService.update(assignmentId, 1, unionFolderName);
+        uploadService.insertOrUpdate(assignmentId, stuNum, assignmentDirectoryPath + stuNum + "/", 1);
+
         renderJson(json);
     }
 
-    public void cancelUpload() {
+    public void cancelUpload() throws IOException {
         String directoryName = getPara("directoryName");
         FileUtil.deleteDirectory(MyConstants.uploadPath + directoryName);
 
@@ -87,11 +89,11 @@ public class UploadController extends Controller {
         renderJson(json);
     }
 
-    public void confirmUpload() {
+    public void confirmUpload() throws IOException {
         int assignmentId = getParaToInt("assignmentId");
         String directoryName = getPara("directoryName");
         //修改作业状态
-        assignmentService.update(assignmentId, 1, directoryName);
+        uploadService.insertOrUpdate(assignmentId, getSessionAttr("userId"), directoryName, 1);
         redirect("/assignment/detail/" + assignmentId + "-code_upload");
     }
 }

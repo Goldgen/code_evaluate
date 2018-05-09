@@ -1,9 +1,7 @@
 package com.ce.service;
 
-import com.ce.model.Class;
-import com.ce.model.StudentClass;
-import com.ce.model.base.BaseStudentClass;
-import com.jfinal.plugin.activerecord.Page;
+import com.ce.model.second.Class;
+import com.ce.model.second.StudentClass;
 
 import java.util.ArrayList;
 import java.util.List;

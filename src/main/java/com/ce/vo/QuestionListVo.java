@@ -1,6 +1,6 @@
 package com.ce.vo;
 
-import com.ce.model.TestCase;
+import com.ce.model.first.TestCase;
 
 import java.util.List;
 

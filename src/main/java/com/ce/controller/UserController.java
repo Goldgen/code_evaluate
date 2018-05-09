@@ -1,13 +1,9 @@
 package com.ce.controller;
 
-import com.ce.model.User;
+import com.ce.model.second.User;
 import com.ce.service.UserService;
-import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 public class UserController extends Controller {
 

@@ -1,8 +1,7 @@
 package com.ce.service;
 
-import com.ce.model.StudentClass;
-import com.ce.model.User;
-import com.ce.model.base.BaseStudentClass;
+import com.ce.model.second.StudentClass;
+import com.ce.model.second.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +26,6 @@ public class UserService {
 
     public List<String> findStudentIdByClassId(String classId) {
         return studentClassDao.find("select * from student_class where classId = ?", classId)
-                .stream().map(BaseStudentClass::getUserId).collect(Collectors.toList());
+                .stream().map(StudentClass::getUserId).collect(Collectors.toList());
     }
 }

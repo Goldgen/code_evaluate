@@ -2,6 +2,12 @@ package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.ce.model.*;
+import com.ce.model.first.Question;
+import com.ce.model.first.Similarity;
+import com.ce.model.first.StudentQuestion;
+import com.ce.model.first.Upload;
+import com.ce.model.second.Assignment;
+import com.ce.model.second.User;
 import com.ce.service.*;
 import com.ce.util.ExcelUtil;
 import com.ce.vo.ExecuteResultVo;
@@ -19,6 +25,8 @@ public class ResultViewController extends Controller {
 
     private static AssignmentService assignmentService = new AssignmentService();
 
+    private static UploadService uploadService = new UploadService();
+
     private static QuestionService questionService = new QuestionService();
 
     private static UserService userService = new UserService();
@@ -33,17 +41,22 @@ public class ResultViewController extends Controller {
     @ActionKey("/execute")
     public void executeResult() {
         int assignmentId = getParaToInt(0);
+
         Assignment assignment = assignmentService.findById(assignmentId);
         setAttr("assignment", assignment);
-        List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
+
         String userId = getSessionAttr("userId", "");
         String userType = getSessionAttr("userType", "student");
         if (userType.equals("student")) {
-            executeResultVoList = executeResultVoList
-                    .stream().filter(x -> x.studentId.equals(userId)).collect(Collectors.toList());
+            Upload upload = uploadService.findById(assignmentId, userId);
+            setAttr("executeResult", getSingleExecuteResult(assignmentId, userId));
+            setAttr("upload", upload);
+            render("student_execute_result.html");
+        } else {
+            List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
+            setAttr("executeResultVoList", executeResultVoList);
+            render("execute_result.html");
         }
-        setAttr("executeResultVoList", executeResultVoList);
-        render("execute_result.html");
     }
 
     @ActionKey("/similarity")
@@ -121,19 +134,7 @@ public class ResultViewController extends Controller {
             executeResultVo.studentId = entry.getKey();
             User student = userService.findByUserId(entry.getKey());
             executeResultVo.studentName = student == null ? "无姓名" : student.getUserName();
-//            executeResultVo.questionResultList = entry.getValue().stream().map(x -> {
-//                QuestionResultVo questionResultVo = new QuestionResultVo();
-//                questionResultVo.questionNo = x.get("questionNo");
-//                questionResultVo.isCompilePass = x.getIsCompilePass();
-//                questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
-//                questionResultVo.testCaseScore = x.getTestCaseScore();
-//                questionResultVo.evaluateScore = x.getEvaluationScore();
-//                List<Integer> violationIds = JSON.parseArray(x.getViolationIds(), Integer.class);
-//                questionResultVo.violationList = violationService.findByIds(violationIds);
-//                return questionResultVo;
-//            }).collect(Collectors.toList());
-
-            executeResultVo.questionResultList = entry.getValue().stream().filter(x -> ((int) x.get("questionNo")) == 1).map(x -> {
+            executeResultVo.questionResultList = entry.getValue().stream().map(x -> {
                 QuestionResultVo questionResultVo = new QuestionResultVo();
                 questionResultVo.questionNo = x.get("questionNo");
                 questionResultVo.isCompilePass = x.getIsCompilePass();
@@ -145,17 +146,51 @@ public class ResultViewController extends Controller {
                 return questionResultVo;
             }).collect(Collectors.toList());
 
+
             int score = 0;
             for (QuestionResultVo questionResultVo : executeResultVo.questionResultList) {
                 score += questionResultVo.evaluateScore;
                 score += questionResultVo.testCaseScore;
             }
-            //score = score / questionNum;
+            score = score / questionNum;
             executeResultVo.score = score;
             executeResultVoList.add(executeResultVo);
         }
         Collections.sort(executeResultVoList);
         return executeResultVoList;
+    }
+
+    public ExecuteResultVo getSingleExecuteResult(int assignmentId, String studentId) {
+        int questionNum = questionService.findByAssignmentId(assignmentId).size();
+        List<StudentQuestion> studentQuestionList = studentQuestionService.findByAssignmentId(assignmentId)
+                .stream().filter(x -> x.getUserId().equals(studentId)).collect(Collectors.toList());
+
+        ExecuteResultVo executeResultVo = new ExecuteResultVo();
+        executeResultVo.studentId = studentId;
+        User student = userService.findByUserId(studentId);
+        executeResultVo.studentName = student == null ? "无姓名" : student.getUserName();
+        executeResultVo.questionResultList = studentQuestionList.stream().map(x -> {
+            QuestionResultVo questionResultVo = new QuestionResultVo();
+            questionResultVo.questionNo = x.get("questionNo");
+            questionResultVo.isCompilePass = x.getIsCompilePass();
+            questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
+            questionResultVo.testCaseScore = x.getTestCaseScore();
+            questionResultVo.evaluateScore = x.getEvaluationScore();
+            List<Integer> violationIds = JSON.parseArray(x.getViolationIds(), Integer.class);
+            questionResultVo.violationList = violationService.findByIds(violationIds);
+            return questionResultVo;
+        }).collect(Collectors.toList());
+
+
+        int score = 0;
+        for (QuestionResultVo questionResultVo : executeResultVo.questionResultList) {
+            score += questionResultVo.evaluateScore;
+            score += questionResultVo.testCaseScore;
+        }
+        score = score / questionNum;
+        executeResultVo.score = score;
+
+        return executeResultVo;
     }
 
 

@@ -1,12 +1,10 @@
 package com.ce.controller;
 
-import com.ce.model.TestDb;
-
-import com.ce.model.TestDbTestCase;
+import com.ce.model.first.TestDb;
+import com.ce.model.first.TestDbTestCase;
 import com.ce.service.TestDbService;
 import com.ce.service.TestDbTestCaseService;
 import com.ce.util.CommonUtil;
-import com.ce.vo.TestVo;
 import com.jfinal.core.Controller;
 
 import java.util.List;
