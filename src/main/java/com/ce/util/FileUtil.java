@@ -30,33 +30,32 @@ public class FileUtil {
 
 //        CompileUtil.executeShellCmd("sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/shell/evaluate.sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168 1.c 1_result.json");
 
-        System.out.println(strStr("aaaaa", "a"));
+        System.out.println(countAndSay(3));
 
     }
 
-    public static int strStr(String haystack, String needle) {
-        if (needle.isEmpty()) return 0;
-        if (haystack.isEmpty()) return -1;
-        int haystack_len = haystack.length();
-        int needle_len = needle.length();
 
-        char firstChar = needle.charAt(0);
-        List<Integer> indexList = new ArrayList<>();
-        for (int i = 0; i < haystack_len; i++) {
-            if (haystack.charAt(i) == firstChar) indexList.add(i);
+    public static String countAndSay(int n) {
+        String s = "1";
+        for (int i = 1; i < n; i++) {
+            s = generate(s);
         }
+        return s;
+    }
 
-        for (int i : indexList) {
-            int x = i;
-            int y = 0;
-            while (x < haystack_len && y < needle_len && haystack.charAt(x) == needle.charAt(y)) {
-                x++;
-                y++;
+    public static String generate(String s) {
+        int i = 0;
+        StringBuilder res = new StringBuilder();
+        while (i < s.length()) {
+            int count = 1;
+            while (i + count < s.length()) {
+                if (s.charAt(i) == s.charAt(i + count)) count++;
+                else break;
             }
-            if (y == needle_len ) return i;
+            res.append(count).append(String.valueOf(s.charAt(i)));
+            i += count;
         }
-        return -1;
-
+        return res.toString();
     }
 
     public static void addTxtFile(String filePath, String content) throws IOException {
@@ -107,45 +106,6 @@ public class FileUtil {
         });
         LogKit.info("获得的所有学号" + folderNameList);
         return folderNameList;
-    }
-
-    //返回一个路径下面所有c或c++文件的名称（只取前缀，忽略非题号的）
-    public static List<FileInfo> getCOrCppFilesName(String directoryPath, String studentId) throws IOException {
-        String finalPath = directoryPath + studentId;
-        List<FileInfo> fileInfoList = new ArrayList<>();
-        Files.walkFileTree(Paths.get(finalPath), new FileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                //访问文件夹之前调用
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                // 访问文件调用
-                String fileName = file.getFileName().toString();
-                String prefix = fileName.substring(0, fileName.indexOf('.'));
-                String suffix = fileName.substring(fileName.indexOf('.') + 1);
-                if ((suffix.equals("c") || suffix.equals("cpp")) && isNumeric(prefix)) {
-                    FileInfo fileInfo = new FileInfo(fileName, prefix, suffix);
-                    fileInfoList.add(fileInfo);
-                }
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                // 访问文件失败时调用
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                // 访问文件夹之后调用
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        return fileInfoList;
     }
 
     //返回一个路径下面所有c或c++文件的名称（只取前缀，忽略非题号的）

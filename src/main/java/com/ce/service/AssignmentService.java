@@ -28,18 +28,11 @@ public class AssignmentService {
     public void update(int assignmentId, int assignmentStatus) {
         Assignment assignment = dao.findById(assignmentId);
         if (assignment != null) {
-            //assignment.setAssignmentStatus(assignmentStatus);
+            assignment.setAssignmentStatus(assignmentStatus);
             assignment.update();
         }
     }
 
-    public void update(int assignmentId, Date evaluateTime) {
-        Assignment assignment = dao.findById(assignmentId);
-        if (assignment != null) {
-            //assignment.setEvaluateTime(evaluateTime);
-            assignment.update();
-        }
-    }
 
     public void update(int assignmentId, String directoryName){
         Assignment assignment = dao.findById(assignmentId);

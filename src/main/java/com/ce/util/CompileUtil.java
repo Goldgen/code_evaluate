@@ -57,13 +57,14 @@ public class CompileUtil {
         }
         bufferError.close();
         errStr = errBuilder.toString();
-        if (!errStr.isEmpty()) {
+        boolean isPass = errStr.isEmpty() || !errStr.contains("error");
+        if (!isPass) {
             LogKit.error("执行命令：" + cmd + "出错,错误为：" + errStr);
         }
         process.destroy();
 
         shellReturnInfo.errorInfo = errStr;
-        shellReturnInfo.isPass = errStr.isEmpty();
+        shellReturnInfo.isPass = isPass;
         return shellReturnInfo;
     }
 
@@ -90,13 +91,14 @@ public class CompileUtil {
         }
         bufferError.close();
         errStr = errBuilder.toString();
-        if (!errStr.isEmpty()) {
+        boolean isPass = errStr.isEmpty() || !errStr.contains("error");
+        if (!isPass) {
             LogKit.error("执行命令：" + Arrays.toString(cmds) + "出错,错误为：" + errStr);
         }
         process.destroy();
         ps.destroy();
         shellReturnInfo.errorInfo = errStr;
-        shellReturnInfo.isPass = errStr.isEmpty();
+        shellReturnInfo.isPass = isPass;
         return shellReturnInfo;
     }
 

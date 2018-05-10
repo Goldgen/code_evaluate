@@ -1,5 +1,6 @@
 package com.ce.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ce.config.JsonInfo;
 import com.ce.config.MyConstants;
 import com.ce.model.first.Upload;
@@ -7,11 +8,14 @@ import com.ce.model.second.Assignment;
 import com.ce.service.*;
 import com.ce.util.CompileUtil;
 import com.ce.util.FileUtil;
+import com.ce.vo.FileInfo;
 import com.ce.vo.QuestionListVo;
 import com.jfinal.core.Controller;
 import com.jfinal.upload.UploadFile;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +35,7 @@ public class UploadController extends Controller {
         int assignmentId = getParaToInt(0);
         String userId = getSessionAttr("userId");
         Assignment assignment = assignmentService.findById(assignmentId);
+        setAttr("isExpired", assignment.getEndDate().compareTo(new Date()) < 0);
         setAttr("assignment", assignment);
         Upload upload = uploadService.findById(assignmentId, userId);
 
@@ -76,24 +81,18 @@ public class UploadController extends Controller {
         CompileUtil.unZip(assignmentDirectoryPath, uploadFile.getOriginalFileName(), stuNum);
         assignmentService.update(assignmentId, unionFolderName);
 
-        uploadService.insertOrUpdate(assignmentId, stuNum, assignmentDirectoryPath + stuNum + "/", 1);
+        //获取实际上传的题号json
+        List<String> allQuestionNoList = questionService.findByAssignmentId(assignmentId)
+                .stream().map(x -> x.getQuestionNo().toString()).collect(Collectors.toList());
+
+        List<FileInfo> fileInfoList = FileUtil.getCOrCppFilesName(assignmentDirectoryPath + stuNum)
+                .stream().filter(x -> allQuestionNoList.contains(x.prefix)).collect(Collectors.toList());
+
+        String uploadFileInfoJson = JSON.toJSONString(fileInfoList);
+
+        uploadService.insertOrUpdate(assignmentId, stuNum, assignmentDirectoryPath + stuNum + "/", 1, uploadFileInfoJson);
 
         renderJson(json);
     }
 
-    public void cancelUpload() throws IOException {
-        String directoryName = getPara("directoryName");
-        FileUtil.deleteDirectory(MyConstants.uploadPath + directoryName);
-
-        JsonInfo json = new JsonInfo(0);
-        renderJson(json);
-    }
-
-    public void confirmUpload() throws IOException {
-        int assignmentId = getParaToInt("assignmentId");
-        String directoryName = getPara("directoryName");
-        //修改作业状态
-        uploadService.insertOrUpdate(assignmentId, getSessionAttr("userId"), directoryName, 1);
-        redirect("/assignment/detail/" + assignmentId + "-code_upload");
-    }
 }

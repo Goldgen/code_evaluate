@@ -1,6 +1,7 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.ce.config.MyConstants;
 import com.ce.model.*;
 import com.ce.model.first.Question;
 import com.ce.model.first.Similarity;
@@ -9,16 +10,18 @@ import com.ce.model.first.Upload;
 import com.ce.model.second.Assignment;
 import com.ce.model.second.User;
 import com.ce.service.*;
+import com.ce.util.CompileUtil;
 import com.ce.util.ExcelUtil;
-import com.ce.vo.ExecuteResultVo;
-import com.ce.vo.QuestionResultVo;
-import com.ce.vo.SimilarityResultVo;
-import com.ce.vo.SimilarityVo;
+import com.ce.util.FileUtil;
+import com.ce.vo.*;
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ResultViewController extends Controller {
@@ -68,6 +71,87 @@ public class ResultViewController extends Controller {
         setAttr("similarityResultVoList", similarityResultVoList);
         render("similarity_analysis.html");
     }
+
+    @ActionKey("/analysis")
+    public void analysis() throws IOException, InterruptedException {
+        int assignmentId = getParaToInt(0);
+
+        Assignment assignment = assignmentService.findById(assignmentId);
+
+        List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+        //预先记录相似度分析的文件名
+        Map<Integer, Temp> questionFilesPathMap = new TreeMap<>();
+        for /*、*/(QuestionListVo vo : questionVoList) {
+            Temp temp = new Temp();
+            temp.questionId = vo.questionId;
+            temp.questionFilesPath = "";
+            questionFilesPathMap.put(vo.questionNo, temp);
+        }
+
+        List<Upload> uploadList = uploadService.findByAssignmentId(assignmentId);
+        if (!uploadList.isEmpty()) {
+
+            String assignmentDirectoryPath = MyConstants.uploadPath + assignment.getUploadDirectory() + "/";
+
+            for (Upload upload : uploadList) {
+                String stuNum = upload.getUserId();
+                List<FileInfo> fileInfoList = JSON.parseArray(upload.getUploadFileInfo(), FileInfo.class);
+                for (FileInfo fileInfo : fileInfoList) {
+                    int questionNo = Integer.parseInt(fileInfo.prefix);
+                    Temp tempInfo = questionFilesPathMap.get(questionNo);
+                    if (tempInfo != null) {
+                        if (tempInfo.questionFilesPath.isEmpty()) {
+                            tempInfo.questionFilesPath += "./" + stuNum + "/" + fileInfo.fileName;
+                        } else {
+                            tempInfo.questionFilesPath += " ./" + stuNum + "/" + fileInfo.fileName;
+                        }
+                        questionFilesPathMap.replace(questionNo, tempInfo);
+                    }
+                }
+            }
+
+
+            //相似度分析
+            List<Similarity> similarityList = new ArrayList<>();
+            for (Map.Entry<Integer, Temp> entry : questionFilesPathMap.entrySet()) {
+                CompileUtil.similarityTest(assignmentDirectoryPath, entry.getKey(), entry.getValue().questionFilesPath);
+                String content = FileUtil.readFile(assignmentDirectoryPath + "similarity" + entry.getKey() + ".txt");
+                Pattern pattern = Pattern.compile("\\./(.*?)/" + entry.getKey() + "\\.c consists for (.*?) % of \\./(.*?)/" + entry.getKey() + "\\.c");
+                Matcher matcher = pattern.matcher(content);
+                while (matcher.find()) {
+                    String studentId1 = matcher.group(1);
+                    String studentId2 = matcher.group(3);
+                    Similarity test = similarityList.stream()
+                            .filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2) && x.getQuestionId() == entry.getValue().questionId)
+                            .findFirst().orElse(null);
+                    if (test != null) {
+                        test.setToSimilarity(Integer.parseInt(matcher.group(2)));
+                    } else {
+                        Similarity info = new Similarity();
+                        info.setQuestionId(entry.getValue().questionId);
+                        info.setUserId1(matcher.group(1));
+                        info.setUserId2(matcher.group(3));
+                        info.setFromSimilarity(Integer.parseInt(matcher.group(2)));
+                        similarityList.add(info);
+                    }
+                }
+            }
+            for (Similarity similarity : similarityList) {
+                if (similarityService.findById(similarity.getQuestionId(), similarity.getUserId1(), similarity.getUserId2()) != null) {
+                    similarity.update();
+                } else {
+                    similarity.save();
+                }
+            }
+            //相似度分析end
+        }
+
+        assignment.setIsSimFinished(true);
+        assignment.update();
+
+        redirect("/similarity/" + assignmentId);
+    }
+
 
     public void confirmRelease() {
         int assignmentId = getParaToInt("assignmentId");
@@ -162,6 +246,7 @@ public class ResultViewController extends Controller {
 
     public ExecuteResultVo getSingleExecuteResult(int assignmentId, String studentId) {
         int questionNum = questionService.findByAssignmentId(assignmentId).size();
+        if (questionNum == 0) return null;
         List<StudentQuestion> studentQuestionList = studentQuestionService.findByAssignmentId(assignmentId)
                 .stream().filter(x -> x.getUserId().equals(studentId)).collect(Collectors.toList());
 
@@ -225,4 +310,9 @@ public class ResultViewController extends Controller {
         Collections.sort(similarityResultVoList);
         return similarityResultVoList;
     }
+}
+
+class Temp {
+    String questionFilesPath;
+    int questionId;
 }

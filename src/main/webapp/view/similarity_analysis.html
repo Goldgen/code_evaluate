@@ -18,10 +18,7 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li><a href="/question/#(assignment.assignmentId)">测试用例编辑</a></li>
-                <!--<li><a href="/upload/#(assignment.assignmentId)">作业上传</a></li>-->
-                <li><a href="/execute/#(assignment.assignmentId)">批改结果查看</a></li>
-                <li class="active"><a href="/similarity/#(assignment.assignmentId)">相似度分析</a>
+                #include("_sidebar.html")
                 </li>
             </ul>
         </div>
@@ -35,26 +32,23 @@
                     </div>
                 </div>
             </div>
-            #if(assignment.assignmentStatus==0)
-            <label class="text-danger">作业未提交</label>
-            #else if(assignment.assignmentStatus==1)
-            <label class="text-danger">作业未批改完成</label>
-            #else if(assignment.assignmentStatus==-1)
-            <label class="text-danger">作业批改出错，请重新上传</label>
-            #else
-            <div class="col-sm-9">
-                <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
+            #if(assignment.isSimFinished)
+
+            <div class="row" style="margin-bottom: 20px">
+                <a class="btn btn-primary" href="/analysis/#(assignment.assignmentId)">重新进行相似度分析</a>
             </div>
             <div class="row">
                 #for(similarityResultVo : similarityResultVoList)
-                <div class="col-md-10"><h3>第#(similarityResultVo.questionNo)题</h3></div>
-
-                <div class="col-md-2" style="margin-top: 20px">
-                    <a class="btn btn-info btn-xs hidden-btn" data-toggle="tooltip" data-placement="bottom" data-original-title="显示">
-                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                    </a>
+                <div class="row">
+                    <div class="col-md-10"><h3>第#(similarityResultVo.questionNo)题</h3></div>
+                    <div class="col-md-2">
+                        <a class="btn btn-info btn-xs hidden-btn" data-toggle="tooltip" data-placement="bottom"
+                           data-original-title="隐藏">
+                            <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                        </a>
+                    </div>
                 </div>
-                <div style="display: none">
+                <div class="row" style="margin-top: 20px">
                     <div class="col-md-4">
                         <div class="panel panel-danger">
                             <div class="panel-heading">
@@ -115,6 +109,11 @@
                 </div>
                 #end
             </div>
+            #else
+            <div class="row"><label class="text-danger">还未进行相似度分析，请点击按钮开始分析</label></div>
+            <div class="row">
+                <a class="btn btn-primary" href="/analysis/#(assignment.assignmentId)">进行相似度分析</a>
+            </div>
             #end
         </div>
     </div>
@@ -137,7 +136,7 @@
                 $(this).attr('data-original-title', '隐藏');
                 $(this).find('.glyphicon-chevron-down').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
             }
-            $(this).closest('div').next().toggle();
+            $(this).closest('.row').next().toggle();
         });
 
     });

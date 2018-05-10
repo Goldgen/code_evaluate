@@ -49,10 +49,15 @@
 
                 #if(upload==null || upload.status!=1)
                 <div class="form-group">
-                    <button type="button" class="layui-btn layui-btn-normal" id="upload-btn">
+                    #if(isExpired)
+
+                    <label class="text-danger #if(!isExpired)hidden#end">抱歉，已过截止时间</label>
+                    #else
+                    <button type="button" class="layui-btn layui-btn-normal" id="upload-btn" >
                         <i class="layui-icon"></i>
                         请选择
                     </button>
+                    #end
                 </div>
                 #else
                 <div class="form-group">
