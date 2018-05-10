@@ -26,50 +26,27 @@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="bread">
-                        <a href="/info/classes">班级列表</a>
-                        &gt; <a href="/info/assignments/#(assignment.classId)">作业列表</a> &gt;
-                        <span>作业详情</span>
+                <div class="breadcrumb">
+                    <li><a href="/info/classes">班级列表</a></li>
+                    <li><a href="/info/assignments/#(assignment.classId)">作业列表</a></li>
+                    <li><span>作业详情</span></li>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="pull-right">
+                        <a class="btn btn-primary btn-sm"
+                           href="/review/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL</a>
+                        #if(assignment.assignmentStatus==1)
+                        <label class="text-danger">已发布</label>
+                        #else
+                        <a class="btn btn-primary btn-sm confirm-release-btn">确认发布</a>
+                        #end
                     </div>
                 </div>
             </div>
-            #if(userType==0)
 
-            #if(assignment.assignmentStatus==3)
-            <div class="col-sm-9">
-                <label class="text-danger">最新批改时间：#(assignment.evaluateTime.toString().substring(0, 19))</label>
-            </div>
             #include("_execute_result_table.html")
-            #else
-            <label class="text-danger">作业未发布</label>
-            #end
-
-            #else
-
-            #if(assignment.assignmentStatus==0)
-            <label class="text-danger">作业未提交</label>
-            #else if(assignment.assignmentStatus==1)
-            <label class="text-danger">作业未批改完成</label>
-            #else if(assignment.assignmentStatus==-1)
-            <label class="text-danger">作业批改出错，请重新上传</label>
-            #else
-            <div class="col-sm-9">
-
-            </div>
-            <div class="col-sm-3">
-                <a class="btn btn-primary btn-sm" href="/review/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL</a>
-                #if(assignment.assignmentStatus==3)
-                <label class="text-danger">已发布</label>
-                #else
-                <a class="btn btn-primary btn-sm confirm-release-btn">确认发布</a>
-                #end
-            </div>
-            #include("_execute_result_table.html")
-            #end
-
-            #end
-
 
         </div>
     </div>

@@ -24,12 +24,10 @@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="bread">
-                        <a href="/info/classes">班级列表</a>
-                        &gt; <a href="/info/assignments/#(assignment.classId)">作业列表</a> &gt;
-                        <span>作业详情</span>
-                    </div>
+                <div class="breadcrumb">
+                    <li><a href="/info/classes">班级列表</a></li>
+                    <li><a href="/info/assignments/#(assignment.classId)">作业列表</a></li>
+                    <li><span>作业详情</span></li>
                 </div>
             </div>
             <div class="row">
@@ -45,64 +43,64 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12" style="margin-top: 20px">
+            <div class="row" style="margin-top: 20px">
                 #for(question : questionVoList)
                 <div class="row">
-                <div class="col-md-10"><h3>第#(question.questionNo)题</h3></div>
-                <div class="col-md-2" >
-                    <a class="btn btn-info btn-xs add-btn" data-questionid="#(question.questionId)" title="添加用例">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </a>
-                    <a class="invisible">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </a>
-                    <a class="btn btn-info btn-xs hidden-btn" data-toggle="tooltip" data-placement="bottom"
-                       data-original-title="隐藏">
-                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-                    </a>
-                    <a class="invisible">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </a>
-                    <a class="btn btn-info btn-xs delete-btn #if(question.questionNo!=questionSize)hidden#end"
-                       title="删除" data-questionid="#(question.questionId)">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    </a>
-                </div>
-                <div class="col-md-12">
-                    <p style="word-wrap:break-word">题目内容：#(question.content)</p>
-                    <table class="table table-hover" style="margin-left: -5px">
-                        <thead>
-                        <tr>
-                            <th>测试用例</th>
-                            <th>答案</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        #for(x : question.testCaseList)
-                        <tr>
-                            <td>
-                                <pre>#(x.testCaseContent)</pre>
-                            </td>
-                            <td>
-                                <pre>#(x.answer)</pre>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)" class="btn btn-success btn-xs" title="修改"
-                                   data-toggle="tooltip" data-placement="bottom"
-                                   data-id="#(x.testCaseId)" data-content="#(x.testCaseContent)"
-                                   data-answer="#(x.answer)">
-                                    <i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="javascript:void(0)" class="btn btn-danger btn-xs" title="删除"
-                                   data-toggle="tooltip" data-placement="bottom"
-                                   data-id="#(x.testCaseId)">
-                                    <i class="glyphicon glyphicon-trash"></i></a>
-                            </td>
-                        </tr>
-                        #end
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="col-md-10"><h3>第#(question.questionNo)题</h3></div>
+                    <div class="col-md-2">
+                        <a class="btn btn-info btn-xs add-btn" data-questionid="#(question.questionId)" title="添加用例">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
+                        <a class="invisible">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </a>
+                        <a class="btn btn-info btn-xs hidden-btn" data-toggle="tooltip" data-placement="bottom"
+                           data-original-title="隐藏">
+                            <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                        </a>
+                        <a class="invisible">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </a>
+                        <a class="btn btn-info btn-xs delete-btn #if(question.questionNo!=questionSize)hidden#end"
+                           title="删除" data-questionid="#(question.questionId)">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div class="col-md-12">
+                        <p style="word-wrap:break-word">题目内容：#(question.content)</p>
+                        <table class="table table-hover" style="margin-left: -5px">
+                            <thead>
+                            <tr>
+                                <th>测试用例</th>
+                                <th>答案</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            #for(x : question.testCaseList)
+                            <tr>
+                                <td>
+                                    <pre>#(x.testCaseContent)</pre>
+                                </td>
+                                <td>
+                                    <pre>#(x.answer)</pre>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" class="btn btn-success btn-xs" title="修改"
+                                       data-toggle="tooltip" data-placement="bottom"
+                                       data-id="#(x.testCaseId)" data-content="#(x.testCaseContent)"
+                                       data-answer="#(x.answer)">
+                                        <i class="glyphicon glyphicon-edit"></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" title="删除"
+                                       data-toggle="tooltip" data-placement="bottom"
+                                       data-id="#(x.testCaseId)">
+                                        <i class="glyphicon glyphicon-trash"></i></a>
+                                </td>
+                            </tr>
+                            #end
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 #end
             </div>

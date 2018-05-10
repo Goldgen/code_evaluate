@@ -19,17 +19,14 @@
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
                 #include("_sidebar.html")
-                </li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="bread">
-                        <a href="/info/classes">班级列表</a>
-                        &gt; <a href="/info/assignments/#(assignment.classId)">作业列表</a> &gt;
-                        <span>作业详情</span>
-                    </div>
+                <div class="breadcrumb">
+                    <li><a href="/info/classes">班级列表</a></li>
+                    <li><a href="/info/assignments/#(assignment.classId)">作业列表</a></li>
+                    <li><span>作业详情</span></li>
                 </div>
             </div>
             #if(assignment.isSimFinished)

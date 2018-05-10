@@ -27,10 +27,10 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="bread">
-                        <a href="/info/classes">班级列表</a>
-                        &gt; <a href="/info/assignments/#(assignment.classId)">作业列表</a> &gt;
-                        <span>作业详情</span>
+                    <div class="breadcrumb">
+                        <li><a href="/info/classes">班级列表</a></li>
+                        <li><a href="/info/assignments/#(assignment.classId)">作业列表</a></li>
+                        <li><span>作业详情</span></li>
                     </div>
                 </div>
             </div>
@@ -42,9 +42,6 @@
             #else if(upload.status==-1)
             <label class="text-danger">作业批改出错，请重新上传</label>
             #else
-            <div class="col-sm-9">
-
-            </div>
             <div class="col-sm-9">
                 <label class="text-danger">最新批改时间：#(upload.evaluateDate.toString().substring(0, 19))</label>
             </div>
