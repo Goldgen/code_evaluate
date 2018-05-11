@@ -30,32 +30,24 @@ public class FileUtil {
 
 //        CompileUtil.executeShellCmd("sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/shell/evaluate.sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168 1.c 1_result.json");
 
-        System.out.println(countAndSay(3));
+        String[] strs = new String[]{"dog","racecar","car"};
+        System.out.println(longestCommonPrefix(strs));
 
     }
 
 
-    public static String countAndSay(int n) {
-        String s = "1";
-        for (int i = 1; i < n; i++) {
-            s = generate(s);
-        }
-        return s;
-    }
-
-    public static String generate(String s) {
-        int i = 0;
-        StringBuilder res = new StringBuilder();
-        while (i < s.length()) {
-            int count = 1;
-            while (i + count < s.length()) {
-                if (s.charAt(i) == s.charAt(i + count)) count++;
-                else break;
+    public static String longestCommonPrefix(String[] strs) {
+        if (strs.length == 0) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; ; i++) {
+            if (i >= strs[0].length()) return sb.toString();
+            char c = strs[0].charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                if (i >= strs[j].length()) return sb.toString();
+                if (c != strs[j].charAt(i)) return sb.toString();
             }
-            res.append(count).append(String.valueOf(s.charAt(i)));
-            i += count;
+            sb.append(c);
         }
-        return res.toString();
     }
 
     public static void addTxtFile(String filePath, String content) throws IOException {

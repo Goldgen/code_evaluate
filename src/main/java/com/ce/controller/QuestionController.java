@@ -1,11 +1,11 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.model.*;
 import com.ce.model.first.Question;
 import com.ce.model.first.TestCase;
 import com.ce.model.first.TestDb;
 import com.ce.model.first.TestDbTestCase;
+import com.ce.model.first.base.BaseQuestion;
 import com.ce.model.second.Assignment;
 import com.ce.service.*;
 import com.ce.util.CommonUtil;
@@ -15,6 +15,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class QuestionController extends Controller {
         question.setContent(content);
         question.save();
 
-        redirect("/question/" + assignmentId );
+        redirect("/question/" + assignmentId);
     }
 
     public void addQuestionFromDb() {
@@ -96,7 +97,7 @@ public class QuestionController extends Controller {
             Db.batchSave(testCaseList, 1000);
         }
 
-        redirect("/question/" + assignmentId );
+        redirect("/question/" + assignmentId);
     }
 
     public void deleteQuestion() {
@@ -105,7 +106,16 @@ public class QuestionController extends Controller {
 
         questionService.deleteById(questionId);
 
-        redirect("/question/" + assignmentId );
+        List<Question> questionList = questionService.findByAssignmentId(assignmentId);
+
+        questionList.sort(Comparator.comparing(Question::getQuestionNo));
+        for (int i = 1; i <= questionList.size(); i++) {
+            Question question = questionList.get(i - 1);
+            question.setQuestionNo(i);
+            question.update();
+        }
+
+        redirect("/question/" + assignmentId);
     }
 
     public void addTestCase() {
@@ -120,7 +130,7 @@ public class QuestionController extends Controller {
         testCase.setAnswer(answer);
         testCase.save();
 
-        redirect("/question/" + assignmentId );
+        redirect("/question/" + assignmentId);
     }
 
     public void editTestCase() {
@@ -134,7 +144,7 @@ public class QuestionController extends Controller {
         testCase.setAnswer(answer);
         testCase.update();
 
-        redirect("/question/" + assignmentId );
+        redirect("/question/" + assignmentId);
     }
 
     public void deleteTestCase() {
@@ -142,7 +152,7 @@ public class QuestionController extends Controller {
         int testCaseId = getParaToInt("testCaseId");
         testCaseService.deleteById(testCaseId);
 
-        redirect("/question/" + assignmentId );
+        redirect("/question/" + assignmentId);
     }
 
 
