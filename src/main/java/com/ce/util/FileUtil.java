@@ -16,40 +16,6 @@ import java.util.regex.Pattern;
 
 public class FileUtil {
 
-
-    public static void main(String[] args) throws Exception {
-//        Pattern pattern = Pattern.compile("\\./(.*?)/1\\.c consists for (.*?) % of \\./(.*?)/1\\.c");
-//        Matcher matcher = pattern.matcher("./10142510168/1.c consists for 100 % of ./10142510166/1.c material\n" +
-//                "./10142510166/1.c consists for 100 % of ./10142510168/1.c material");
-//        //System.out.println(matcher.matches());
-//        while (matcher.find()){
-//            System.out.println(matcher.group(1));
-//            System.out.println(matcher.group(2));
-//            System.out.println(matcher.group(3));
-//        }
-
-//        CompileUtil.executeShellCmd("sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/shell/evaluate.sh /home/olin/Documents/IdeaProjects/code_evaluate/src/main/webapp/upload/18_04_10_16_12_28224921aa-acbe-4dbb-8a69-ef8f11281ba4/10142510168 1.c 1_result.json");
-
-        String[] strs = new String[]{"dog","racecar","car"};
-        System.out.println(longestCommonPrefix(strs));
-
-    }
-
-
-    public static String longestCommonPrefix(String[] strs) {
-        if (strs.length == 0) return "";
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; ; i++) {
-            if (i >= strs[0].length()) return sb.toString();
-            char c = strs[0].charAt(i);
-            for (int j = 1; j < strs.length; j++) {
-                if (i >= strs[j].length()) return sb.toString();
-                if (c != strs[j].charAt(i)) return sb.toString();
-            }
-            sb.append(c);
-        }
-    }
-
     public static void addTxtFile(String filePath, String content) throws IOException {
         Path path = Paths.get(filePath);
         Files.write(path, content.getBytes(), StandardOpenOption.CREATE);
@@ -58,7 +24,7 @@ public class FileUtil {
     public static boolean compareFileWithString(String filePath, String compareStr) throws IOException {
         String fileStr = readFile(filePath);
         compareStr = replaceUseless(compareStr);
-        return fileStr.contains(compareStr);
+        return fileStr.equals(compareStr);
     }
 
     //返回一个路径下面所有文件夹的名称（忽略非学号的）
