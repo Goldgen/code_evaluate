@@ -85,7 +85,9 @@
                 <div id="tab-content">
                     <div id="change-content">
                         #for(question : questionVoList)
-                        <div class="col-md-12"><p>第#(question.questionNo)题:#(question.content)</p></div>
+                        <div class="col-md-12"><p>第#(question.questionNo)题:
+                            <pre>#(question.content)</pre>
+                            </p></div>
                         #end
                     </div>
                 </div>

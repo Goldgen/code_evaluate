@@ -7,6 +7,6 @@ if [ "${extension}"x = "c"x ]; then
     gcc $2 -o ${filename}.out -lm
 fi
 if [ "${extension}"x = "cpp"x ]; then
-    g++ $2 prefix -o  ${filename}.out
+    g++ $2 -o  ${filename}.out
 fi
 

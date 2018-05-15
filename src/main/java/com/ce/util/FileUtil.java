@@ -22,9 +22,17 @@ public class FileUtil {
     }
 
     public static boolean compareFileWithString(String filePath, String compareStr) throws IOException {
-        String fileStr = readFile(filePath);
+        List<String> fileLineList = readFileLines(filePath);
         compareStr = replaceUseless(compareStr);
-        return fileStr.equals(compareStr);
+        List<String> compareLineList = Arrays.asList(compareStr.split("\n"));
+        if (fileLineList.size() != compareLineList.size()) return false;
+        else {
+            for (int i = 0; i < fileLineList.size(); i++) {
+                if (!fileLineList.get(i).contains(compareLineList.get(i)))
+                    return false;
+            }
+        }
+        return true;
     }
 
     //返回一个路径下面所有文件夹的名称（忽略非学号的）
@@ -138,11 +146,14 @@ public class FileUtil {
         return dest;
     }
 
-    public static String readFile(String filePath) throws IOException {
-        String content = "";
+    public static List<String> readFileLines(String filePath) throws IOException {
         Path path = Paths.get(filePath);
-        content = new String(Files.readAllBytes(path));
-        return content;
+        return Files.readAllLines(path);
+    }
+
+    public static String readFile(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        return new String(Files.readAllBytes(path));
     }
 
     /**

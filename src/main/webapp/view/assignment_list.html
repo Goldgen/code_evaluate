@@ -30,7 +30,7 @@
                         <div class="panel-heading">教学班信息</div>
                         <div class="panel-body">
                             <table>
-                                <tbody>
+                                <tbody id="classInfo">
                                 <tr>
                                     <th>教学班号</th>
                                     <td>#(classInfo.classId)</td>
@@ -47,7 +47,7 @@
                                 </tbody>
                             </table>
                             <input type="hidden" id="curClassId" value="#(classInfo.classId)">
-                            <input type="hidden" id="total-count" value="#(totalCount)">
+                            <input type="hidden" id="totalCount" value="#(totalCount)">
                         </div>
                     </div>
                 </div>
@@ -125,6 +125,7 @@
             callback: function (pagecount, size, count) {
                 $('tbody').addClass('hidden');
                 $('#assignment-list' + pagecount).removeClass('hidden');
+                $('#classInfo').removeClass('hidden');
                 page.render({count: totalCount, current: pagecount});
             }
         });

@@ -2,7 +2,6 @@ package com.ce.task;
 
 import com.alibaba.fastjson.JSON;
 import com.ce.config.MyConstants;
-import com.ce.model.*;
 import com.ce.model.first.*;
 import com.ce.model.second.Assignment;
 import com.ce.service.*;
@@ -140,6 +139,7 @@ public class CompileTask implements Runnable {
                 uploadService.insertOrUpdate(assignmentId, stuNum, 2);
 
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 LogKit.error(e.getMessage());
                 uploadService.insertOrUpdate(assignmentId, stuNum, -1);
             }
