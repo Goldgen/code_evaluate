@@ -1,6 +1,7 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.ce.config.MyConstants;
 import com.ce.model.first.Question;
 import com.ce.model.first.TestCase;
 import com.ce.model.first.TestDb;
@@ -9,11 +10,13 @@ import com.ce.model.first.base.BaseQuestion;
 import com.ce.model.second.Assignment;
 import com.ce.service.*;
 import com.ce.util.CommonUtil;
+import com.ce.util.FileUtil;
 import com.ce.vo.QuestionInfoVo;
 import com.ce.vo.QuestionListVo;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -151,6 +154,36 @@ public class QuestionController extends Controller {
         int assignmentId = getParaToInt("assignmentId");
         int testCaseId = getParaToInt("testCaseId");
         testCaseService.deleteById(testCaseId);
+
+        redirect("/question/" + assignmentId);
+    }
+
+    public void finish() throws IOException {
+        int assignmentId = getParaToInt("assignmentId");
+
+        Assignment assignment = assignmentService.findById(assignmentId);
+
+        String unionFolderName = assignment.getUploadDirectory();
+        String assignmentDirectoryPath;
+
+        if (unionFolderName.isEmpty()) {
+            unionFolderName = FileUtil.generateFolderName();
+            assignmentDirectoryPath = MyConstants.uploadPath + unionFolderName + "/";
+            FileUtil.createDirectory(MyConstants.uploadPath + unionFolderName + "/");
+            assignmentService.update(assignmentId, unionFolderName);
+        } else {
+            assignmentDirectoryPath = MyConstants.uploadPath + unionFolderName + "/";
+        }
+
+
+        //创建测试用例文件
+        List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+        for (QuestionListVo vo : questionVoList) {
+            for (TestCase testCase : vo.testCaseList) {
+                String inputFilePath = assignmentDirectoryPath + vo.questionNo + "_input_" + testCase.getTestCaseId() + ".txt";
+                FileUtil.addTxtFile(inputFilePath, testCase.getTestCaseContent());
+            }
+        }
 
         redirect("/question/" + assignmentId);
     }

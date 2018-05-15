@@ -16,6 +16,18 @@ import java.util.regex.Pattern;
 
 public class FileUtil {
 
+    public static void createFile(String filePath, String content) throws IOException {
+        Path path = Paths.get(filePath);
+        Files.write(path, content.getBytes());
+    }
+
+    public static void createDirectory(String directoryPath) throws IOException {
+        Path path = Paths.get(directoryPath);
+        if (!Files.exists(path))
+            Files.createDirectory(path);
+    }
+
+
     public static void addTxtFile(String filePath, String content) throws IOException {
         Path path = Paths.get(filePath);
         Files.write(path, content.getBytes(), StandardOpenOption.CREATE);
@@ -40,7 +52,7 @@ public class FileUtil {
         List<String> folderNameList = new ArrayList<>();
         Files.walkFileTree(Paths.get(directoryPath), new FileVisitor<Path>() {
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 //访问文件夹之前调用
                 if (!dir.endsWith(directoryPath)) {
                     String folderName = dir.getFileName().toString();
@@ -52,20 +64,20 @@ public class FileUtil {
             }
 
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                 // 访问文件调用
                 //System.out.println(file);
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+            public FileVisitResult visitFileFailed(Path file, IOException exc) {
                 // 访问文件失败时调用
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
                 // 访问文件夹之后调用
                 return FileVisitResult.CONTINUE;
             }
@@ -79,13 +91,13 @@ public class FileUtil {
         List<FileInfo> fileInfoList = new ArrayList<>();
         Files.walkFileTree(Paths.get(directoryPath), new FileVisitor<Path>() {
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 //访问文件夹之前调用
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                 // 访问文件调用
                 String fileName = file.getFileName().toString();
                 String prefix = fileName.substring(0, fileName.indexOf('.'));
@@ -98,13 +110,13 @@ public class FileUtil {
             }
 
             @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+            public FileVisitResult visitFileFailed(Path file, IOException exc) {
                 // 访问文件失败时调用
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
                 // 访问文件夹之后调用
                 return FileVisitResult.CONTINUE;
             }

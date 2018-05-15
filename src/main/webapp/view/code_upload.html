@@ -35,65 +35,29 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <form method="post" enctype="multipart/form-data" style="margin-top: 20px">
-                    <div class="form-group">
-                        <label class="text-danger">您可以多次上传代码，以最后一次的批改结果为准</label>
-                    </div>
-                    <div class="form-group">
-                        <label class="text-danger">提交前请先确认问题，仅支持zip文件！</label>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="layui-btn layui-btn-normal" data-toggle="modal"
-                                data-target="#myModal">
-                            问题确认
-                        </button>
-                    </div>
 
-                    #if(upload==null || upload.status!=1)
-                    <div class="form-group">
-                        #if(isExpired)
-
-                        <label class="text-danger #if(!isExpired)hidden#end">抱歉，已过截止时间</label>
-                        #else
-                        <button type="button" class="layui-btn layui-btn-normal" id="upload-btn">
-                            <i class="layui-icon"></i>
-                            请选择
-                        </button>
-                        #end
-                    </div>
-                    #else
-                    <div class="form-group">
-                        <label class="text-danger">上次上传的代码正在分析中，请稍后上传</label>
-                    </div>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>题号</th>
+                        <th>题目内容</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    #for(question : questionVoList)
+                    <tbody>
+                    <tr>
+                        <td>#(question.questionNo)</td>
+                        <td><pre>#(question.content)</pre></td>
+                        <td>
+                            <a href="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)" title="查看作业" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="bottom">
+                                <i class="glyphicon glyphicon-list"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
                     #end
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">问题确认</h4>
-            </div>
-            <div class="modal-body">
-                <div id="tab-content">
-                    <div id="change-content">
-                        #for(question : questionVoList)
-                        <div class="col-md-12"><p>第#(question.questionNo)题:
-                            <pre>#(question.content)</pre>
-                            </p></div>
-                        #end
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </table>
             </div>
         </div>
     </div>
@@ -132,44 +96,6 @@
                 }
             });
         });
-
-
-        // $('#submit-btn').click(function () {
-        //     var form = new FormData(document.querySelector("form"));
-        //     $.ajax({
-        //         url: "/upload/receive",
-        //         type: "post",
-        //         data: form,
-        //         cache: false,
-        //         processData: false,
-        //         contentType: false,
-        //         dataType: "json",
-        //         success: function (data) {
-        //             if (data.resCode === 0) {
-        //                 layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
-        //                 setTimeout("location.reload()", 1000);
-        //             }
-        //             if (data.resCode === 1) {
-        //                 layer.alert(data.errorMsg);
-        //             }
-        //             if (data.resCode === 2) {
-        //                 var directoryName = data.data;
-        //                 layer.confirm(data.errorMsg + '是否确认上传？', {
-        //                     btn: ['确认', '取消'],
-        //                     cancel: function () {
-        //                         $.get("/upload/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
-        //                     }
-        //                 }, function (index, layero) {
-        //                     layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
-        //                     var cmd = 'window.location.href = "/upload/confirmUpload?assignmentId=#(assignment.assignmentId)&directoryName=' + directoryName+'"';
-        //                     setTimeout(cmd, 1000)
-        //                 }, function (index) {
-        //                     $.get("/upload/cancelUpload?assignmentId=#(assignment.assignmentId)&directoryName=" + directoryName);
-        //                 });
-        //             }
-        //         }
-        //     });
-        // });
     });
 </script>
 </body>

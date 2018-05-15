@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>代码提交</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_codemirror.html")
+
+    <style>
+        .CodeMirror {
+            height: 374px;
+        }
+    </style>
+
+</head>
+
+<body>
+#include("_navbar.html")
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="breadcrumb">
+                <li><a href="/info/classes">班级列表</a></li>
+                <li><a href="/info/assignments/#(assignment.classId)">作业列表</a></li>
+                <li><a href="/upload/#(assignment.assignmentId)">作业详情</a></li>
+                <li><span>代码提交</span></li>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label>第#(question.questionNo)题：</label><pre>#(question.content)</pre>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div id="compiler" class="panel-heading">
+                    <form class="form-inline" role="form">
+                        <button type="button" class="btn btn-primary" id="submitBTN" disabled="disabled">点击运行</button>
+                        <button type="button" class="btn btn-default" id="clearCode">清空</button>
+
+                        <select class="form-control pull-right" id="sel1">
+                            <option value="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)&type=cpp">
+                                C++
+                            </option>
+                            <option selected="selected"
+                                    value="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)&type=c">
+                                C
+                            </option>
+                        </select>
+
+
+                    </form>
+                </div>
+
+                <div class="panel-body">
+                    <form role="form" id="compiler-form">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <textarea class="form-control" id="c-code" name="code" rows="18">#[[]]#</textarea>
+                                </div>
+                                <div class="col-md-5">
+                                    <textarea placeholder="运行结果……" class="form-control" id="compiler-textarea-result"
+                                              rows="18"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+<script>
+    var editor = CodeMirror.fromTextArea(document.getElementById("c-code"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-csrc",
+        indentUnit: 4,
+        indentWithTabs: true
+    });
+    var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;
+    CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";
+
+    btn = $("#submitBTN");
+
+    editor.on("change", function (editor, change) {
+        btn.prop('disabled', false);
+    });
+
+    btn.click(function () {
+        btn.prop('disabled', true);
+        loadingdata = '程序正在运行中……';
+        $("#compiler-textarea-result").val(loadingdata);
+
+        code = editor.getValue();
+        var language = 1;
+        $.post("https://m.runoob.com/api/compile.php", {
+            code: code,
+            language: language,
+            fileext: "cpp"
+        }, function (data) {
+            $("#compiler-textarea-result").val(data.output + data.errors);
+        });
+        setTimeout(function () {
+            btn.prop('disabled', false);
+        }, 10 * 1000);
+    });
+
+    $(function () {
+
+        $('#sel1').on('change', function () {
+            var url = $(this).val(); // get selected value
+            if (url) { // require a URL
+                window.location = url; // redirect
+            }
+            return false;
+        });
+
+        $("#clearCode").click(function () {
+            editor.setValue("");
+            editor.clearHistory();
+            $("#compiler-textarea-result").val("");
+            btn.prop('disabled', true);
+        });
+    });
+</script>
+

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>作业上传</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_css.html")
+
+</head>
+<body>
+
+#include("_navbar.html")
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                #include("_sidebar.html")
+            </ul>
+        </div>
+        <input type="hidden" id="assignmentId" value="#(assignment.assignmentId)">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="breadcrumb">
+                        <li><a href="/info/classes">班级列表</a></li>
+                        <li><a href="/info/assignments/#(assignment.classId)">作业列表</a></li>
+                        <li><span>作业详情</span></li>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <form method="post" enctype="multipart/form-data" style="margin-top: 20px">
+                    <div class="form-group">
+                        <label class="text-danger">您可以多次上传代码，以最后一次的批改结果为准</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-danger">提交前请先确认问题，仅支持zip文件！</label>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="layui-btn layui-btn-normal" data-toggle="modal"
+                                data-target="#myModal">
+                            问题确认
+                        </button>
+                    </div>
+
+                    #if(upload==null || upload.status!=1)
+                    <div class="form-group">
+                        #if(isExpired)
+
+                        <label class="text-danger #if(!isExpired)hidden#end">抱歉，已过截止时间</label>
+                        #else
+                        <button type="button" class="layui-btn layui-btn-normal" id="upload-btn">
+                            <i class="layui-icon"></i>
+                            请选择
+                        </button>
+                        #end
+                    </div>
+                    #else
+                    <div class="form-group">
+                        <label class="text-danger">上次上传的代码正在分析中，请稍后上传</label>
+                    </div>
+                    #end
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">问题确认</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tab-content">
+                    <div id="change-content">
+                        #for(question : questionVoList)
+                        <div class="col-md-12"><p>第#(question.questionNo)题:
+                            <pre>#(question.content)</pre>
+                            </p></div>
+                        #end
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+#include("_js.html")
+
+<script>
+    $(function () {
+
+        layui.use('upload', function () {
+            var upload = layui.upload;
+
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#upload-btn',
+                url: '/upload/receive',
+                accept: 'file',
+                exts: 'zip',
+                before: function (input) {
+                    this.data = {'assignmentId': $('#assignmentId').val()};
+                },
+                done: function (data) {
+                    //上传完毕回调
+                    if (data.resCode === 0) {
+                        layer.alert('系统将按照测试用例批改作业，请稍后查看批改结果');
+                        setTimeout("location.reload()", 1000);
+                    }
+                    if (data.resCode === 1) {
+                        layer.alert(data.errorMsg);
+                    }
+                },
+                error: function () {
+                    //请求异常回调
+                    layer.alert('作业上传失败，请重新上传');
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>
