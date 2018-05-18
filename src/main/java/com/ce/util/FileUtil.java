@@ -62,7 +62,7 @@ public class FileUtil {
     }
 
     //返回一个路径下面所有文件夹的名称（忽略非学号的）
-    public static List<String> getSubDirectoryName(String directoryPath) throws IOException {
+    public static List<String> getSubDirectoryAndFile(String directoryPath) throws IOException {
         List<String> folderNameList = new ArrayList<>();
         Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new FileVisitor<Path>() {
             @Override
