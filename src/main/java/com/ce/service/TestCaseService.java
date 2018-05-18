@@ -4,7 +4,8 @@ import com.ce.model.first.Question;
 import com.ce.model.first.TestCase;
 import com.ce.vo.QuestionListVo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestCaseService {
 
@@ -18,6 +19,10 @@ public class TestCaseService {
 
     public void deleteById(int id) {
         testCaseDao.deleteById(id);
+    }
+
+    public List<TestCase> findByQuestionId(int questionId) {
+        return testCaseDao.find("select * from test_case where questionId = ? ", questionId);
     }
 
     public List<QuestionListVo> findByAssignmentIdGroupByquestionId(int assignmentId) {
@@ -34,8 +39,6 @@ public class TestCaseService {
         }
         return result;
     }
-
-
 
 
 }

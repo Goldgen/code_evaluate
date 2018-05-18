@@ -1,10 +1,10 @@
 package com.ce.util;
 
+import com.ce.config.MyConstants;
 import com.ce.vo.FileInfo;
 import com.jfinal.kit.LogKit;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DateFormat;
@@ -16,25 +16,39 @@ import java.util.regex.Pattern;
 
 public class FileUtil {
 
+    public static String getRealPath(String path) {
+        return MyConstants.uploadPath + path;
+    }
+
+    public static String readFile(String filePath) throws IOException {
+        Path path = Paths.get(getRealPath(filePath));
+        return new String(Files.readAllBytes(path));
+    }
+
+    public static void deleteFile(String filePath) throws IOException {
+        Path path = Paths.get(getRealPath(filePath));
+        Files.deleteIfExists(path);
+    }
+
     public static void createFile(String filePath, String content) throws IOException {
-        Path path = Paths.get(filePath);
+        Path path = Paths.get(getRealPath(filePath));
         Files.write(path, content.getBytes());
     }
 
     public static void createDirectory(String directoryPath) throws IOException {
-        Path path = Paths.get(directoryPath);
+        Path path = Paths.get(getRealPath(directoryPath));
         if (!Files.exists(path))
             Files.createDirectory(path);
     }
 
-
     public static void addTxtFile(String filePath, String content) throws IOException {
-        Path path = Paths.get(filePath);
+        Path path = Paths.get(getRealPath(filePath));
         Files.write(path, content.getBytes(), StandardOpenOption.CREATE);
     }
 
     public static boolean compareFileWithString(String filePath, String compareStr) throws IOException {
-        List<String> fileLineList = readFileLines(filePath);
+        Path path = Paths.get(getRealPath(filePath));
+        List<String> fileLineList = Files.readAllLines(path);
         compareStr = replaceUseless(compareStr);
         List<String> compareLineList = Arrays.asList(compareStr.split("\n"));
         if (fileLineList.size() != compareLineList.size()) return false;
@@ -50,7 +64,7 @@ public class FileUtil {
     //返回一个路径下面所有文件夹的名称（忽略非学号的）
     public static List<String> getSubDirectoryName(String directoryPath) throws IOException {
         List<String> folderNameList = new ArrayList<>();
-        Files.walkFileTree(Paths.get(directoryPath), new FileVisitor<Path>() {
+        Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new FileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 //访问文件夹之前调用
@@ -89,7 +103,7 @@ public class FileUtil {
     //返回一个路径下面所有c或c++文件的名称（只取前缀，忽略非题号的）
     public static List<FileInfo> getCOrCppFilesName(String directoryPath) throws IOException {
         List<FileInfo> fileInfoList = new ArrayList<>();
-        Files.walkFileTree(Paths.get(directoryPath), new FileVisitor<Path>() {
+        Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new FileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 //访问文件夹之前调用
@@ -126,7 +140,7 @@ public class FileUtil {
 
     //删除文件夹以及下面所有的文件
     public static void deleteDirectory(String directoryPath) throws IOException {
-        Files.walkFileTree(Paths.get(directoryPath), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Files.delete(file);
@@ -158,15 +172,6 @@ public class FileUtil {
         return dest;
     }
 
-    public static List<String> readFileLines(String filePath) throws IOException {
-        Path path = Paths.get(filePath);
-        return Files.readAllLines(path);
-    }
-
-    public static String readFile(String filePath) throws IOException {
-        Path path = Paths.get(filePath);
-        return new String(Files.readAllBytes(path));
-    }
 
     /**
      * new文件夹名= 时间 + 全球唯一编号

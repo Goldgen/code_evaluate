@@ -2,11 +2,7 @@ package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.ce.config.MyConstants;
-import com.ce.model.*;
-import com.ce.model.first.Question;
-import com.ce.model.first.Similarity;
-import com.ce.model.first.StudentQuestion;
-import com.ce.model.first.Upload;
+import com.ce.model.first.*;
 import com.ce.model.second.Assignment;
 import com.ce.model.second.User;
 import com.ce.service.*;
@@ -16,6 +12,7 @@ import com.ce.util.FileUtil;
 import com.ce.vo.*;
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -62,6 +59,60 @@ public class ResultViewController extends Controller {
         }
     }
 
+    public void codeView() {
+        int questionId = getParaToInt("questionId");
+        String userId = getPara("userId");
+        StudentQuestion studentQuestion = studentQuestionService.findById(questionId, userId);
+        String codePath = studentQuestion.getCodePath();
+        if (StringUtils.isEmpty(codePath)) {
+            renderJson(JSON.toJSONString(JsonResponse.ok("代码未上传", -1)));
+            return;
+        }
+        String code = null;
+        try {
+            code = FileUtil.readFile(codePath);
+        } catch (IOException e) {
+            renderJson(JSON.toJSONString(JsonResponse.ok("代码读取出错", -1)));
+            return;
+        }
+        if (codePath.endsWith(".cpp")) {
+            renderJson(JSON.toJSONString(JsonResponse.ok(code, 2)));
+        } else {
+            renderJson(JSON.toJSONString(JsonResponse.ok(code, 1)));
+        }
+    }
+
+    public void caseResult() {
+        int questionId = getParaToInt("questionId");
+        String userId = getPara("userId");
+        Question question = questionService.findById(questionId);
+        Assignment assignment = assignmentService.findById(question.getAssignmentId());
+        String studentDirectoryPath = assignment.getUploadDirectory() + "/" + userId + "/";
+        int questionNo = question.getQuestionNo();
+
+        List<TestCase> testCaseList = testCaseService.findByQuestionId(questionId);
+        List<TestCaseVo> testCaseVoList = new ArrayList<>();
+        try {
+            for (TestCase testCase : testCaseList) {
+                TestCaseVo vo = new TestCaseVo();
+                vo.content = testCase.getTestCaseContent();
+                vo.answer = testCase.getAnswer();
+                String outputFileName = questionNo + "_output_" + testCase.getTestCaseId() + ".txt";
+                vo.output = FileUtil.readFile(studentDirectoryPath + outputFileName);
+                vo.isPass = FileUtil.compareFileWithString(studentDirectoryPath + outputFileName, testCase.getAnswer());
+                testCaseVoList.add(vo);
+            }
+        } catch (IOException e) {
+            setAttr("isError", true);
+            render("test_case_result.html");
+            return;
+        }
+        setAttr("question", question);
+        setAttr("testCaseVoList", testCaseVoList);
+        render("test_case_result.html");
+
+    }
+
     @ActionKey("/similarity")
     public void similarityResult() {
         int assignmentId = getParaToInt(0);
@@ -70,6 +121,17 @@ public class ResultViewController extends Controller {
         List<SimilarityResultVo> similarityResultVoList = getSimilarityResult(assignmentId);
         setAttr("similarityResultVoList", similarityResultVoList);
         render("similarity_analysis.html");
+    }
+
+    public void packCode() throws IOException, InterruptedException {
+        int assignmentId = getParaToInt("assignmentId");
+        Assignment assignment = assignmentService.findById(assignmentId);
+        String filePath = assignment.getUploadDirectory();
+        String unionName = FileUtil.generateFolderName();
+        String copyFilePath = unionName;
+        CompileUtil.zip(filePath, copyFilePath, unionName);
+        renderFile(unionName + ".zip");
+        //FileUtil.deleteFile(unionName + ".zip");
     }
 
     @ActionKey("/analysis")
@@ -153,12 +215,6 @@ public class ResultViewController extends Controller {
     }
 
 
-    public void confirmRelease() {
-        int assignmentId = getParaToInt("assignmentId");
-        assignmentService.update(assignmentId, 3);
-        redirect("/assignment/detail/" + assignmentId + "-execute_result");
-    }
-
     public void allExcel() {
         int assignmentId = getParaToInt("assignmentId");
         List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
@@ -220,13 +276,12 @@ public class ResultViewController extends Controller {
             executeResultVo.studentName = student == null ? "无姓名" : student.getUserName();
             executeResultVo.questionResultList = entry.getValue().stream().map(x -> {
                 QuestionResultVo questionResultVo = new QuestionResultVo();
+                questionResultVo.questionId = x.get("questionId");
                 questionResultVo.questionNo = x.get("questionNo");
                 questionResultVo.isCompilePass = x.getIsCompilePass();
                 questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
                 questionResultVo.testCaseScore = x.getTestCaseScore();
                 questionResultVo.evaluateScore = x.getEvaluationScore();
-                List<Integer> violationIds = JSON.parseArray(x.getViolationIds(), Integer.class);
-                questionResultVo.violationList = violationService.findByIds(violationIds);
                 return questionResultVo;
             }).collect(Collectors.toList());
 
@@ -261,8 +316,6 @@ public class ResultViewController extends Controller {
             questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
             questionResultVo.testCaseScore = x.getTestCaseScore();
             questionResultVo.evaluateScore = x.getEvaluationScore();
-            List<Integer> violationIds = JSON.parseArray(x.getViolationIds(), Integer.class);
-            questionResultVo.violationList = violationService.findByIds(violationIds);
             return questionResultVo;
         }).collect(Collectors.toList());
 

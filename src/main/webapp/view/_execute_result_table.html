@@ -41,7 +41,13 @@
                                 <tbody>
                                 #for(x : executeResult.questionResultList)
                                 <tr>
-                                    <td>#(x.questionNo)</td>
+                                    <td>
+                                        <a class="code-view"
+                                           title="点击查看学生代码"
+                                           data-questionid="#(x.questionId)"
+                                           data-userid="#(executeResult.studentId)"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom">#(x.questionNo)</a></td>
                                     <td>
                                         <div class="hidden">
                                             <p style="margin-left: 20px;margin-right: 20px;margin-top: 5px">
@@ -53,22 +59,15 @@
                                                                 data-toggle="tooltip"
                                                                 data-placement="bottom">#end#if(x.isCompilePass)是#else否#end#if(!x.isCompilePass)</a>#end
                                     </td>
-                                    <td>#(x.testCaseScore)</td>
                                     <td>
-                                        <div class="hidden">
-                                            #for(y : x.violationList)
-                                            <p style="margin-left: 20px;margin-right: 20px;margin-top: 5px">
-                                                #(y.startLine)行#(y.startColumn)列到#(y.endLine)行#(y.endColumn)列出现错误：<br>
-                                                #(y.message)</p>
-                                            #else
-                                            <p style="margin-left: 20px;margin-right: 20px;margin-top: 5px">
-                                                无信息</p>
-                                            #end
-                                        </div>
-                                        <a class="violation"
-                                           title="点击查看评估详情"
+                                        <a class="case-view"
+                                           href="/review/caseResult?questionId=#(x.questionId)&userId=#(executeResult.studentId)"
+                                           title="点击查看批改详情"
+                                           target="_Blank"
                                            data-toggle="tooltip"
-                                           data-placement="bottom">#(x.evaluateScore)</a></td>
+                                           data-placement="bottom">#(x.testCaseScore)</a>
+                                    </td>
+                                    <td>#(x.evaluateScore)</td>
                                 </tr>
                                 #end
                                 </tbody>

@@ -128,7 +128,6 @@ public class CompileTask implements Runnable {
                     studentQuestion.setCompileErrorInfo("");
                     studentQuestion.setTestCaseScore(testCaseScore);
                     studentQuestion.setEvaluationScore(evaluationScore < 0 ? 0 : evaluationScore);
-                    studentQuestion.setViolationIds(JSON.toJSONString(violationIdList));
                     if (alreadyExist) {
                         studentQuestion.update();
                     } else {

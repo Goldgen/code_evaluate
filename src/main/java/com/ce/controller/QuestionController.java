@@ -6,7 +6,6 @@ import com.ce.model.first.Question;
 import com.ce.model.first.TestCase;
 import com.ce.model.first.TestDb;
 import com.ce.model.first.TestDbTestCase;
-import com.ce.model.first.base.BaseQuestion;
 import com.ce.model.second.Assignment;
 import com.ce.service.*;
 import com.ce.util.CommonUtil;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class QuestionController extends Controller {

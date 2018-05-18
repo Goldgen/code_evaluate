@@ -54,6 +54,24 @@ public abstract class BaseStudentQuestion<M extends BaseStudentQuestion<M>> exte
 		return getInt("testCaseScore");
 	}
 
+	public M setTestCasePassNum(java.lang.Integer testCasePassNum) {
+		set("testCasePassNum", testCasePassNum);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getTestCasePassNum() {
+		return getInt("testCasePassNum");
+	}
+
+	public M setCodePath(java.lang.String codePath) {
+		set("codePath", codePath);
+		return (M)this;
+	}
+	
+	public java.lang.String getCodePath() {
+		return getStr("codePath");
+	}
+
 	public M setEvaluationScore(java.lang.Integer evaluationScore) {
 		set("evaluationScore", evaluationScore);
 		return (M)this;
@@ -61,15 +79,6 @@ public abstract class BaseStudentQuestion<M extends BaseStudentQuestion<M>> exte
 	
 	public java.lang.Integer getEvaluationScore() {
 		return getInt("evaluationScore");
-	}
-
-	public M setViolationIds(java.lang.String violationIds) {
-		set("violationIds", violationIds);
-		return (M)this;
-	}
-	
-	public java.lang.String getViolationIds() {
-		return getStr("violationIds");
 	}
 
 }

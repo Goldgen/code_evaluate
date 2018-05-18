@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>代码提交</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_codemirror.html")
+
+
+</head>
+
+<body>
+#include("_navbar.html")
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="breadcrumb">
+                <li><a href="/info/classes">班级列表</a></li>
+                <li><a href="/info/assignments/#(assignment.classId)">作业列表</a></li>
+                <li><a href="/upload/#(assignment.assignmentId)">作业详情</a></li>
+                <li><span>代码提交</span></li>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <input id="questionId" type="hidden" value="#(question.questionId)"/>
+        <input id="assignmentId" type="hidden" value="#(assignment.assignmentId)"/>
+        <div class="col-md-12">
+            <label>第#(question.questionNo)题：</label>
+            <pre>#(question.content)</pre>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div id="compiler" class="panel-heading">
+                    <form class="form-inline" role="form">
+                        <button type="button" class="btn btn-primary" id="submitBTN" disabled="disabled">点击运行</button>
+                        <button type="button" class="btn btn-default" id="clearCode">清空</button>
+                        <select class="form-control pull-right" id="sel1">
+                            <option #if(type=='cpp')selected="selected"#end
+                                    value="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)&type=cpp">
+                                C++
+                            </option>
+                            <option #if(type=='c')selected="selected"#end
+                                    value="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)&type=c">
+                                C
+                            </option>
+                        </select>
+                    </form>
+                </div>
+                <div class="panel-body">
+                    <form role="form" id="compiler-form">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <textarea class="form-control" id="code" rows="18">#[[]]#</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resultModel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="modal-title">批改结果</h4>
+            </div>
+            <div class="modal-body">
+                <p id="compileInfo"></p>
+                <p id="testCaseInfo"></p>
+                <p id="testCaseScore"></p>
+                <p id="evaluationScore"></p>
+                <p>静态分析详情：见下表</p>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th width="30%">位置</th>
+                        <th>信息</th>
+                    </tr>
+                    </thead>
+                    <tbody id="static-info">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+<script>
+    var type = '#(type)';
+    var mode;
+    var language;
+    if (type === 'c') {
+        mode = "text/x-csrc";
+        language = 1;
+    } else {
+        mode = "text/x-c++src";
+        language = 2;
+    }
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: mode,
+        indentUnit: 4,
+        indentWithTabs: true
+    });
+    var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;
+    CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";
+
+    btn = $("#submitBTN");
+
+    editor.on("change", function (editor, change) {
+        btn.prop('disabled', false);
+    });
+
+    btn.click(function () {
+        btn.prop('disabled', true);
+        loadingdata = '程序正在运行中……';
+        $("#compiler-textarea-result").val(loadingdata);
+
+        code = editor.getValue();
+
+        var questionId = $('#questionId').val();
+        var assignmentId = $('#assignmentId').val();
+        var index = layer.load(1, {
+            shade: [0.5, '#fff']
+        });
+        $.post("/upload/run", {
+            code: code,
+            language: language,
+            questionId: questionId,
+            assignmentId: assignmentId
+        }, function (data) {
+            layer.close(index);
+            formatRunInfo(data.payload);
+            $('#resultModel').modal('toggle');
+        });
+        setTimeout(function () {
+            btn.prop('disabled', false);
+        }, 3 * 1000);
+    });
+
+    function formatRunInfo(data) {
+        if (data.isCompilePass) {
+            var compileInfo = "编译通过";
+            $('#compileInfo').html("编译信息：" + compileInfo);
+            var testCaseInfo = "在" + data.testCaseSize + "个测试用例中通过了" + data.testCasePassNum + "个";
+            $('#testCaseInfo').html("测试用例信息：" + testCaseInfo);
+            var testCaseScore = "测试用例得分：" + data.testCaseScore;
+            $('#testCaseScore').html(testCaseScore);
+            var evaluationScore = "静态分析得分：" + data.evaluationScore;
+            $('#evaluationScore').html(evaluationScore);
+
+            var tbody = '';
+            $.each(data.violationList, function (index, obj) {
+                tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.message + '</td></tr>';
+                $('#static-info').html(tbody);
+            });
+        }
+        else {
+            var compileInfo = "编译未通过：<br>" + data.compileErrorInfo;
+            $('#compileInfo').html("编译信息：" + compileInfo);
+            $('#testCaseInfo').html("测试用例信息：无");
+            $('#testCaseScore').html("测试用例得分：0");
+            $('#evaluationScore').html("静态分析得分：0");
+        }
+    }
+
+    $(function () {
+
+        $('#sel1').on('change', function () {
+            var url = $(this).val();
+            if (url) {
+                window.location = url;
+            }
+            return false;
+        });
+
+        $("#clearCode").click(function () {
+            editor.setValue("");
+            editor.clearHistory();
+            $("#compiler-textarea-result").val("");
+            btn.prop('disabled', true);
+        });
+
+    });
+</script>
+

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>用例测试结果</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_css.html")
+    <style>
+        body {
+        padding-top: 0px;
+    }</style>
+
+</head>
+<body>
+
+<div class="main">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            #if(isError)
+            <div class="row read-option">
+                <div class="col-md-12">
+                    <label class="text-danger">读取输出文件发生错误</label>
+                </div>
+            </div>
+            #else
+            <div class="row read-option">
+                <div class="col-md-12">
+                    <h2>第#(question.questionNo)题用例测试结果</h2>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>用例</th>
+                        <th>答案</th>
+                        <th>输出</th>
+                        <th>是否通过</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    #for(vo : testCaseVoList)
+                    <tr>
+                        <td style="max-width: 250px">
+                            <pre>#(vo.content)</pre>
+                        </td>
+                        <td style="max-width: 500px">
+                            <pre>#(vo.answer)</pre>
+                        </td>
+                        <td style="max-width: 500px">
+                            <pre>#(vo.output)</pre>
+                        </td>
+                        <td>
+                            #if(vo.isPass)是#else否#end
+                        </td>
+                    </tr>
+                    #end
+                    </tbody>
+                </table>
+            </div>
+            #end
+        </div>
+    </div>
+</div>
+</body>
+</html>

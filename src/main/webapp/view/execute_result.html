@@ -8,7 +8,7 @@
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
 
-    #include("_css.html")
+    #include("_codemirror.html")
 
 </head>
 <body>
@@ -17,7 +17,7 @@
 
 
 <div class="container-fluid">
-
+    <input id="assignmentId" type="hidden" value="#(assignment.assignmentId)"/>
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
@@ -36,12 +36,11 @@
                 <div class="col-md-10">
                     <div class="pull-right">
                         <a class="btn btn-primary btn-sm"
-                           href="/review/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL</a>
-                        #if(assignment.assignmentStatus==1)
-                        <label class="text-danger">已发布</label>
-                        #else
-                        <a class="btn btn-primary btn-sm confirm-release-btn">确认发布</a>
-                        #end
+                           href="/review/allExcel?assignmentId=#(assignment.assignmentId)">导出EXCEL
+                        </a>
+                        <a class="btn btn-primary btn-sm" id="pack-btn"
+                           href="/review/packCode?assignmentId=#(assignment.assignmentId)">代码打包
+                        </a>
                     </div>
                 </div>
             </div>
@@ -51,13 +50,58 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="cCodeModel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title">代码查看</h4>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" id="c-code" rows="18">#[[]]#</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cppCodeModel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title">代码查看</h4>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" id="cpp-code" rows="18" style="max-height: 400px">#[[]]#</textarea>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-#include("_js.html")
-
 </body>
 <script>
+
+    var cEditor = CodeMirror.fromTextArea(document.getElementById("c-code"), {
+        matchBrackets: true,
+        mode: "text/x-csrc",
+        indentUnit: 4,
+        indentWithTabs: true,
+        readOnly: true,
+        autoRefresh: true
+    });
+
+    var cppEditor = CodeMirror.fromTextArea(document.getElementById("cpp-code"), {
+        matchBrackets: true,
+        mode: "text/x-c++src",
+        indentUnit: 4,
+        indentWithTabs: true,
+        readOnly: true,
+        autoRefresh: true
+    });
 
     $(function () {
 
@@ -68,11 +112,25 @@
         });
 
 
-        $('.violation').click(function () {
-            layer.open({
-                type: 1,
-                area: ['600px', '240px'], //宽高
-                content: $(this).prev().html()
+        $(".code-view").click(function () {
+            var index = layer.load(1, {
+                shade: [0.5, '#fff']
+            });
+            var questionId = $(this).data('questionid');
+            var userId = $(this).data('userid');
+            $.post("/review/codeView", {
+                questionId: questionId,
+                userId: userId
+            }, function (data) {
+
+                layer.close(index);
+                if (data.code == 1) {
+                    $('#cCodeModel').modal('toggle');
+                    cEditor.setValue(data.payload);
+                } else {
+                    $('#cppCodeModel').modal('toggle');
+                    cppEditor.setValue(data.payload);
+                }
             });
         });
 
@@ -91,7 +149,9 @@
                 window.location.href = "/assignment/confirmRelease?assignmentId=#(assignment.assignmentId)";
             }, function (index) {
             });
-        })
+        });
+
+
     });
 </script>
 </html>

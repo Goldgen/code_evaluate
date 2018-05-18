@@ -26,7 +26,6 @@ public class _MappingKit {
 		arp.addMapping("test_db_test_case", "testCaseId", TestDbTestCase.class);
 		// Composite Primary Key order: assignmentId,userId
 		arp.addMapping("upload", "assignmentId,userId", Upload.class);
-		arp.addMapping("violation", "violationId", Violation.class);
 	}
 }
 

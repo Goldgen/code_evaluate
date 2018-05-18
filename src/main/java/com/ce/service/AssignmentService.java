@@ -25,14 +25,6 @@ public class AssignmentService {
         return dao.find("select * from assignment where classId = ? order by startDate DESC", classId);
     }
 
-    public void update(int assignmentId, int assignmentStatus) {
-        Assignment assignment = dao.findById(assignmentId);
-        if (assignment != null) {
-            assignment.setAssignmentStatus(assignmentStatus);
-            assignment.update();
-        }
-    }
-
 
     public void update(int assignmentId, String directoryName){
         Assignment assignment = dao.findById(assignmentId);

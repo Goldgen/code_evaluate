@@ -108,13 +108,4 @@ public abstract class BaseAssignment<M extends BaseAssignment<M>> extends Model<
 		return get("isSimFinished");
 	}
 
-	public M setAssignmentStatus(java.lang.Integer assignmentStatus) {
-		set("assignmentStatus", assignmentStatus);
-		return (M)this;
-	}
-	
-	public java.lang.Integer getAssignmentStatus() {
-		return getInt("assignmentStatus");
-	}
-
 }
