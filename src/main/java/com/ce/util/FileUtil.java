@@ -2,7 +2,6 @@ package com.ce.util;
 
 import com.ce.config.MyConstants;
 import com.ce.vo.FileInfo;
-import com.jfinal.kit.LogKit;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -62,54 +61,42 @@ public class FileUtil {
     }
 
     //返回一个路径下面所有文件夹的名称（忽略非学号的）
-    public static List<String> getSubDirectoryAndFile(String directoryPath) throws IOException {
-        List<String> folderNameList = new ArrayList<>();
-        Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new FileVisitor<Path>() {
+    public static List<FileInfo> getSubDirectoryAndFile(String directoryPath) throws IOException {
+        List<FileInfo> fileInfoList = new ArrayList<>();
+        Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 //访问文件夹之前调用
                 if (!dir.endsWith(directoryPath)) {
                     String folderName = dir.getFileName().toString();
                     if (isNumeric(folderName)) {
-                        folderNameList.add(folderName);
+                        Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+                            @Override
+                            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                                String fileName = file.getFileName().toString();
+                                String prefix = fileName.substring(0, fileName.indexOf('.'));
+                                String suffix = fileName.substring(fileName.indexOf('.') + 1);
+                                if ((suffix.equals("c") || suffix.equals("cpp")) && isNumeric(prefix)) {
+                                    FileInfo fileInfo = new FileInfo(fileName, prefix, suffix, folderName);
+                                    fileInfoList.add(fileInfo);
+                                    return FileVisitResult.TERMINATE;
+                                }
+                                return FileVisitResult.CONTINUE;
+                            }
+                        });
                     }
                 }
                 return FileVisitResult.CONTINUE;
             }
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                // 访问文件调用
-                //System.out.println(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) {
-                // 访问文件失败时调用
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-                // 访问文件夹之后调用
-                return FileVisitResult.CONTINUE;
-            }
         });
-        LogKit.info("获得的所有学号" + folderNameList);
-        return folderNameList;
+        return fileInfoList;
     }
+
 
     //返回一个路径下面所有c或c++文件的名称（只取前缀，忽略非题号的）
     public static List<FileInfo> getCOrCppFilesName(String directoryPath) throws IOException {
         List<FileInfo> fileInfoList = new ArrayList<>();
-        Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new FileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-                //访问文件夹之前调用
-                return FileVisitResult.CONTINUE;
-            }
-
+        Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                 // 访问文件调用
@@ -120,18 +107,6 @@ public class FileUtil {
                     FileInfo fileInfo = new FileInfo(fileName, prefix, suffix);
                     fileInfoList.add(fileInfo);
                 }
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) {
-                // 访问文件失败时调用
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-                // 访问文件夹之后调用
                 return FileVisitResult.CONTINUE;
             }
         });

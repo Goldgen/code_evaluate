@@ -99,13 +99,4 @@ public abstract class BaseAssignment<M extends BaseAssignment<M>> extends Model<
 		return getStr("uploadDirectory");
 	}
 
-	public M setIsSimFinished(java.lang.Boolean isSimFinished) {
-		set("isSimFinished", isSimFinished);
-		return (M)this;
-	}
-	
-	public java.lang.Boolean getIsSimFinished() {
-		return get("isSimFinished");
-	}
-
 }

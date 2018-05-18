@@ -49,9 +49,9 @@ public class CompileUtil {
         executeShellCmd(cmd);
     }
 
-    public static void similarityTest(String fatherFilePath, int questionNo, String questionFilesPath) throws IOException, InterruptedException {
+    public static void similarityTest(String fatherFilePath, int questionNo, String questionFilesPath, String type) throws IOException, InterruptedException {
         fatherFilePath = getRealPath(fatherFilePath);
-        String[] cmds = new String[]{MyConstants.shellPath + "similarityTest.sh", fatherFilePath, String.valueOf(questionNo), questionFilesPath};
+        String[] cmds = new String[]{MyConstants.shellPath + "similarityTest.sh", fatherFilePath, String.valueOf(questionNo), questionFilesPath, type};
         executeShellCmd(cmds, MyConstants.shellPath + "similarityTest.sh");
     }
 

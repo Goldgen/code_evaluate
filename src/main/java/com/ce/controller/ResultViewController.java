@@ -1,7 +1,6 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.config.MyConstants;
 import com.ce.model.first.*;
 import com.ce.model.second.Assignment;
 import com.ce.model.second.User;
@@ -118,6 +117,8 @@ public class ResultViewController extends Controller {
         int assignmentId = getParaToInt(0);
         Assignment assignment = assignmentService.findById(assignmentId);
         setAttr("assignment", assignment);
+        List<Question> questionList = questionService.findByAssignmentId(assignmentId);
+        setAttr("questionList", questionList);
         List<SimilarityResultVo> similarityResultVoList = getSimilarityResult(assignmentId);
         setAttr("similarityResultVoList", similarityResultVoList);
         render("similarity_analysis.html");
@@ -139,77 +140,120 @@ public class ResultViewController extends Controller {
         int assignmentId = getParaToInt(0);
 
         Assignment assignment = assignmentService.findById(assignmentId);
+        List<Question> questionList = questionService.findByAssignmentId(assignmentId);
+        String unionFolderName = assignment.getUploadDirectory();
+        List<FileInfo> fileInfoList = FileUtil.getSubDirectoryAndFile(unionFolderName);
 
-        List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
-        //预先记录相似度分析的文件名
-        Map<Integer, Temp> questionFilesPathMap = new TreeMap<>();
-        for /*、*/(QuestionListVo vo : questionVoList) {
-            Temp temp = new Temp();
-            temp.questionId = vo.questionId;
-            temp.questionFilesPath = "";
-            questionFilesPathMap.put(vo.questionNo, temp);
-        }
+        List<FileInfo> cfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("c")).collect(Collectors.toList());
+        List<FileInfo> cppfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("cpp")).collect(Collectors.toList());
 
-        List<Upload> uploadList = uploadService.findByAssignmentId(assignmentId);
-        if (!uploadList.isEmpty()) {
+        Map<String, List<FileInfo>> cfileInfoListHashByQuestionNo = cfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
+        Map<String, List<FileInfo>> cppfileInfoListHashByQuestionNo = cppfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
 
-            String assignmentDirectoryPath = MyConstants.uploadPath + assignment.getUploadDirectory() + "/";
-
-            for (Upload upload : uploadList) {
-                String stuNum = upload.getUserId();
-                List<FileInfo> fileInfoList = JSON.parseArray(upload.getUploadFileInfo(), FileInfo.class);
-                for (FileInfo fileInfo : fileInfoList) {
-                    int questionNo = Integer.parseInt(fileInfo.prefix);
-                    Temp tempInfo = questionFilesPathMap.get(questionNo);
-                    if (tempInfo != null) {
-                        if (tempInfo.questionFilesPath.isEmpty()) {
-                            tempInfo.questionFilesPath += "./" + stuNum + "/" + fileInfo.fileName;
-                        } else {
-                            tempInfo.questionFilesPath += " ./" + stuNum + "/" + fileInfo.fileName;
-                        }
-                        questionFilesPathMap.replace(questionNo, tempInfo);
-                    }
-                }
+        for (Question question : questionList) {
+            String questionNoStr = question.getQuestionNo().toString();
+            StringBuilder cFileStr = new StringBuilder();
+            StringBuilder cppFileStr = new StringBuilder();
+            List<FileInfo> cList = cfileInfoListHashByQuestionNo.get(questionNoStr);
+            List<FileInfo> cppList = cfileInfoListHashByQuestionNo.get(questionNoStr);
+            for (FileInfo fileInfo : cList) {
+                cFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
+            }
+            for (FileInfo fileInfo : cppList) {
+                cppFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
             }
 
-
-            //相似度分析
             List<Similarity> similarityList = new ArrayList<>();
-            for (Map.Entry<Integer, Temp> entry : questionFilesPathMap.entrySet()) {
-                CompileUtil.similarityTest(assignmentDirectoryPath, entry.getKey(), entry.getValue().questionFilesPath);
-                String content = FileUtil.readFile(assignmentDirectoryPath + "similarity" + entry.getKey() + ".txt");
-                Pattern pattern = Pattern.compile("\\./(.*?)/" + entry.getKey() + "\\.c consists for (.*?) % of \\./(.*?)/" + entry.getKey() + "\\.c");
-                Matcher matcher = pattern.matcher(content);
-                while (matcher.find()) {
-                    String studentId1 = matcher.group(1);
-                    String studentId2 = matcher.group(3);
-                    Similarity test = similarityList.stream()
-                            .filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2) && x.getQuestionId() == entry.getValue().questionId)
-                            .findFirst().orElse(null);
-                    if (test != null) {
-                        test.setToSimilarity(Integer.parseInt(matcher.group(2)));
-                    } else {
-                        Similarity info = new Similarity();
-                        info.setQuestionId(entry.getValue().questionId);
-                        info.setUserId1(matcher.group(1));
-                        info.setUserId2(matcher.group(3));
-                        info.setFromSimilarity(Integer.parseInt(matcher.group(2)));
-                        similarityList.add(info);
-                    }
-                }
-            }
-            for (Similarity similarity : similarityList) {
-                if (similarityService.findById(similarity.getQuestionId(), similarity.getUserId1(), similarity.getUserId2()) != null) {
-                    similarity.update();
+            CompileUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
+            String content = FileUtil.readFile(unionFolderName + "similarity" + questionNoStr + "_c.txt");
+            Pattern pattern = Pattern.compile("\\./(.*?)/" + questionNoStr + "\\.c consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.c");
+            Matcher matcher = pattern.matcher(content);
+            while (matcher.find()) {
+                String studentId1 = matcher.group(1);
+                String studentId2 = matcher.group(3);
+                Similarity test = similarityList.stream()
+                        .filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2) && x.getQuestionId() == entry.getValue().questionId)
+                        .findFirst().orElse(null);
+                if (test != null) {
+                    test.setToSimilarity(Integer.parseInt(matcher.group(2)));
                 } else {
-                    similarity.save();
+                    Similarity info = new Similarity();
+                    info.setQuestionId(question.getQuestionId());
+                    info.setUserId1(matcher.group(1));
+                    info.setUserId2(matcher.group(3));
+                    info.setFromSimilarity(Integer.parseInt(matcher.group(2)));
+                    similarityList.add(info);
                 }
             }
-            //相似度分析end
         }
-
-        assignment.setIsSimFinished(true);
-        assignment.update();
+//
+//        List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+//        //预先记录相似度分析的文件名
+//        Map<Integer, Temp> questionFilesPathMap = new TreeMap<>();
+//        for /*、*/(QuestionListVo vo : questionVoList) {
+//            Temp temp = new Temp();
+//            temp.questionId = vo.questionId;
+//            temp.questionFilesPath = "";
+//            questionFilesPathMap.put(vo.questionNo, temp);
+//        }
+//
+//        List<Upload> uploadList = uploadService.findByAssignmentId(assignmentId);
+//        if (!uploadList.isEmpty()) {
+//
+//            String assignmentDirectoryPath = MyConstants.uploadPath + assignment.getUploadDirectory() + "/";
+//
+//            for (Upload upload : uploadList) {
+//                String stuNum = upload.getUserId();
+//                List<FileInfo> fileInfoList = JSON.parseArray(upload.getUploadFileInfo(), FileInfo.class);
+//                for (FileInfo fileInfo : fileInfoList) {
+//                    int questionNo = Integer.parseInt(fileInfo.prefix);
+//                    Temp tempInfo = questionFilesPathMap.get(questionNo);
+//                    if (tempInfo != null) {
+//                        if (tempInfo.questionFilesPath.isEmpty()) {
+//                            tempInfo.questionFilesPath += "./" + stuNum + "/" + fileInfo.fileName;
+//                        } else {
+//                            tempInfo.questionFilesPath += " ./" + stuNum + "/" + fileInfo.fileName;
+//                        }
+//                        questionFilesPathMap.replace(questionNo, tempInfo);
+//                    }
+//                }
+//            }
+//
+//
+//            //相似度分析
+//            List<Similarity> similarityList = new ArrayList<>();
+//            for (Map.Entry<Integer, Temp> entry : questionFilesPathMap.entrySet()) {
+//                CompileUtil.similarityTest(assignmentDirectoryPath, entry.getKey(), entry.getValue().questionFilesPath);
+//                String content = FileUtil.readFile(assignmentDirectoryPath + "similarity" + entry.getKey() + ".txt");
+//                Pattern pattern = Pattern.compile("\\./(.*?)/" + entry.getKey() + "\\.c consists for (.*?) % of \\./(.*?)/" + entry.getKey() + "\\.c");
+//                Matcher matcher = pattern.matcher(content);
+//                while (matcher.find()) {
+//                    String studentId1 = matcher.group(1);
+//                    String studentId2 = matcher.group(3);
+//                    Similarity test = similarityList.stream()
+//                            .filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2) && x.getQuestionId() == entry.getValue().questionId)
+//                            .findFirst().orElse(null);
+//                    if (test != null) {
+//                        test.setToSimilarity(Integer.parseInt(matcher.group(2)));
+//                    } else {
+//                        Similarity info = new Similarity();
+//                        info.setQuestionId(entry.getValue().questionId);
+//                        info.setUserId1(matcher.group(1));
+//                        info.setUserId2(matcher.group(3));
+//                        info.setFromSimilarity(Integer.parseInt(matcher.group(2)));
+//                        similarityList.add(info);
+//                    }
+//                }
+//            }
+//            for (Similarity similarity : similarityList) {
+//                if (similarityService.findById(similarity.getQuestionId(), similarity.getUserId1(), similarity.getUserId2()) != null) {
+//                    similarity.update();
+//                } else {
+//                    similarity.save();
+//                }
+//            }
+//            //相似度分析end
+//        }
 
         redirect("/similarity/" + assignmentId);
     }
@@ -363,9 +407,4 @@ public class ResultViewController extends Controller {
         Collections.sort(similarityResultVoList);
         return similarityResultVoList;
     }
-}
-
-class Temp {
-    String questionFilesPath;
-    int questionId;
 }

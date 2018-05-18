@@ -29,12 +29,55 @@
                     <li><span>作业详情</span></li>
                 </div>
             </div>
-            #if(assignment.isSimFinished)
 
             <div class="row" style="margin-bottom: 20px">
                 <a class="btn btn-primary" href="/analysis/#(assignment.assignmentId)">重新进行相似度分析</a>
             </div>
             <div class="row">
+                #for(question : questionList)
+                <div class="row">
+                    <div class="col-md-10"><h3>第#(question.questionNo)题</h3></div>
+                    <div class="col-md-2">
+                        <a class="btn btn-info btn-xs hidden-btn" data-toggle="tooltip" data-placement="bottom"
+                           data-original-title="隐藏">
+                            <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-md-4">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">相似度50%～100%</h3>
+                            </div>
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">相似度30%～50%</h3>
+                            </div>
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">相似度10%～30%</h3>
+                            </div>
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                #end
                 #for(similarityResultVo : similarityResultVoList)
                 <div class="row">
                     <div class="col-md-10"><h3>第#(similarityResultVo.questionNo)题</h3></div>
@@ -106,12 +149,6 @@
                 </div>
                 #end
             </div>
-            #else
-            <div class="row"><label class="text-danger">还未进行相似度分析，请点击按钮开始分析</label></div>
-            <div class="row">
-                <a class="btn btn-primary" href="/analysis/#(assignment.assignmentId)">进行相似度分析</a>
-            </div>
-            #end
         </div>
     </div>
 </div>
