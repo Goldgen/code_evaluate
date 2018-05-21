@@ -30,124 +30,12 @@
                 </div>
             </div>
 
+            <input id="assignmentId" type="hidden" value="#(assignment.assignmentId)"/>
             <div class="row" style="margin-bottom: 20px">
-                <a class="btn btn-primary" href="/analysis/#(assignment.assignmentId)">重新进行相似度分析</a>
+                <a class="btn btn-primary analysis-btn">进行相似度分析</a>
             </div>
-            <div class="row">
-                #for(question : questionList)
-                <div class="row">
-                    <div class="col-md-10"><h3>第#(question.questionNo)题</h3></div>
-                    <div class="col-md-2">
-                        <a class="btn btn-info btn-xs hidden-btn" data-toggle="tooltip" data-placement="bottom"
-                           data-original-title="隐藏">
-                            <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 20px">
-                    <div class="col-md-4">
-                        <div class="panel panel-danger">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">相似度50%～100%</h3>
-                            </div>
-                            <div class="panel-body">
+            <div class="row" id="main">
 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="panel panel-warning">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">相似度30%～50%</h3>
-                            </div>
-                            <div class="panel-body">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">相似度10%～30%</h3>
-                            </div>
-                            <div class="panel-body">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                #end
-                #for(similarityResultVo : similarityResultVoList)
-                <div class="row">
-                    <div class="col-md-10"><h3>第#(similarityResultVo.questionNo)题</h3></div>
-                    <div class="col-md-2">
-                        <a class="btn btn-info btn-xs hidden-btn" data-toggle="tooltip" data-placement="bottom"
-                           data-original-title="隐藏">
-                            <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 20px">
-                    <div class="col-md-4">
-                        <div class="panel panel-danger">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">相似度50%～100%</h3>
-                            </div>
-                            <div class="panel-body">
-                                #for(x : similarityResultVo.highSimilarityVoList)
-                                <label data-toggle="tooltip" data-placement="bottom"
-                                       title="#(x.userId1)">#(x.userName1)</label>
-                                与
-                                <label data-toggle="tooltip" data-placement="bottom"
-                                       title="#(x.userId2)">#(x.userName2)</label>
-                                的相似度为#(x.similarity)%<br>
-                                #else
-                                无数据
-                                #end
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="panel panel-warning">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">相似度30%～50%</h3>
-                            </div>
-                            <div class="panel-body">
-                                #for(x : similarityResultVo.mediumSimilarityVoList)
-                                <label data-toggle="tooltip" data-placement="bottom"
-                                       title="#(x.userId1)">#(x.userName1)</label>
-                                与
-                                <label data-toggle="tooltip" data-placement="bottom"
-                                       title="#(x.userId2)">#(x.userName2)</label>
-                                的相似度为#(x.similarity)%<br>
-                                #else
-                                无数据
-                                #end
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">相似度10%～30%</h3>
-                            </div>
-                            <div class="panel-body">
-                                #for(x : similarityResultVo.lowSimilarityVoList)
-                                <label data-toggle="tooltip" data-placement="bottom"
-                                       title="#(x.userId1)">#(x.userName1)</label>
-                                与
-                                <label data-toggle="tooltip" data-placement="bottom"
-                                       title="#(x.userId2)">#(x.userName2)</label>
-                                的相似度为#(x.similarity)%<br>
-                                #else
-                                无数据
-                                #end
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                #end
             </div>
         </div>
     </div>
@@ -159,9 +47,6 @@
 
     $(function () {
 
-        $('[data-toggle="tooltip"]').tooltip();
-
-
         $(".hidden-btn").click(function () {
             if ($(this).attr('data-original-title') === '隐藏') {
                 $(this).attr('data-original-title', '显示');
@@ -171,6 +56,18 @@
                 $(this).find('.glyphicon-chevron-down').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
             }
             $(this).closest('.row').next().toggle();
+        });
+
+        $(".analysis-btn").click(function () {
+            var assignmentId = $('#assignmentId').val();
+            var index = layer.load(1, {
+                shade: [0.5, '#fff']
+            });
+            $.post("/analysis/" + assignmentId, {}, function (data) {
+                layer.close(index);
+                $('#main').html(data);
+                $('[data-toggle="tooltip"]').tooltip();
+            });
         });
 
     });

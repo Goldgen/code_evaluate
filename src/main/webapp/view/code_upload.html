@@ -53,9 +53,9 @@
                         </td>
                         <td>#(vo.totalScore==-1?'未提交':vo.totalScore)</td>
                         <td>
-                            <a href="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(vo.questionId)"
-                               title="提交代码" class="btn btn-success btn-xs" data-toggle="tooltip"
-                               data-placement="bottom">
+                            <a #if(assignment.isCaseEditFinish)title="提交代码" href="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(vo.questionId)"
+                               #else title="教师未完成测试用例编辑，不可运行代码" #end  class="btn btn-success btn-xs" data-toggle="tooltip"
+                               data-placement="bottom" >
                                 <i class="glyphicon glyphicon-play-circle"></i>
                             </a>
                             <button data-questionid="#(vo.questionId)" title="查看代码"

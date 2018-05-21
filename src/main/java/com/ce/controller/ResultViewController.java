@@ -119,8 +119,6 @@ public class ResultViewController extends Controller {
         setAttr("assignment", assignment);
         List<Question> questionList = questionService.findByAssignmentId(assignmentId);
         setAttr("questionList", questionList);
-        List<SimilarityResultVo> similarityResultVoList = getSimilarityResult(assignmentId);
-        setAttr("similarityResultVoList", similarityResultVoList);
         render("similarity_analysis.html");
     }
 
@@ -144,118 +142,90 @@ public class ResultViewController extends Controller {
         String unionFolderName = assignment.getUploadDirectory();
         List<FileInfo> fileInfoList = FileUtil.getSubDirectoryAndFile(unionFolderName);
 
+        List<String> stuNumList = fileInfoList.stream().map(x -> x.fatherDirectory).distinct().collect(Collectors.toList());
+
+        List<User> userList = userService.findByIds(stuNumList);
+
         List<FileInfo> cfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("c")).collect(Collectors.toList());
         List<FileInfo> cppfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("cpp")).collect(Collectors.toList());
 
         Map<String, List<FileInfo>> cfileInfoListHashByQuestionNo = cfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
         Map<String, List<FileInfo>> cppfileInfoListHashByQuestionNo = cppfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
 
+        List<SimilarityResultVo> similarityResultVoList = new ArrayList<>();
+
         for (Question question : questionList) {
+            List<SimilarityVo> similarityVoList = new ArrayList<>();
             String questionNoStr = question.getQuestionNo().toString();
             StringBuilder cFileStr = new StringBuilder();
             StringBuilder cppFileStr = new StringBuilder();
             List<FileInfo> cList = cfileInfoListHashByQuestionNo.get(questionNoStr);
-            List<FileInfo> cppList = cfileInfoListHashByQuestionNo.get(questionNoStr);
-            for (FileInfo fileInfo : cList) {
-                cFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
-            }
-            for (FileInfo fileInfo : cppList) {
-                cppFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
-            }
-
-            List<Similarity> similarityList = new ArrayList<>();
-            CompileUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
-            String content = FileUtil.readFile(unionFolderName + "similarity" + questionNoStr + "_c.txt");
-            Pattern pattern = Pattern.compile("\\./(.*?)/" + questionNoStr + "\\.c consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.c");
-            Matcher matcher = pattern.matcher(content);
-            while (matcher.find()) {
-                String studentId1 = matcher.group(1);
-                String studentId2 = matcher.group(3);
-                Similarity test = similarityList.stream()
-                        .filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2) && x.getQuestionId() == entry.getValue().questionId)
-                        .findFirst().orElse(null);
-                if (test != null) {
-                    test.setToSimilarity(Integer.parseInt(matcher.group(2)));
-                } else {
-                    Similarity info = new Similarity();
-                    info.setQuestionId(question.getQuestionId());
-                    info.setUserId1(matcher.group(1));
-                    info.setUserId2(matcher.group(3));
-                    info.setFromSimilarity(Integer.parseInt(matcher.group(2)));
-                    similarityList.add(info);
+            List<FileInfo> cppList = cppfileInfoListHashByQuestionNo.get(questionNoStr);
+            if (cList != null) {
+                for (FileInfo fileInfo : cList) {
+                    cFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
                 }
             }
-        }
-//
-//        List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
-//        //预先记录相似度分析的文件名
-//        Map<Integer, Temp> questionFilesPathMap = new TreeMap<>();
-//        for /*、*/(QuestionListVo vo : questionVoList) {
-//            Temp temp = new Temp();
-//            temp.questionId = vo.questionId;
-//            temp.questionFilesPath = "";
-//            questionFilesPathMap.put(vo.questionNo, temp);
-//        }
-//
-//        List<Upload> uploadList = uploadService.findByAssignmentId(assignmentId);
-//        if (!uploadList.isEmpty()) {
-//
-//            String assignmentDirectoryPath = MyConstants.uploadPath + assignment.getUploadDirectory() + "/";
-//
-//            for (Upload upload : uploadList) {
-//                String stuNum = upload.getUserId();
-//                List<FileInfo> fileInfoList = JSON.parseArray(upload.getUploadFileInfo(), FileInfo.class);
-//                for (FileInfo fileInfo : fileInfoList) {
-//                    int questionNo = Integer.parseInt(fileInfo.prefix);
-//                    Temp tempInfo = questionFilesPathMap.get(questionNo);
-//                    if (tempInfo != null) {
-//                        if (tempInfo.questionFilesPath.isEmpty()) {
-//                            tempInfo.questionFilesPath += "./" + stuNum + "/" + fileInfo.fileName;
-//                        } else {
-//                            tempInfo.questionFilesPath += " ./" + stuNum + "/" + fileInfo.fileName;
-//                        }
-//                        questionFilesPathMap.replace(questionNo, tempInfo);
-//                    }
-//                }
-//            }
-//
-//
-//            //相似度分析
-//            List<Similarity> similarityList = new ArrayList<>();
-//            for (Map.Entry<Integer, Temp> entry : questionFilesPathMap.entrySet()) {
-//                CompileUtil.similarityTest(assignmentDirectoryPath, entry.getKey(), entry.getValue().questionFilesPath);
-//                String content = FileUtil.readFile(assignmentDirectoryPath + "similarity" + entry.getKey() + ".txt");
-//                Pattern pattern = Pattern.compile("\\./(.*?)/" + entry.getKey() + "\\.c consists for (.*?) % of \\./(.*?)/" + entry.getKey() + "\\.c");
-//                Matcher matcher = pattern.matcher(content);
-//                while (matcher.find()) {
-//                    String studentId1 = matcher.group(1);
-//                    String studentId2 = matcher.group(3);
-//                    Similarity test = similarityList.stream()
-//                            .filter(x -> x.getUserId2().equals(studentId1) && x.getUserId1().equals(studentId2) && x.getQuestionId() == entry.getValue().questionId)
-//                            .findFirst().orElse(null);
-//                    if (test != null) {
-//                        test.setToSimilarity(Integer.parseInt(matcher.group(2)));
-//                    } else {
-//                        Similarity info = new Similarity();
-//                        info.setQuestionId(entry.getValue().questionId);
-//                        info.setUserId1(matcher.group(1));
-//                        info.setUserId2(matcher.group(3));
-//                        info.setFromSimilarity(Integer.parseInt(matcher.group(2)));
-//                        similarityList.add(info);
-//                    }
-//                }
-//            }
-//            for (Similarity similarity : similarityList) {
-//                if (similarityService.findById(similarity.getQuestionId(), similarity.getUserId1(), similarity.getUserId2()) != null) {
-//                    similarity.update();
-//                } else {
-//                    similarity.save();
-//                }
-//            }
-//            //相似度分析end
-//        }
+            if (cppList != null) {
+                for (FileInfo fileInfo : cppList) {
+                    cppFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
+                }
+            }
 
-        redirect("/similarity/" + assignmentId);
+            CompileUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
+            CompileUtil.similarityTest(unionFolderName, question.getQuestionNo(), cppFileStr.toString(), "cpp");
+            String cContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_c.txt");
+            String cppContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_cpp.txt");
+            String cPattern = "\\./(.*?)/" + questionNoStr + "\\.c consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.c";
+            String cppPattern = "\\./(.*?)/" + questionNoStr + "\\.cpp consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.cpp";
+
+            getSimilarityResult(cContent, cPattern, similarityVoList, userList);
+            getSimilarityResult(cppContent, cppPattern, similarityVoList, userList);
+
+            SimilarityResultVo similarityResultVo = new SimilarityResultVo();
+            similarityResultVo.questionId = question.getQuestionId();
+            similarityResultVo.questionNo = question.getQuestionNo();
+            similarityResultVo.lowSimilarityVoList = similarityVoList
+                    .stream().filter(x -> x.similarity > 10 && x.similarity <= 30).collect(Collectors.toList());
+            similarityResultVo.mediumSimilarityVoList = similarityVoList
+                    .stream().filter(x -> x.similarity > 30 && x.similarity <= 50).collect(Collectors.toList());
+            similarityResultVo.highSimilarityVoList = similarityVoList
+                    .stream().filter(x -> x.similarity > 50).collect(Collectors.toList());
+            similarityResultVoList.add(similarityResultVo);
+        }
+
+        Collections.sort(similarityResultVoList);
+
+        setAttr("similarityResultVoList", similarityResultVoList);
+
+        render("_similarity_result.html");
+    }
+
+    private void getSimilarityResult(String content, String regexStr, List<SimilarityVo> similarityVoList, List<User> userList) {
+        Pattern pattern = Pattern.compile(regexStr);
+        Matcher matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            String studentId1 = matcher.group(1);
+            String studentId2 = matcher.group(3);
+            SimilarityVo test = similarityVoList.stream()
+                    .filter(x -> x.userId2.equals(studentId1) && x.userId1.equals(studentId2))
+                    .findFirst().orElse(null);
+            if (test != null) {
+                int newSimilarity = Integer.parseInt(matcher.group(2));
+                if (test.similarity < newSimilarity)
+                    test.similarity = newSimilarity;
+            } else {
+                SimilarityVo vo = new SimilarityVo();
+                vo.userId1 = matcher.group(1);
+                vo.userId2 = matcher.group(3);
+                User user1 = userList.stream().filter(x -> x.getUserId().equals(matcher.group(1))).findFirst().orElse(null);
+                User user2 = userList.stream().filter(x -> x.getUserId().equals(matcher.group(3))).findFirst().orElse(null);
+                vo.userName1 = user1 == null ? "" : user1.getUserName();
+                vo.userName2 = user2 == null ? "" : user2.getUserName();
+                vo.similarity = Integer.parseInt(matcher.group(2));
+                similarityVoList.add(vo);
+            }
+        }
     }
 
 
@@ -375,36 +345,4 @@ public class ResultViewController extends Controller {
         return executeResultVo;
     }
 
-
-    public List<SimilarityResultVo> getSimilarityResult(int assignmentId) {
-        List<SimilarityResultVo> similarityResultVoList = new ArrayList<>();
-        Map<Integer, List<Similarity>> listMap = similarityService.findByAssignmentId(assignmentId)
-                .stream().collect(Collectors.groupingBy(Similarity::getQuestionId));
-        for (Map.Entry<Integer, List<Similarity>> entry : listMap.entrySet()) {
-            SimilarityResultVo similarityResultVo = new SimilarityResultVo();
-            similarityResultVo.questionId = entry.getKey();
-            Question question = questionService.findById(entry.getKey());
-            similarityResultVo.questionNo = question == null ? 0 : question.getQuestionNo();
-            List<SimilarityVo> similarityVoList = entry.getValue().stream().map(x -> {
-                SimilarityVo similarityVo = new SimilarityVo();
-                similarityVo.userId1 = x.getUserId1();
-                similarityVo.userId2 = x.getUserId2();
-                User user1 = userService.findByUserId(x.getUserId1());
-                User user2 = userService.findByUserId(x.getUserId2());
-                similarityVo.userName1 = user1 == null ? "" : user1.getUserName();
-                similarityVo.userName2 = user2 == null ? "" : user2.getUserName();
-                similarityVo.similarity = x.getFromSimilarity() > x.getToSimilarity() ? x.getFromSimilarity() : x.getToSimilarity();
-                return similarityVo;
-            }).collect(Collectors.toList());
-            similarityResultVo.lowSimilarityVoList = similarityVoList
-                    .stream().filter(x -> x.similarity > 10 && x.similarity <= 30).collect(Collectors.toList());
-            similarityResultVo.mediumSimilarityVoList = similarityVoList
-                    .stream().filter(x -> x.similarity > 30 && x.similarity <= 50).collect(Collectors.toList());
-            similarityResultVo.highSimilarityVoList = similarityVoList
-                    .stream().filter(x -> x.similarity > 50).collect(Collectors.toList());
-            similarityResultVoList.add(similarityResultVo);
-        }
-        Collections.sort(similarityResultVoList);
-        return similarityResultVoList;
-    }
 }

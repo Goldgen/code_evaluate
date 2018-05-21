@@ -35,6 +35,8 @@ public class StudentQuestionService {
         List<Question> questionList = questionDao.find("select * from question where assignmentId = ?", assignmentId);
         String questionIdListStr = "(";
         List<Integer> questionIdList = questionList.stream().map(Question::getQuestionId).collect(Collectors.toList());
+        if (questionIdList.isEmpty()) return new ArrayList<>();
+
         for (int id : questionIdList) {
             if (id == questionIdList.get(questionIdList.size() - 1)) {
                 questionIdListStr += id + ")";

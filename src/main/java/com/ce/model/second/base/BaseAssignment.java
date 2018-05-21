@@ -99,4 +99,13 @@ public abstract class BaseAssignment<M extends BaseAssignment<M>> extends Model<
 		return getStr("uploadDirectory");
 	}
 
+	public M setIsCaseEditFinish(java.lang.Boolean isCaseEditFinish) {
+		set("isCaseEditFinish", isCaseEditFinish);
+		return (M)this;
+	}
+	
+	public java.lang.Boolean getIsCaseEditFinish() {
+		return get("isCaseEditFinish");
+	}
+
 }

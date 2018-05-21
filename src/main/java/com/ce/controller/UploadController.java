@@ -110,6 +110,11 @@ public class UploadController extends Controller {
 
     public void run() throws IOException, InterruptedException {
         int assignmentId = getParaToInt("assignmentId");
+        Assignment assignment = assignmentService.findById(assignmentId);
+        if (!assignment.getIsCaseEditFinish()) {
+            renderJson(JSON.toJSONString(JsonResponse.ok(2)));
+            return;
+        }
         int questionId = getParaToInt("questionId");
         String code = getPara("code");
         int language = getParaToInt("language");
@@ -118,7 +123,7 @@ public class UploadController extends Controller {
         String suffix = language == 1 ? ".c" : ".cpp";
         String deleteSuffix = language != 1 ? ".c" : ".cpp";
 
-        Assignment assignment = assignmentService.findById(assignmentId);
+
         Question question = questionService.findById(questionId);
 
         String unionFolderName = assignment.getUploadDirectory();
@@ -229,7 +234,7 @@ public class UploadController extends Controller {
             }
         }
 
-        renderJson(JSON.toJSONString(JsonResponse.ok(evaluateInfo)));
+        renderJson(JSON.toJSONString(JsonResponse.ok(evaluateInfo, 1)));
 
     }
 

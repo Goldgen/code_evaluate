@@ -17,6 +17,7 @@
 <div class="container-fluid">
     <div class="row">
 
+        <input type="hidden" value="#(assignment.isCaseEditFinish)" id="isCaseEditFinish">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
                 #include("_sidebar.html")
@@ -30,7 +31,7 @@
                     <li><span>作业详情</span></li>
                 </div>
             </div>
-            <div class="row">
+            <div class="row main-table">
                 <div class="col-md-11">
                     <div class="pull-right">
                         <a class="btn btn-primary add-question-btn">
@@ -40,14 +41,21 @@
                            href="/question/addQuestionFromDb?assignmentId=#(assignment.assignmentId)&questionNo=#(questionSize)">
                             从题库新增题目
                         </a>
+                        #if(assignment.isCaseEditFinish)
+                        <a class="btn btn-primary " id="start-edit-btn"
+                           href="/question/startEdit?assignmentId=#(assignment.assignmentId)">
+                            开始编辑
+                        </a>
+                        #else
                         <a class="btn btn-primary "
                            href="/question/finish?assignmentId=#(assignment.assignmentId)">
                             编辑完成
                         </a>
+                        #end
                     </div>
                 </div>
             </div>
-            <div class="row" style="margin-top: 20px">
+            <div class="row main-table" style="margin-top: 20px">
                 #for(question : questionVoList)
                 <div class="row">
                     <div class="col-md-10"><h3>第#(question.questionNo)题</h3></div>
@@ -196,6 +204,13 @@
     $(function () {
 
         $('[data-toggle="tooltip"]').tooltip();
+
+        var isCaseEditFinish = $('#isCaseEditFinish').val();
+
+        if (isCaseEditFinish === 'true') {
+            $('.main-table').find('a').hide();
+            $('#start-edit-btn').show();
+        }
 
         $('.add-question-btn').click(function () {
             $('#question-content').val('');

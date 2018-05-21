@@ -3,6 +3,7 @@ package com.ce.service;
 import com.ce.model.second.StudentClass;
 import com.ce.model.second.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,16 +13,23 @@ public class UserService {
 
     private static final StudentClass studentClassDao = new StudentClass().dao();
 
-    public User findById(String userId) {
-        return userDao.findById(userId);
-    }
-
-    public void deleteById(String userId) {
-        userDao.deleteById(userId);
-    }
 
     public User findByUserId(String userId) {
         return userDao.findFirst("select * from user where userId = ?", userId);
+    }
+
+    public List<User> findByIds(List<String> idList) {
+        if (idList.isEmpty())
+            return new ArrayList<>();
+        StringBuilder idListStr = new StringBuilder("(");
+        for (String id : idList) {
+            if (id.equals(idList.get(idList.size() - 1))) {
+                idListStr.append(id).append(")");
+            } else {
+                idListStr.append(id).append(",");
+            }
+        }
+        return userDao.find("select * from user where userId in " + idListStr);
     }
 
     public List<String> findStudentIdByClassId(String classId) {

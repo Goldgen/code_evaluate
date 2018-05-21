@@ -156,6 +156,18 @@ public class QuestionController extends Controller {
         redirect("/question/" + assignmentId);
     }
 
+    public void startEdit() throws IOException {
+        int assignmentId = getParaToInt("assignmentId");
+
+        Assignment assignment = assignmentService.findById(assignmentId);
+
+        assignment.setIsCaseEditFinish(false);
+        assignment.update();
+
+        redirect("/question/" + assignmentId);
+    }
+
+
     public void finish() throws IOException {
         int assignmentId = getParaToInt("assignmentId");
 
@@ -166,11 +178,11 @@ public class QuestionController extends Controller {
 
         if (unionFolderName.isEmpty()) {
             unionFolderName = FileUtil.generateFolderName();
-            assignmentDirectoryPath = MyConstants.uploadPath + unionFolderName + "/";
+            assignmentDirectoryPath = unionFolderName + "/";
             FileUtil.createDirectory(MyConstants.uploadPath + unionFolderName + "/");
             assignmentService.update(assignmentId, unionFolderName);
         } else {
-            assignmentDirectoryPath = MyConstants.uploadPath + unionFolderName + "/";
+            assignmentDirectoryPath = unionFolderName + "/";
         }
 
 
@@ -182,6 +194,10 @@ public class QuestionController extends Controller {
                 FileUtil.addTxtFile(inputFilePath, testCase.getTestCaseContent());
             }
         }
+
+        assignment.setIsCaseEditFinish(true);
+        assignment.update();
+
 
         redirect("/question/" + assignmentId);
     }

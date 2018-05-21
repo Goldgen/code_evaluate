@@ -79,7 +79,7 @@ public class FileUtil {
                                 if ((suffix.equals("c") || suffix.equals("cpp")) && isNumeric(prefix)) {
                                     FileInfo fileInfo = new FileInfo(fileName, prefix, suffix, folderName);
                                     fileInfoList.add(fileInfo);
-                                    return FileVisitResult.TERMINATE;
+                                    return FileVisitResult.CONTINUE;
                                 }
                                 return FileVisitResult.CONTINUE;
                             }
