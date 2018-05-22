@@ -135,16 +135,25 @@
             $.post("/upload/codeView", {
                 questionId: questionId
             }, function (data) {
-
                 layer.close(index);
-                if (data.code == 1) {
-                    $('#cCodeModel').modal('toggle');
+                if (data.code === 1) {
                     cEditor.setValue(data.payload);
+                    $('#cCodeModel').modal('toggle');
+                    cEditor.refresh();
                 } else {
-                    $('#cppCodeModel').modal('toggle');
                     cppEditor.setValue(data.payload);
+                    $('#cppCodeModel').modal('toggle');
+
                 }
             });
+        });
+
+        $('#cCodeModel').on('shown.bs.modal', function (e) {
+            cEditor.refresh();
+        });
+
+        $('#cppCodeModel').on('shown.bs.modal', function (e) {
+            cppEditor.refresh();
         });
     });
 </script>

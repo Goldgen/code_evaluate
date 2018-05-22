@@ -134,6 +134,14 @@
             });
         });
 
+        $('#cCodeModel').on('shown.bs.modal', function (e) {
+            cEditor.refresh();
+        });
+
+        $('#cppCodeModel').on('shown.bs.modal', function (e) {
+            cppEditor.refresh();
+        });
+
         $('.compile-error').click(function () {
             layer.open({
                 type: 1,

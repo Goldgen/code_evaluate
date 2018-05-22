@@ -179,7 +179,7 @@ public class QuestionController extends Controller {
         if (unionFolderName.isEmpty()) {
             unionFolderName = FileUtil.generateFolderName();
             assignmentDirectoryPath = unionFolderName + "/";
-            FileUtil.createDirectory(MyConstants.uploadPath + unionFolderName + "/");
+            FileUtil.createDirectory( unionFolderName + "/");
             assignmentService.update(assignmentId, unionFolderName);
         } else {
             assignmentDirectoryPath = unionFolderName + "/";
