@@ -1,7 +1,10 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.model.first.*;
+import com.ce.model.first.Question;
+import com.ce.model.first.StudentQuestion;
+import com.ce.model.first.TestCase;
+import com.ce.model.first.Upload;
 import com.ce.model.second.Assignment;
 import com.ce.model.second.User;
 import com.ce.service.*;
@@ -237,13 +240,17 @@ public class ResultViewController extends Controller {
         List<String> headList = new ArrayList<>();
         headList.add("学号");
         headList.add("姓名");
-        headList.add("得分");
+        headList.add("测试用例得分");
+        headList.add("静态分析得分");
+        headList.add("总分");
         List<Map<String, Object>> dataList = new ArrayList<>();
         for (ExecuteResultVo vo : executeResultVoList) {
             Map<String, Object> temp = new HashMap<>();
             temp.put("学号", vo.studentId);
             temp.put("姓名", vo.studentName);
-            temp.put("得分", vo.score);
+            temp.put("测试用例得分", vo.testCaseScore);
+            temp.put("静态分析得分", vo.evaluateScore);
+            temp.put("总分", vo.score);
             dataList.add(temp);
         }
         ExcelUtil.exportXlsx(response, fileName, headList, dataList);
@@ -301,12 +308,20 @@ public class ResultViewController extends Controller {
 
 
             int score = 0;
+            int testCaseScore = 0;
+            int evaluateScore = 0;
             for (QuestionResultVo questionResultVo : executeResultVo.questionResultList) {
                 score += questionResultVo.evaluateScore;
+                evaluateScore += questionResultVo.evaluateScore;
                 score += questionResultVo.testCaseScore;
+                testCaseScore += questionResultVo.testCaseScore;
             }
             score = score / questionNum;
+            evaluateScore = evaluateScore / questionNum;
+            testCaseScore = testCaseScore / questionNum;
             executeResultVo.score = score;
+            executeResultVo.evaluateScore = evaluateScore;
+            executeResultVo.testCaseScore = testCaseScore;
             executeResultVoList.add(executeResultVo);
         }
         Collections.sort(executeResultVoList);
@@ -335,12 +350,20 @@ public class ResultViewController extends Controller {
 
 
         int score = 0;
+        int testCaseScore = 0;
+        int evaluateScore = 0;
         for (QuestionResultVo questionResultVo : executeResultVo.questionResultList) {
             score += questionResultVo.evaluateScore;
+            evaluateScore += questionResultVo.evaluateScore;
             score += questionResultVo.testCaseScore;
+            testCaseScore += questionResultVo.testCaseScore;
         }
         score = score / questionNum;
+        evaluateScore = evaluateScore / questionNum;
+        testCaseScore = testCaseScore / questionNum;
         executeResultVo.score = score;
+        executeResultVo.evaluateScore = evaluateScore;
+        executeResultVo.testCaseScore = testCaseScore;
 
         return executeResultVo;
     }

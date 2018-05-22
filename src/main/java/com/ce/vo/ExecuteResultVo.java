@@ -7,6 +7,8 @@ public class ExecuteResultVo implements Comparable<ExecuteResultVo> {
     public String studentId;
     public String studentName;
     public int score;
+    public int testCaseScore;
+    public int evaluateScore;
     public List<QuestionResultVo> questionResultList;
 
     @Override

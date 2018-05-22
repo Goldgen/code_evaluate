@@ -166,7 +166,7 @@
         if (data.isCompilePass) {
             var compileInfo = "编译通过";
             $('#compileInfo').html("编译信息：" + compileInfo);
-            var testCaseInfo = "在" + data.testCaseSize + "个测试用例中通过了" + data.testCasePassNum + "个";
+            var testCaseInfo = "在" + data.testCaseSize + "个测试用例中通过了" + data.testCasePassNum + "个 " + data.executeInfo;
             $('#testCaseInfo').html("测试用例信息：" + testCaseInfo);
             var testCaseScore = "测试用例得分：" + data.testCaseScore;
             $('#testCaseScore').html(testCaseScore);
@@ -175,7 +175,7 @@
 
             var tbody = '';
             $.each(data.violationList, function (index, obj) {
-                tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.message + '</td></tr>';
+                tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.rule + '</td></tr>';
                 $('#static-info').html(tbody);
             });
         }

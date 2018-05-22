@@ -172,22 +172,25 @@ public class UploadController extends Controller {
 
             //执行，比较测试用例和输出
             System.out.println("正在执行学号" + stuNum + " 第" + questionId + "题文件");
+            evaluateInfo.executeInfo = "";
             double testCasePassNum = 0;
             for (TestCase testCase : testCaseList) {
                 String inputFileName = question.getQuestionNo() + "_input_" + testCase.getTestCaseId() + ".txt";
                 String outputFileName = question.getQuestionNo() + "_output_" + testCase.getTestCaseId() + ".txt";
-                CompileUtil.execute(studentDirectoryPath, prefix + ".out", inputFileName, outputFileName);
+                ShellReturnInfo excuteReturnInfo = CompileUtil.execute(studentDirectoryPath, prefix + ".out", inputFileName, outputFileName);
+                if (!excuteReturnInfo.isPass)
+                    evaluateInfo.executeInfo = "有部分测试用例执行超时";
                 String outputFilePath = studentDirectoryPath + "/" + outputFileName;
                 if (FileUtil.compareFileWithString(outputFilePath, testCase.getAnswer())) {
                     testCasePassNum++;
                 }
             }
             int testCaseSize = testCaseList.size();
-            int testCaseScore = (int) ((testCasePassNum / testCaseSize) * 70);
+            int testCaseScore = (int) ((testCasePassNum / testCaseSize) * 80);
 
             evaluateInfo.testCasePassNum = (int) testCasePassNum;
             evaluateInfo.testCaseSize = testCaseSize;
-            evaluateInfo.testCaseScore = testCaseScore;
+            evaluateInfo.testCaseScore = (int) ((testCasePassNum / testCaseSize) * 100);  //以百分制显示
 
 
             //静态分析
@@ -198,14 +201,14 @@ public class UploadController extends Controller {
             String json = FileUtil.readFile(evaluateFilePath);
             OclintInfoVo info = JSON.parseObject(json, OclintInfoVo.class);
 
-            int evaluationScore = 30;
+            double evaluationScore = 20;
             for (Violation violation : info.violation) {
                 switch (violation.getPriority()) {
                     case 1:
-                        evaluationScore = evaluationScore - 7;
+                        evaluationScore = evaluationScore - 5;
                         break;
                     case 2:
-                        evaluationScore = evaluationScore - 3;
+                        evaluationScore = evaluationScore - 2;
                         break;
                     case 3:
                         evaluationScore = evaluationScore - 1;
@@ -215,7 +218,7 @@ public class UploadController extends Controller {
                 }
             }
 
-            evaluateInfo.evaluationScore = evaluationScore;
+            evaluateInfo.evaluationScore = (int) ((evaluationScore / 20) * 100); //以百分制显示
             evaluateInfo.violationList = info.violation;
 
             StudentQuestion studentQuestion = new StudentQuestion();
@@ -225,7 +228,7 @@ public class UploadController extends Controller {
             studentQuestion.setCompileErrorInfo("");
             studentQuestion.setTestCaseScore(testCaseScore);
             studentQuestion.setTestCasePassNum((int) testCasePassNum);
-            studentQuestion.setEvaluationScore(evaluationScore < 0 ? 0 : evaluationScore);
+            studentQuestion.setEvaluationScore((int) (evaluationScore < 0 ? 0 : evaluationScore));
             studentQuestion.setCodePath(codePath);
             if (alreadyExist) {
                 studentQuestion.update();
@@ -266,6 +269,7 @@ public class UploadController extends Controller {
     public class EvaluateInfo {
         public boolean isCompilePass;
         public String compileErrorInfo;
+        public String executeInfo;
         public int testCasePassNum;
         public int testCaseSize;
         public int testCaseScore;

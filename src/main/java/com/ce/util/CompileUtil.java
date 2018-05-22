@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class CompileUtil {
 
@@ -18,35 +19,36 @@ public class CompileUtil {
     public static ShellReturnInfo isCompilePass(String fatherFilePath, String fileName) throws IOException, InterruptedException {
         fatherFilePath = getRealPath(fatherFilePath);
         String cmd = "sh " + MyConstants.shellPath + "compile.sh " + fatherFilePath + " " + fileName;
-        return executeShellCmd(cmd);
+        return executeShellCmd(cmd, -1);
     }
 
-    public static void execute(String fatherFilePath, String fileName, String inputFileName, String outputFileName) throws IOException, InterruptedException {
+    public static ShellReturnInfo execute(String fatherFilePath, String fileName, String inputFileName, String outputFileName) throws IOException, InterruptedException {
         fatherFilePath = getRealPath(fatherFilePath);
         String cmd = "sh " + MyConstants.shellPath + "execute.sh " + fatherFilePath + " " + fileName + " " + inputFileName + " " + outputFileName;
-        executeShellCmd(cmd);
+        //设置5秒运行超时
+        return executeShellCmd(cmd, 5);
     }
 
     public static void unZipAll(String fatherFilePath, String oldZipFileName, String newFolderName) throws IOException, InterruptedException {
         fatherFilePath = getRealPath(fatherFilePath);
-        executeShellCmd("sh " + MyConstants.shellPath + "unzipAll.sh " + fatherFilePath + " " + oldZipFileName + " " + newFolderName);
+        executeShellCmd("sh " + MyConstants.shellPath + "unzipAll.sh " + fatherFilePath + " " + oldZipFileName + " " + newFolderName, -1);
     }
 
     public static void zip(String filePath, String copyFilePath, String zipName) throws IOException, InterruptedException {
         filePath = getRealPath(filePath);
         copyFilePath = getRealPath(copyFilePath);
-        executeShellCmd("sh " + MyConstants.shellPath + "packcode.sh " + filePath + " " + copyFilePath + " " + zipName);
+        executeShellCmd("sh " + MyConstants.shellPath + "packcode.sh " + filePath + " " + copyFilePath + " " + zipName, -1);
     }
 
     public static void unZip(String fatherFilePath, String oldZipFileName, String newFolderName) throws IOException, InterruptedException {
         fatherFilePath = getRealPath(fatherFilePath);
-        executeShellCmd("sh " + MyConstants.shellPath + "unzip.sh " + fatherFilePath + " " + oldZipFileName + " " + newFolderName);
+        executeShellCmd("sh " + MyConstants.shellPath + "unzip.sh " + fatherFilePath + " " + oldZipFileName + " " + newFolderName, -1);
     }
 
     public static void evaluate(String fatherFilePath, String fileName, String resultFileName) throws IOException, InterruptedException {
         fatherFilePath = getRealPath(fatherFilePath);
         String cmd = "sh " + MyConstants.shellPath + "evaluate.sh " + fatherFilePath + " " + fileName + " " + resultFileName;
-        executeShellCmd(cmd);
+        executeShellCmd(cmd, -1);
     }
 
     public static void similarityTest(String fatherFilePath, int questionNo, String questionFilesPath, String type) throws IOException, InterruptedException {
@@ -56,11 +58,20 @@ public class CompileUtil {
     }
 
     //执行shell命令，返回执行中是否有错误
-    private static ShellReturnInfo executeShellCmd(String cmd) throws InterruptedException, IOException {
+    private static ShellReturnInfo executeShellCmd(String cmd, int seconds) throws InterruptedException, IOException {
         ShellReturnInfo shellReturnInfo = new ShellReturnInfo();
         String errStr = "";
         Process process = Runtime.getRuntime().exec(cmd);
-        process.waitFor();
+        if (seconds <= 0) {
+            process.waitFor();
+        } else {
+            if (!process.waitFor(seconds, TimeUnit.SECONDS)) {
+                process.destroy();
+                shellReturnInfo.errorInfo = "运行超过5秒";
+                shellReturnInfo.isPass = false;
+                return shellReturnInfo;
+            }
+        }
         BufferedReader bufferError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         StringBuilder errBuilder = new StringBuilder();
         while (true) {
