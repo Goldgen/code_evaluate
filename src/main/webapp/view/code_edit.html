@@ -69,7 +69,7 @@
 </div>
 
 <div class="modal fade" id="resultModel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -86,6 +86,7 @@
                     <thead>
                     <tr>
                         <th width="30%">位置</th>
+                        <th>规则</th>
                         <th>信息</th>
                     </tr>
                     </thead>
@@ -129,13 +130,9 @@
 
     btn.click(function () {
         btn.prop('disabled', true);
-        loadingdata = '程序正在运行中……';
-        $("#compiler-textarea-result").val(loadingdata);
-
-        code = editor.getValue();
-
         var questionId = $('#questionId').val();
         var assignmentId = $('#assignmentId').val();
+        code = editor.getValue();
         var index = layer.load(1, {
             shade: [0.5, '#fff']
         });
@@ -175,7 +172,7 @@
 
             var tbody = '';
             $.each(data.violationList, function (index, obj) {
-                tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.rule + '</td></tr>';
+                tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.rule + '</td><td>' + obj.message + '</td></tr>';
                 $('#static-info').html(tbody);
             });
         }

@@ -33,6 +33,18 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-2">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">提交统计</h3>
+                        </div>
+                        <div class="panel-body">
+                            #(submitCountInfo)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-10">
                     <div class="pull-right">
                         <a class="btn btn-primary btn-sm"
@@ -44,6 +56,7 @@
                     </div>
                 </div>
             </div>
+
 
             #include("_execute_result_table.html")
 
@@ -76,6 +89,32 @@
             </div>
             <div class="modal-body">
                 <textarea class="form-control" id="cpp-code" rows="18" style="max-height: 400px">#[[]]#</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resultModel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="modal-title">静态分析结果</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th width="30%">位置</th>
+                        <th>规则</th>
+                        <th>信息</th>
+                        <th>扣分</th>
+                    </tr>
+                    </thead>
+                    <tbody id="static-info">
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -150,12 +189,33 @@
             });
         });
 
-        $('.confirm-release-btn').click(function () {
-            layer.confirm('是否确认发布吗？', {
-                btn: ['确认', '取消']
-            }, function (index, layero) {
-                window.location.href = "/assignment/confirmRelease?assignmentId=#(assignment.assignmentId)";
-            }, function (index) {
+        $('.static-analysis').click(function () {
+
+            var url = $(this).data('href');
+            var index = layer.load(1, {
+                shade: [0.5, '#fff']
+            });
+            $.post(url, {}, function (data) {
+                if (data.code === 1) {
+                    layer.close(index);
+                    var tbody = '';
+                    $.each(data.payload, function (index, obj) {
+                        var delta = 0;
+                        if (obj.priority === 3) {
+                            delta = -1;
+                        }
+                        if (obj.priority === 2) {
+                            delta = -2;
+                        }
+                        if (obj.priority === 1) {
+                            delta = -5;
+                        }
+                        tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.rule + '</td><td>' + obj.message + '</td><td>' + delta + '</td></tr>';
+                        $('#static-info').html(tbody);
+                    });
+                }
+                $('#resultModel').modal('toggle');
+
             });
         });
 

@@ -4,6 +4,7 @@
         <th>学号</th>
         <th>姓名</th>
         <th>总分</th>
+        <th>提交状态</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -13,6 +14,7 @@
         <td>#(executeResult.studentId)</td>
         <td>#(executeResult.studentName)</td>
         <td>#(executeResult.score)</td>
+        <td>#(executeResult.submitStatus)</td>
         <td>
             <a href="javascript:void(0)" class="btn btn-info btn-xs detail-info-btn" title="批改详情"
                data-toggle="tooltip" data-placement="bottom" data-target="##(executeResult.studentId)"><i
@@ -67,7 +69,12 @@
                                            data-toggle="tooltip"
                                            data-placement="bottom">#(x.testCaseScore)</a>
                                     </td>
-                                    <td>#(x.evaluateScore)</td>
+                                    <td><a class="static-analysis"
+                                           data-href="/review/staticAnalysis?assignmentId=#(assignment.assignmentId)&questionId=#(x.questionId)&userId=#(executeResult.studentId)"
+                                           title="点击进行静态分析"
+                                           target="_Blank"
+                                           data-toggle="tooltip"
+                                           data-placement="bottom">#(x.evaluateScore)</a></td>
                                 </tr>
                                 #end
                                 </tbody>

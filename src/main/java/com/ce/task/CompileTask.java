@@ -1,20 +1,14 @@
 package com.ce.task;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.config.MyConstants;
 import com.ce.model.first.*;
-import com.ce.model.second.Assignment;
 import com.ce.service.*;
 import com.ce.util.FileUtil;
-import com.ce.util.CompileUtil;
+import com.ce.util.CorrectUtil;
 import com.ce.vo.*;
 import com.jfinal.kit.LogKit;
-import com.jfinal.kit.PathKit;
-import com.jfinal.plugin.activerecord.Db;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CompileTask implements Runnable {
 
@@ -62,7 +56,7 @@ public class CompileTask implements Runnable {
                     int questionId = question.getQuestionId();
                     boolean alreadyExist = studentQuestionService.findById(questionId, stuNum) != null;
                     //编译
-                    ShellReturnInfo returnInfo = CompileUtil.isCompilePass(directoryPath, fileName);
+                    ShellReturnInfo returnInfo = CorrectUtil.isCompilePass(directoryPath, fileName);
                     if (!returnInfo.isPass) {
                         StudentQuestion studentQuestion = new StudentQuestion();
                         studentQuestion.setUserId(stuNum);
@@ -86,7 +80,7 @@ public class CompileTask implements Runnable {
                     for (TestCase testCase : testCaseList) {
                         String inputFileName = question.getQuestionNo() + "_input_" + testCase.getTestCaseId() + ".txt";
                         String outputFileName = question.getQuestionNo() + "_output_" + testCase.getTestCaseId() + ".txt";
-                        CompileUtil.execute(directoryPath, prefix + ".out", inputFileName, outputFileName);
+                        CorrectUtil.execute(directoryPath, prefix + ".out", inputFileName, outputFileName);
                         String outputFilePath = directoryPath + "/" + outputFileName;
                         if (FileUtil.compareFileWithString(outputFilePath, testCase.getAnswer())) {
                             testCasePassNum++;
@@ -97,7 +91,7 @@ public class CompileTask implements Runnable {
                     //静态分析
                     System.out.println("正在分析学号" + stuNum + " 第" + question.getQuestionNo() + "题文件");
                     String resultFileName = prefix + "_result.json";
-                    CompileUtil.evaluate(directoryPath, fileName, resultFileName);
+                    CorrectUtil.evaluate(directoryPath, fileName, resultFileName);
                     String evaluateFilePath = directoryPath + "/" + question.getQuestionNo() + "_result.json";
                     String json = FileUtil.readFile(evaluateFilePath);
                     OclintInfoVo info = JSON.parseObject(json, OclintInfoVo.class);

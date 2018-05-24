@@ -84,7 +84,7 @@
                             <td data-submit="true">#(x.needSubmit ? '是':'否')</td>
                             <td>是</td>
                             <td>
-                                <a href="/execute/#(x.assignmentId)"
+                                <a href=#if(isTeacher)"/execute/#(x.assignmentId)"#else"/upload/#(x.assignmentId)"#end
                                    title="查看作业详情" class="btn btn-info btn-xs" data-toggle="tooltip"
                                    data-placement="bottom">
                                     <i class="glyphicon glyphicon-list"></i>

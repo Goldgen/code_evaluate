@@ -7,7 +7,9 @@ import com.ce.service.ClassService;
 import com.ce.util.CommonUtil;
 import com.ce.vo.ClassListVo;
 import com.jfinal.core.Controller;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,11 +21,16 @@ public class BaseInfoController extends Controller {
 
     public void classes() {
         String userId = getSessionAttr("userId", "");
-        String userType = getSessionAttr("userType", "student");
+        boolean isTeacher = getSessionAttr("isTeacher", false);
         List<Class> classList;
-        System.out.println(userType);
-        if (userType.equals("teacher")) {
-            classList = classService.findAllByTeacherId(userId);
+        if (isTeacher) {
+            String classId = getSessionAttr("classId", "");
+            if (!StringUtils.isEmpty(classId)) {
+                classList = new ArrayList<>();
+                classList.add(classService.findSingleByClassId(classId));
+            } else {
+                classList = classService.findAllByTeacherId(userId);
+            }
         } else {
             classList = classService.findAllByStudentId(userId);
         }
@@ -60,5 +67,5 @@ public class BaseInfoController extends Controller {
         setAttr("classInfo", vo);
         render("assignment_list.html");
     }
-    
+
 }

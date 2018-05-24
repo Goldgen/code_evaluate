@@ -4,11 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.ce.model.first.Question;
 import com.ce.model.first.StudentQuestion;
 import com.ce.model.first.TestCase;
-import com.ce.model.first.Upload;
 import com.ce.model.second.Assignment;
 import com.ce.model.second.User;
 import com.ce.service.*;
-import com.ce.util.CompileUtil;
+import com.ce.util.CorrectUtil;
 import com.ce.util.ExcelUtil;
 import com.ce.util.FileUtil;
 import com.ce.vo.*;
@@ -43,24 +42,20 @@ public class ResultViewController extends Controller {
     @ActionKey("/execute")
     public void executeResult() {
         int assignmentId = getParaToInt(0);
-
         Assignment assignment = assignmentService.findById(assignmentId);
         setAttr("assignment", assignment);
+        StringBuilder submitCountInfo = new StringBuilder();
+        List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId, assignment.getClassId(), submitCountInfo);
+        List<ExecuteResultVo> submitResultVoList = executeResultVoList.stream().filter(x -> x.submitStatus.equals("已提交")).collect(Collectors.toList());
+        List<ExecuteResultVo> unSubmitResultVoList = executeResultVoList.stream().filter(x -> x.submitStatus.equals("未提交")).collect(Collectors.toList());
+        submitResultVoList.addAll(unSubmitResultVoList);
+        setAttr("submitCountInfo", submitCountInfo.toString());
+        setAttr("executeResultVoList", submitResultVoList);
+        render("execute_result.html");
 
-        String userId = getSessionAttr("userId", "");
-        String userType = getSessionAttr("userType", "student");
-        if (userType.equals("student")) {
-            Upload upload = uploadService.findById(assignmentId, userId);
-            setAttr("executeResult", getSingleExecuteResult(assignmentId, userId));
-            setAttr("upload", upload);
-            render("student_execute_result.html");
-        } else {
-            List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
-            setAttr("executeResultVoList", executeResultVoList);
-            render("execute_result.html");
-        }
     }
 
+    //查看代码
     public void codeView() {
         int questionId = getParaToInt("questionId");
         String userId = getPara("userId");
@@ -84,6 +79,7 @@ public class ResultViewController extends Controller {
         }
     }
 
+    //查看学生代码输出
     public void caseResult() {
         int questionId = getParaToInt("questionId");
         String userId = getPara("userId");
@@ -131,7 +127,7 @@ public class ResultViewController extends Controller {
         String filePath = assignment.getUploadDirectory();
         String unionName = FileUtil.generateFolderName();
         String copyFilePath = unionName;
-        CompileUtil.zip(filePath, copyFilePath, unionName);
+        CorrectUtil.zip(filePath, copyFilePath, unionName);
         renderFile(unionName + ".zip");
         //FileUtil.deleteFile(unionName + ".zip");
     }
@@ -175,8 +171,8 @@ public class ResultViewController extends Controller {
                 }
             }
 
-            CompileUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
-            CompileUtil.similarityTest(unionFolderName, question.getQuestionNo(), cppFileStr.toString(), "cpp");
+            CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
+            CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cppFileStr.toString(), "cpp");
             String cContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_c.txt");
             String cppContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_cpp.txt");
             String cPattern = "\\./(.*?)/" + questionNoStr + "\\.c consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.c";
@@ -204,37 +200,39 @@ public class ResultViewController extends Controller {
         render("_similarity_result.html");
     }
 
-    private void getSimilarityResult(String content, String regexStr, List<SimilarityVo> similarityVoList, List<User> userList) {
-        Pattern pattern = Pattern.compile(regexStr);
-        Matcher matcher = pattern.matcher(content);
-        while (matcher.find()) {
-            String studentId1 = matcher.group(1);
-            String studentId2 = matcher.group(3);
-            SimilarityVo test = similarityVoList.stream()
-                    .filter(x -> x.userId2.equals(studentId1) && x.userId1.equals(studentId2))
-                    .findFirst().orElse(null);
-            if (test != null) {
-                int newSimilarity = Integer.parseInt(matcher.group(2));
-                if (test.similarity < newSimilarity)
-                    test.similarity = newSimilarity;
-            } else {
-                SimilarityVo vo = new SimilarityVo();
-                vo.userId1 = matcher.group(1);
-                vo.userId2 = matcher.group(3);
-                User user1 = userList.stream().filter(x -> x.getUserId().equals(matcher.group(1))).findFirst().orElse(null);
-                User user2 = userList.stream().filter(x -> x.getUserId().equals(matcher.group(3))).findFirst().orElse(null);
-                vo.userName1 = user1 == null ? "" : user1.getUserName();
-                vo.userName2 = user2 == null ? "" : user2.getUserName();
-                vo.similarity = Integer.parseInt(matcher.group(2));
-                similarityVoList.add(vo);
-            }
-        }
-    }
+    public void staticAnalysis() throws IOException, InterruptedException {
+        int assignmentId = getParaToInt("assignmentId");
+        Assignment assignment = assignmentService.findById(assignmentId);
+        int questionId = getParaToInt("questionId");
+        Question question = questionService.findById(questionId);
+        String studentId = getPara("userId");
 
+        StudentQuestion studentQuestion = studentQuestionService.findById(questionId, studentId);
+        String filePath = studentQuestion.getCodePath();
+        String fileName;
+        if (filePath.endsWith(".c")) {
+            fileName = question.getQuestionNo() + ".c";
+        } else {
+            fileName = question.getQuestionNo() + ".cpp";
+        }
+
+        String unionFolderName = assignment.getUploadDirectory();
+
+        String studentDirectoryPath = unionFolderName + "/" + studentId + "/";
+
+        String resultFileName = question.getQuestionNo() + "_result.json";
+        CorrectUtil.evaluate(studentDirectoryPath, fileName, resultFileName);
+        String evaluateFilePath = studentDirectoryPath + "/" + question.getQuestionNo() + "_result.json";
+        String json = FileUtil.readFile(evaluateFilePath);
+        OclintInfoVo info = JSON.parseObject(json, OclintInfoVo.class);
+
+        renderJson(JSON.toJSONString(JsonResponse.ok(info.violation, 1)));
+    }
 
     public void allExcel() {
         int assignmentId = getParaToInt("assignmentId");
-        List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId);
+        Assignment assignment = assignmentService.findById(assignmentId);
+        List<ExecuteResultVo> executeResultVoList = getCompleteExecuteResult(assignmentId, assignment.getClassId(), new StringBuilder());
         HttpServletResponse response = getResponse();
         String fileName = "作业" + assignmentId + "成绩表";
         List<String> headList = new ArrayList<>();
@@ -243,7 +241,9 @@ public class ResultViewController extends Controller {
         headList.add("测试用例得分");
         headList.add("静态分析得分");
         headList.add("总分");
+        headList.add("提交状态");
         List<Map<String, Object>> dataList = new ArrayList<>();
+
         for (ExecuteResultVo vo : executeResultVoList) {
             Map<String, Object> temp = new HashMap<>();
             temp.put("学号", vo.studentId);
@@ -251,8 +251,10 @@ public class ResultViewController extends Controller {
             temp.put("测试用例得分", vo.testCaseScore);
             temp.put("静态分析得分", vo.evaluateScore);
             temp.put("总分", vo.score);
+            temp.put("提交状态", vo.submitStatus);
             dataList.add(temp);
         }
+
         ExcelUtil.exportXlsx(response, fileName, headList, dataList);
         renderNull();
     }
@@ -260,8 +262,7 @@ public class ResultViewController extends Controller {
     public void singleExcel() {
         int assignmentId = getParaToInt("assignmentId");
         String studentId = getPara("studentId");
-        ExecuteResultVo executeResultVo = getCompleteExecuteResult(assignmentId)
-                .stream().filter(x -> x.studentId.equals(studentId)).findFirst().orElse(null);
+        ExecuteResultVo executeResultVo = getSingleExecuteResult(assignmentId, studentId);
         HttpServletResponse response = getResponse();
         String fileName = "作业" + assignmentId + "学号" + studentId + "成绩表";
         List<String> headList = new ArrayList<>();
@@ -285,20 +286,25 @@ public class ResultViewController extends Controller {
 
     }
 
-    public List<ExecuteResultVo> getCompleteExecuteResult(int assignmentId) {
+    public List<ExecuteResultVo> getCompleteExecuteResult(int assignmentId, String classId, StringBuilder submitCountInfo) {
+
         List<ExecuteResultVo> executeResultVoList = new ArrayList<>();
         int questionNum = questionService.findByAssignmentId(assignmentId).size();
+        int submitCount[] = new int[questionNum + 1];
         Map<String, List<StudentQuestion>> listMap = studentQuestionService.findByAssignmentId(assignmentId)
                 .stream().collect(Collectors.groupingBy(StudentQuestion::getUserId));
+        List<String> existStudentIdList = new ArrayList<>();
         for (Map.Entry<String, List<StudentQuestion>> entry : listMap.entrySet()) {
             ExecuteResultVo executeResultVo = new ExecuteResultVo();
             executeResultVo.studentId = entry.getKey();
+            existStudentIdList.add(entry.getKey());
             User student = userService.findByUserId(entry.getKey());
             executeResultVo.studentName = student == null ? "无姓名" : student.getUserName();
             executeResultVo.questionResultList = entry.getValue().stream().map(x -> {
                 QuestionResultVo questionResultVo = new QuestionResultVo();
                 questionResultVo.questionId = x.get("questionId");
                 questionResultVo.questionNo = x.get("questionNo");
+                submitCount[questionResultVo.questionNo]++;
                 questionResultVo.isCompilePass = x.getIsCompilePass();
                 questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
                 questionResultVo.testCaseScore = x.getTestCaseScore();
@@ -322,7 +328,26 @@ public class ResultViewController extends Controller {
             executeResultVo.score = score;
             executeResultVo.evaluateScore = evaluateScore;
             executeResultVo.testCaseScore = testCaseScore;
+            executeResultVo.submitStatus = "已提交";
             executeResultVoList.add(executeResultVo);
+        }
+        List<User> unSubmitUserList = userService.findStudentByClassId(classId)
+                .stream().filter(x -> !existStudentIdList.contains(x.getUserId())).collect(Collectors.toList());
+        for (User user : unSubmitUserList) {
+            ExecuteResultVo executeResultVo = new ExecuteResultVo();
+            executeResultVo.studentId = user.getUserId();
+            executeResultVo.studentName = user.getUserName();
+            executeResultVo.questionResultList = new ArrayList<>();
+            executeResultVo.score = 0;
+            executeResultVo.evaluateScore = 0;
+            executeResultVo.testCaseScore = 0;
+            executeResultVo.submitStatus = "未提交";
+            executeResultVoList.add(executeResultVo);
+        }
+
+
+        for (int i = 1; i < questionNum + 1; i++) {
+            submitCountInfo.append("第").append(i).append("题已有").append(submitCount[i]).append("人提交<br>");
         }
         Collections.sort(executeResultVoList);
         return executeResultVoList;
@@ -366,6 +391,33 @@ public class ResultViewController extends Controller {
         executeResultVo.testCaseScore = testCaseScore;
 
         return executeResultVo;
+    }
+
+    private void getSimilarityResult(String content, String regexStr, List<SimilarityVo> similarityVoList, List<User> userList) {
+        Pattern pattern = Pattern.compile(regexStr);
+        Matcher matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            String studentId1 = matcher.group(1);
+            String studentId2 = matcher.group(3);
+            SimilarityVo test = similarityVoList.stream()
+                    .filter(x -> x.userId2.equals(studentId1) && x.userId1.equals(studentId2))
+                    .findFirst().orElse(null);
+            if (test != null) {
+                int newSimilarity = Integer.parseInt(matcher.group(2));
+                if (test.similarity < newSimilarity)
+                    test.similarity = newSimilarity;
+            } else {
+                SimilarityVo vo = new SimilarityVo();
+                vo.userId1 = matcher.group(1);
+                vo.userId2 = matcher.group(3);
+                User user1 = userList.stream().filter(x -> x.getUserId().equals(matcher.group(1))).findFirst().orElse(null);
+                User user2 = userList.stream().filter(x -> x.getUserId().equals(matcher.group(3))).findFirst().orElse(null);
+                vo.userName1 = user1 == null ? "" : user1.getUserName();
+                vo.userName2 = user2 == null ? "" : user2.getUserName();
+                vo.similarity = Integer.parseInt(matcher.group(2));
+                similarityVoList.add(vo);
+            }
+        }
     }
 
 }

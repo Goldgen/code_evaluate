@@ -9,6 +9,7 @@ public class ExecuteResultVo implements Comparable<ExecuteResultVo> {
     public int score;
     public int testCaseScore;
     public int evaluateScore;
+    public String submitStatus;
     public List<QuestionResultVo> questionResultList;
 
     @Override

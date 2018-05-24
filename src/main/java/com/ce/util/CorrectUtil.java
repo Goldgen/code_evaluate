@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-public class CompileUtil {
+public class CorrectUtil {
 
     private static String getRealPath(String path) {
         return MyConstants.uploadPath + path;
@@ -25,13 +25,8 @@ public class CompileUtil {
     public static ShellReturnInfo execute(String fatherFilePath, String fileName, String inputFileName, String outputFileName) throws IOException, InterruptedException {
         fatherFilePath = getRealPath(fatherFilePath);
         String cmd = "sh " + MyConstants.shellPath + "execute.sh " + fatherFilePath + " " + fileName + " " + inputFileName + " " + outputFileName;
-        //设置5秒运行超时
-        return executeShellCmd(cmd, 5);
-    }
-
-    public static void unZipAll(String fatherFilePath, String oldZipFileName, String newFolderName) throws IOException, InterruptedException {
-        fatherFilePath = getRealPath(fatherFilePath);
-        executeShellCmd("sh " + MyConstants.shellPath + "unzipAll.sh " + fatherFilePath + " " + oldZipFileName + " " + newFolderName, -1);
+        //设置1秒运行超时
+        return executeShellCmd(cmd, 1);
     }
 
     public static void zip(String filePath, String copyFilePath, String zipName) throws IOException, InterruptedException {

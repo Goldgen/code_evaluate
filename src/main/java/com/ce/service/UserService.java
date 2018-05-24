@@ -13,7 +13,6 @@ public class UserService {
 
     private static final StudentClass studentClassDao = new StudentClass().dao();
 
-
     public User findByUserId(String userId) {
         return userDao.findFirst("select * from user where userId = ?", userId);
     }
@@ -35,5 +34,9 @@ public class UserService {
     public List<String> findStudentIdByClassId(String classId) {
         return studentClassDao.find("select * from student_class where classId = ?", classId)
                 .stream().map(StudentClass::getUserId).collect(Collectors.toList());
+    }
+
+    public List<User> findStudentByClassId(String classId) {
+        return userDao.find("select  u.userId,u.userName from user u join student_class sc on u.userId=sc.userId where sc.classId = ?", classId);
     }
 }

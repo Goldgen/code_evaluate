@@ -6,7 +6,7 @@ import com.ce.config.MyConstants;
 import com.ce.model.first.*;
 import com.ce.model.second.Assignment;
 import com.ce.service.*;
-import com.ce.util.CompileUtil;
+import com.ce.util.CorrectUtil;
 import com.ce.util.FileUtil;
 import com.ce.vo.*;
 import com.jfinal.core.Controller;
@@ -75,7 +75,7 @@ public class UploadController extends Controller {
 
         String assignmentDirectoryPath = MyConstants.uploadPath + unionFolderName + "/";
         String stuNum = getSessionAttr("userId");
-        CompileUtil.unZip(assignmentDirectoryPath, uploadFile.getOriginalFileName(), stuNum);
+        CorrectUtil.unZip(assignmentDirectoryPath, uploadFile.getOriginalFileName(), stuNum);
         assignmentService.update(assignmentId, unionFolderName);
 
         //获取实际上传的题号json
@@ -115,6 +115,7 @@ public class UploadController extends Controller {
             renderJson(JSON.toJSONString(JsonResponse.ok(2)));
             return;
         }
+
         int questionId = getParaToInt("questionId");
         String code = getPara("code");
         int language = getParaToInt("language");
@@ -133,11 +134,14 @@ public class UploadController extends Controller {
 
         String deleteCodePath = studentDirectoryPath + question.getQuestionNo() + deleteSuffix;
 
+        //创建学号文件夹
         FileUtil.createDirectory(studentDirectoryPath);
 
+        //删除以前提交的代码
         FileUtil.deleteFile(codePath);
         FileUtil.deleteFile(deleteCodePath);
 
+        //创建代码文件
         FileUtil.createFile(codePath, code);
 
         String fileName = question.getQuestionNo() + suffix;
@@ -147,7 +151,7 @@ public class UploadController extends Controller {
 
         boolean alreadyExist = studentQuestionService.findById(questionId, stuNum) != null;
         //编译
-        ShellReturnInfo returnInfo = CompileUtil.isCompilePass(studentDirectoryPath, fileName);
+        ShellReturnInfo returnInfo = CorrectUtil.isCompilePass(studentDirectoryPath, fileName);
 
         evaluateInfo.isCompilePass = returnInfo.isPass;
         evaluateInfo.compileErrorInfo = returnInfo.errorInfo.replace("\n", "<br>");
@@ -177,7 +181,7 @@ public class UploadController extends Controller {
             for (TestCase testCase : testCaseList) {
                 String inputFileName = question.getQuestionNo() + "_input_" + testCase.getTestCaseId() + ".txt";
                 String outputFileName = question.getQuestionNo() + "_output_" + testCase.getTestCaseId() + ".txt";
-                ShellReturnInfo excuteReturnInfo = CompileUtil.execute(studentDirectoryPath, prefix + ".out", inputFileName, outputFileName);
+                ShellReturnInfo excuteReturnInfo = CorrectUtil.execute(studentDirectoryPath, prefix + ".out", inputFileName, outputFileName);
                 if (!excuteReturnInfo.isPass)
                     evaluateInfo.executeInfo = "有部分测试用例执行超时";
                 String outputFilePath = studentDirectoryPath + "/" + outputFileName;
@@ -196,7 +200,7 @@ public class UploadController extends Controller {
             //静态分析
             System.out.println("正在分析学号" + stuNum + " 第" + question.getQuestionNo() + "题文件");
             String resultFileName = prefix + "_result.json";
-            CompileUtil.evaluate(studentDirectoryPath, fileName, resultFileName);
+            CorrectUtil.evaluate(studentDirectoryPath, fileName, resultFileName);
             String evaluateFilePath = studentDirectoryPath + "/" + question.getQuestionNo() + "_result.json";
             String json = FileUtil.readFile(evaluateFilePath);
             OclintInfoVo info = JSON.parseObject(json, OclintInfoVo.class);
@@ -245,7 +249,7 @@ public class UploadController extends Controller {
         int questionId = getParaToInt("questionId");
         String stuNum = getSessionAttr("userId");
         StudentQuestion studentQuestion = studentQuestionService.findById(questionId, stuNum);
-        String codePath = studentQuestion.getCodePath();
+        String codePath = studentQuestion == null ? "" : studentQuestion.getCodePath();
         if (StringUtils.isEmpty(codePath)) {
             renderJson(JSON.toJSONString(JsonResponse.ok("代码未上传", -1)));
             return;
