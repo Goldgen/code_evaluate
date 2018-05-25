@@ -4,7 +4,7 @@ import com.ce.controller.*;
 import com.ce.interceptor.ActionExceptionIntoLogInterceptor;
 import com.ce.interceptor.ServiceExceptionIntoLogInterceptor;
 import com.ce.interceptor.SessionInterceptor;
-import com.ce.task.CompileTask;
+import com.ce.task.MaintainTask;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -118,7 +118,7 @@ public class CoreConfig extends JFinalConfig {
         me.add(secondArp);
 
         Cron4jPlugin cp = new Cron4jPlugin();
-        cp.addTask("*/1 * * * *", new CompileTask());
+        cp.addTask("*/1 * * * *", new MaintainTask());
         me.add(cp);
 
     }

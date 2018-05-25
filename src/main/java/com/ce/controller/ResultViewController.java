@@ -26,8 +26,6 @@ public class ResultViewController extends Controller {
 
     private static AssignmentService assignmentService = new AssignmentService();
 
-    private static UploadService uploadService = new UploadService();
-
     private static QuestionService questionService = new QuestionService();
 
     private static UserService userService = new UserService();
@@ -35,9 +33,6 @@ public class ResultViewController extends Controller {
     private static StudentQuestionService studentQuestionService = new StudentQuestionService();
 
     private static TestCaseService testCaseService = new TestCaseService();
-
-    private static ViolationService violationService = new ViolationService();
-    private static SimilarityService similarityService = new SimilarityService();
 
     @ActionKey("/execute")
     public void executeResult() {

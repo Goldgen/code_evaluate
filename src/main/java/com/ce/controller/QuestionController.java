@@ -1,7 +1,6 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.config.MyConstants;
 import com.ce.model.first.Question;
 import com.ce.model.first.TestCase;
 import com.ce.model.first.TestDb;
@@ -191,7 +190,7 @@ public class QuestionController extends Controller {
         for (QuestionListVo vo : questionVoList) {
             for (TestCase testCase : vo.testCaseList) {
                 String inputFilePath = assignmentDirectoryPath + vo.questionNo + "_input_" + testCase.getTestCaseId() + ".txt";
-                FileUtil.addTxtFile(inputFilePath, testCase.getTestCaseContent());
+                FileUtil.createFile(inputFilePath, testCase.getTestCaseContent());
             }
         }
 

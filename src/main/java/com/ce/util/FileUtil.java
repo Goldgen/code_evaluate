@@ -1,7 +1,7 @@
 package com.ce.util;
 
-import com.ce.config.MyConstants;
 import com.ce.vo.FileInfo;
+import com.jfinal.kit.PathKit;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 
 public class FileUtil {
 
-    public static String getRealPath(String path) {
-        return MyConstants.uploadPath + path;
+    private static String getRealPath(String path) {
+        return PathKit.getWebRootPath() + "/upload/" + path;
     }
 
     public static String readFile(String filePath) throws IOException {
@@ -38,11 +38,6 @@ public class FileUtil {
         Path path = Paths.get(getRealPath(directoryPath));
         if (!Files.exists(path))
             Files.createDirectory(path);
-    }
-
-    public static void addTxtFile(String filePath, String content) throws IOException {
-        Path path = Paths.get(getRealPath(filePath));
-        Files.write(path, content.getBytes(), StandardOpenOption.CREATE);
     }
 
     public static boolean compareFileWithString(String filePath, String compareStr) throws IOException {
