@@ -38,6 +38,7 @@
                                     <th>是否编译通过</th>
                                     <th>测试用例得分</th>
                                     <th>静态分析得分</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -72,9 +73,12 @@
                                     <td><a class="static-analysis"
                                            data-href="/review/staticAnalysis?assignmentId=#(assignment.assignmentId)&questionId=#(x.questionId)&userId=#(executeResult.studentId)"
                                            title="点击进行静态分析"
-                                           target="_Blank"
                                            data-toggle="tooltip"
                                            data-placement="bottom">#(x.evaluateScore)</a></td>
+                                    <td><a class="re-correct btn btn-sm btn-primary"
+                                           data-href="/review/reCorrect?assignmentId=#(assignment.assignmentId)&questionId=#(x.questionId)&userId=#(executeResult.studentId)"
+                                           title="点击重新进行测试用例批改"
+                                           data-toggle="tooltip">重新批改</a></td>
                                 </tr>
                                 #end
                                 </tbody>

@@ -2,6 +2,8 @@ package com.ce.vo;
 
 public class JsonResponse<T> {
 
+
+
     /**
      * 服务器响应数据
      */

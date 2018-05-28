@@ -97,7 +97,7 @@ public class UploadController extends Controller {
         String fileName = question.getQuestionNo() + suffix;
         String prefix = question.getQuestionNo().toString();
 
-        EvaluateInfo evaluateInfo = new EvaluateInfo();
+        EvaluateInfoVo evaluateInfo = new EvaluateInfoVo();
 
         boolean alreadyExist = studentQuestionService.findById(questionId, stuNum) != null;
         //编译
@@ -172,6 +172,7 @@ public class UploadController extends Controller {
                 }
             }
 
+            evaluationScore = evaluationScore < 0 ? 0 : evaluationScore;
             evaluateInfo.evaluationScore = (int) ((evaluationScore / 20) * 100); //以百分制显示
             evaluateInfo.violationList = info.violation;
 
@@ -191,7 +192,8 @@ public class UploadController extends Controller {
             }
         }
 
-        renderJson(JSON.toJSONString(JsonResponse.ok(evaluateInfo, 1)));
+        String json = JSON.toJSONString(JsonResponse.ok(evaluateInfo, 1));
+        renderJson(json);
 
     }
 
@@ -220,15 +222,5 @@ public class UploadController extends Controller {
     }
 
 
-    public class EvaluateInfo {
-        boolean isCompilePass;
-        String compileErrorInfo;
-        String executeInfo;
-        int testCasePassNum;
-        int testCaseSize;
-        int testCaseScore;
-        int evaluationScore;
-        List<Violation> violationList;
-    }
 
 }

@@ -88,6 +88,7 @@
                         <th width="30%">位置</th>
                         <th>规则</th>
                         <th>信息</th>
+                        <th>扣分</th>
                     </tr>
                     </thead>
                     <tbody id="static-info">
@@ -144,8 +145,7 @@
         }, function (data) {
             if (data.code === 1) {
                 layer.close(index);
-                formatRunInfo(data.payload);
-
+                formatReturnInfo(data.payload);
             }
             if (data.code === 2) {
                 layer.close(index);
@@ -159,7 +159,7 @@
         }, 3 * 1000);
     });
 
-    function formatRunInfo(data) {
+    function formatReturnInfo(data) {
         if (data.isCompilePass) {
             var compileInfo = "编译通过";
             $('#compileInfo').html("编译信息：" + compileInfo);
@@ -172,7 +172,17 @@
 
             var tbody = '';
             $.each(data.violationList, function (index, obj) {
-                tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.rule + '</td><td>' + obj.message + '</td></tr>';
+                var diff = 0;
+                if (obj.priority === 3) {
+                    diff = -1;
+                }
+                if (obj.priority === 2) {
+                    diff = -2;
+                }
+                if (obj.priority === 1) {
+                    diff = -5;
+                }
+                tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.rule + '</td><td>' + obj.message + '</td><td>' + diff + '</td></tr>';
                 $('#static-info').html(tbody);
             });
         }

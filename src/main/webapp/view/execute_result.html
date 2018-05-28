@@ -100,7 +100,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="modal-title">静态分析结果</h4>
+                <h4 class="modal-title">静态分析结果</h4>
             </div>
             <div class="modal-body">
                 <table class="table table-hover">
@@ -115,6 +115,23 @@
                     <tbody id="static-info">
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reCorrectModel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title">批改结果</h4>
+            </div>
+            <div class="modal-body">
+                <p id="compileInfo"></p>
+                <p id="testCaseInfo"></p>
+                <p id="testCaseScore"></p>
             </div>
         </div>
     </div>
@@ -181,6 +198,10 @@
             cppEditor.refresh();
         });
 
+        $('#reCorrectModel').on('hidden.bs.modal', function (e) {
+            window.location.reload();
+        });
+
         $('.compile-error').click(function () {
             layer.open({
                 type: 1,
@@ -200,26 +221,58 @@
                     layer.close(index);
                     var tbody = '';
                     $.each(data.payload, function (index, obj) {
-                        var delta = 0;
+                        var diff = 0;
                         if (obj.priority === 3) {
-                            delta = -1;
+                            diff = -1;
                         }
                         if (obj.priority === 2) {
-                            delta = -2;
+                            diff = -2;
                         }
                         if (obj.priority === 1) {
-                            delta = -5;
+                            diff = -5;
                         }
-                        tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.rule + '</td><td>' + obj.message + '</td><td>' + delta + '</td></tr>';
+                        tbody += '<tr><td>' + obj.startLine + '行' + obj.startColumn + '列~' + obj.endLine + '行' + obj.endColumn + '列' + '</td><td>' + obj.rule + '</td><td>' + obj.message + '</td><td>' + diff + '</td></tr>';
                         $('#static-info').html(tbody);
                     });
                 }
                 $('#resultModel').modal('toggle');
+            });
+        });
 
+        $('.re-correct').click(function () {
+
+            var url = $(this).data('href');
+            var index = layer.load(1, {
+                shade: [0.5, '#fff']
+            });
+            $.post(url, {}, function (data) {
+                if (data.code === 1) {
+                    layer.close(index);
+                    formatReturnInfo(data.payload);
+                }
+                $('#reCorrectModel').modal('toggle');
             });
         });
 
 
+
     });
+
+    function formatReturnInfo(data) {
+        if (data.isCompilePass) {
+            var compileInfo = "编译通过";
+            $('#compileInfo').html("编译信息：" + compileInfo);
+            var testCaseInfo = "在" + data.testCaseSize + "个测试用例中通过了" + data.testCasePassNum + "个 " + data.executeInfo;
+            $('#testCaseInfo').html("测试用例信息：" + testCaseInfo);
+            var testCaseScore = "测试用例得分：" + data.testCaseScore;
+            $('#testCaseScore').html(testCaseScore);
+        }
+        else {
+            var compileInfo = "编译未通过：<br>" + data.compileErrorInfo;
+            $('#compileInfo').html("编译信息：" + compileInfo);
+            $('#testCaseInfo').html("测试用例信息：无");
+            $('#testCaseScore').html("测试用例得分：0");
+        }
+    }
 </script>
 </html>

@@ -74,6 +74,77 @@ public class ResultViewController extends Controller {
         }
     }
 
+    public void reCorrect() throws IOException, InterruptedException {
+        int assignmentId = getParaToInt("assignmentId");
+        Assignment assignment = assignmentService.findById(assignmentId);
+        int questionId = getParaToInt("questionId");
+        Question question = questionService.findById(questionId);
+        String studentId = getPara("userId");
+
+        StudentQuestion studentQuestion = studentQuestionService.findById(questionId, studentId);
+        String filePath = studentQuestion.getCodePath();
+        String fileName;
+        if (filePath.endsWith(".c")) {
+            fileName = question.getQuestionNo() + ".c";
+        } else {
+            fileName = question.getQuestionNo() + ".cpp";
+        }
+
+        String unionFolderName = assignment.getUploadDirectory();
+
+        String studentDirectoryPath = unionFolderName + "/" + studentId + "/";
+
+        EvaluateInfoVo evaluateInfo = new EvaluateInfoVo();
+
+        //编译
+        ShellReturnInfo returnInfo = CorrectUtil.isCompilePass(studentDirectoryPath, fileName);
+
+        evaluateInfo.isCompilePass = returnInfo.isPass;
+        evaluateInfo.compileErrorInfo = returnInfo.errorInfo.replace("\n", "<br>");
+
+        if (!returnInfo.isPass) {
+            studentQuestion.setIsCompilePass(false);
+            studentQuestion.setCompileErrorInfo(returnInfo.errorInfo);
+            studentQuestion.update();
+        } else {
+            List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+
+            List<TestCase> testCaseList = questionVoList.stream().filter(x -> x.questionId == questionId)
+                    .findFirst().orElse(new QuestionListVo()).testCaseList;
+
+            //执行，比较测试用例和输出
+            System.out.println("正在执行学号" + studentId + " 第" + questionId + "题文件");
+            evaluateInfo.executeInfo = "";
+            double testCasePassNum = 0;
+            for (TestCase testCase : testCaseList) {
+                String inputFileName = question.getQuestionNo() + "_input_" + testCase.getTestCaseId() + ".txt";
+                String outputFileName = question.getQuestionNo() + "_output_" + testCase.getTestCaseId() + ".txt";
+                ShellReturnInfo excuteReturnInfo = CorrectUtil.execute(studentDirectoryPath, question.getQuestionNo() + ".out", inputFileName, outputFileName);
+                if (!excuteReturnInfo.isPass)
+                    evaluateInfo.executeInfo = "有部分测试用例执行超时";
+                String outputFilePath = studentDirectoryPath + "/" + outputFileName;
+                if (FileUtil.compareFileWithString(outputFilePath, testCase.getAnswer())) {
+                    testCasePassNum++;
+                }
+            }
+            int testCaseSize = testCaseList.size();
+            int testCaseScore = (int) ((testCasePassNum / testCaseSize) * 80);
+
+            evaluateInfo.testCasePassNum = (int) testCasePassNum;
+            evaluateInfo.testCaseSize = testCaseSize;
+            evaluateInfo.testCaseScore = (int) ((testCasePassNum / testCaseSize) * 100);  //以百分制显示
+
+            studentQuestion.setIsCompilePass(true);
+            studentQuestion.setCompileErrorInfo("");
+            studentQuestion.setTestCaseScore(testCaseScore);
+            studentQuestion.setTestCasePassNum((int) testCasePassNum);
+            studentQuestion.update();
+        }
+
+        String json = JSON.toJSONString(JsonResponse.ok(evaluateInfo, 1));
+        renderJson(json);
+    }
+
     //查看学生代码输出
     public void caseResult() {
         int questionId = getParaToInt("questionId");
