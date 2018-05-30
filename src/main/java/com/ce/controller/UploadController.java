@@ -155,7 +155,7 @@ public class UploadController extends Controller {
             String json = FileUtil.readFile(evaluateFilePath);
             OclintInfoVo info = JSON.parseObject(json, OclintInfoVo.class);
 
-            double evaluationScore = 20;
+            double evaluationScore = 100;
             for (Violation violation : info.violation) {
                 switch (violation.getPriority()) {
                     case 1:
@@ -173,7 +173,7 @@ public class UploadController extends Controller {
             }
 
             evaluationScore = evaluationScore < 0 ? 0 : evaluationScore;
-            evaluateInfo.evaluationScore = (int) ((evaluationScore / 20) * 100); //以百分制显示
+            evaluateInfo.evaluationScore = (int) evaluationScore; //以百分制显示
             evaluateInfo.violationList = info.violation;
 
             StudentQuestion studentQuestion = new StudentQuestion();
@@ -183,7 +183,7 @@ public class UploadController extends Controller {
             studentQuestion.setCompileErrorInfo("");
             studentQuestion.setTestCaseScore(testCaseScore);
             studentQuestion.setTestCasePassNum((int) testCasePassNum);
-            studentQuestion.setEvaluationScore((int) (evaluationScore < 0 ? 0 : evaluationScore));
+            studentQuestion.setEvaluationScore((int) ((evaluationScore / 100) * 20));  //存入数据库时是20分制
             studentQuestion.setCodePath(codePath);
             if (alreadyExist) {
                 studentQuestion.update();
@@ -220,7 +220,6 @@ public class UploadController extends Controller {
         }
 
     }
-
 
 
 }

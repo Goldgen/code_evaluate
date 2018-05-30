@@ -55,6 +55,17 @@ public class QuestionController extends Controller {
         redirect("/question/" + assignmentId);
     }
 
+    public void editQuestion() {
+        int assignmentId = getParaToInt("assignmentId");
+        int questionId = getParaToInt("questionId");
+        String content = getPara("content");
+        Question question = questionService.findById(questionId);
+        question.setContent(content);
+        question.update();
+
+        redirect("/question/" + assignmentId);
+    }
+
     public void addQuestionFromDb() {
         int assignmentId = getParaToInt("assignmentId");
         int questionNo = getParaToInt("questionNo");
@@ -178,7 +189,7 @@ public class QuestionController extends Controller {
         if (unionFolderName.isEmpty()) {
             unionFolderName = FileUtil.generateFolderName();
             assignmentDirectoryPath = unionFolderName + "/";
-            FileUtil.createDirectory( unionFolderName + "/");
+            FileUtil.createDirectory(unionFolderName + "/");
             assignmentService.update(assignmentId, unionFolderName);
         } else {
             assignmentDirectoryPath = unionFolderName + "/";
