@@ -58,11 +58,14 @@ public class CorrectUtil {
             process.waitFor();
         } else {
             if (!process.waitFor(seconds, TimeUnit.SECONDS)) {
+                process.children().forEach(ProcessHandle::destroy);
                 process.destroy();
-                shellReturnInfo.errorInfo = "运行超过5秒";
+                System.out.println("执行命令：" + cmd + "超时");
+                shellReturnInfo.errorInfo = "运行超过" + seconds + "秒";
                 shellReturnInfo.isPass = false;
                 return shellReturnInfo;
             }
+            System.out.println("执行命令：" + cmd + "正常");
         }
         BufferedReader bufferError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         StringBuilder errBuilder = new StringBuilder();
