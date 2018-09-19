@@ -57,4 +57,22 @@ public class ClassService {
                 "where cl.classId= ? ";
         return dao.findFirst(sql, classId);
     }
+
+    public List<Class> findByClassIdList(List<String> classIdList) {
+        if (classIdList.isEmpty())
+            return new ArrayList<>();
+        String idListStr = "(";
+        for (String id : classIdList) {
+            if (id.equals(classIdList.get(classIdList.size() - 1))) {
+                idListStr += "'" + id + "'" + ")";
+            } else {
+                idListStr += "'" + id + "'" + ",";
+            }
+        }
+        String sql = "select cl.*,co.courseName,t.termName " +
+                "from class cl inner join term t inner join course co " +
+                "on t.termId=cl.termId and co.courseId=cl.courseId " +
+                "where cl.classId in " + idListStr + " order by cl.classId desc";
+        return dao.find(sql);
+    }
 }

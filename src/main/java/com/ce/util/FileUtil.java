@@ -42,17 +42,19 @@ public class FileUtil {
 
     public static boolean compareFileWithString(String filePath, String compareStr) throws IOException {
         Path path = Paths.get(getRealPath(filePath));
-        List<String> fileLineList = Files.readAllLines(path);
+        String fileStr = new String(Files.readAllBytes(path));
         compareStr = replaceUseless(compareStr);
-        List<String> compareLineList = Arrays.asList(compareStr.split("\n"));
-        if (fileLineList.size() != compareLineList.size()) return false;
-        else {
-            for (int i = 0; i < fileLineList.size(); i++) {
-                if (!fileLineList.get(i).contains(compareLineList.get(i)))
-                    return false;
-            }
-        }
-        return true;
+//        List<String> fileLineList = Files.readAllLines(path);
+//        List<String> compareLineList = Arrays.asList(compareStr.split("\n"));
+//        if (fileLineList.size() != compareLineList.size()) return false;
+//        else {
+//            for (int i = 0; i < fileLineList.size(); i++) {
+//                if (!fileLineList.get(i).contains(compareLineList.get(i)))
+//                    return false;
+//            }
+//        }
+//        return true;
+        return fileStr.equals(compareStr);
     }
 
     //返回一个路径下面所有文件夹的名称（忽略非学号的）

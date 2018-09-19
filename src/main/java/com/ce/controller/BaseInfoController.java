@@ -1,5 +1,6 @@
 package com.ce.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ce.model.second.Assignment;
 import com.ce.model.second.Class;
 import com.ce.service.AssignmentService;
@@ -24,10 +25,10 @@ public class BaseInfoController extends Controller {
         boolean isTeacher = getSessionAttr("isTeacher", false);
         List<Class> classList;
         if (isTeacher) {
-            String classId = getSessionAttr("classId", "");
-            if (!StringUtils.isEmpty(classId)) {
-                classList = new ArrayList<>();
-                classList.add(classService.findSingleByClassId(classId));
+            String classIdStr = getSessionAttr("classIdList", "");
+            List<String> classIdList = JSON.parseArray(classIdStr, String.class);
+            if (!classIdList.isEmpty()) {
+                classList = classService.findByClassIdList(classIdList);
             } else {
                 classList = classService.findAllByTeacherId(userId);
             }

@@ -1,5 +1,6 @@
 package com.ce.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.ce.model.second.ClassTutor;
 import com.ce.model.second.User;
 import com.ce.service.ClassTutorService;
@@ -8,6 +9,8 @@ import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserController extends Controller {
 
@@ -47,9 +50,9 @@ public class UserController extends Controller {
         else if (user.getIsTeacher() == 1) return true;
         else {
             String userId = user.getUserId();
-            ClassTutor classTutor = classTutorService.findAll().stream().filter(x -> x.getUserId().equals(userId)).findFirst().orElse(null);
-            if (classTutor != null) {
-                setSessionAttr("classId", classTutor.getClassId());
+            List<String> classTutorList = classTutorService.findAll().stream().filter(x -> x.getUserId().equals(userId)).map(x->x.getClassId()).collect(Collectors.toList());
+            if (!classTutorList.isEmpty()) {
+                setSessionAttr("classIdList", JSON.toJSONString(classTutorList));
                 return true;
             } else return false;
         }
