@@ -27,7 +27,7 @@ public class BaseInfoController extends Controller {
         if (isTeacher) {
             String classIdStr = getSessionAttr("classIdList", "");
             List<String> classIdList = JSON.parseArray(classIdStr, String.class);
-            if (!classIdList.isEmpty()) {
+            if (classIdList != null && !classIdList.isEmpty()) {
                 classList = classService.findByClassIdList(classIdList);
             } else {
                 classList = classService.findAllByTeacherId(userId);

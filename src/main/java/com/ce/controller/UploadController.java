@@ -15,8 +15,10 @@ import com.ce.util.FileUtil;
 import com.ce.vo.*;
 import com.jfinal.core.Controller;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +36,12 @@ public class UploadController extends Controller {
         int assignmentId = getParaToInt(0);
         String userId = getSessionAttr("userId");
         Assignment assignment = assignmentService.findById(assignmentId);
-        setAttr("isExpired", assignment.getEndDate().compareTo(new Date()) < 0);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        setAttr("isExpired", assignment.getEndDate().compareTo(new Date(cal.getTimeInMillis())) < 0);
         setAttr("assignment", assignment);
 
         List<QuestionResultVo> questionResultVoList = studentQuestionService.findByAssignmentIdAndUserId(assignmentId, userId);

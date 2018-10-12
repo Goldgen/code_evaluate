@@ -45,16 +45,22 @@
                             <pre>#(vo.content)</pre>
                         </td>
                         <td>#(vo.totalScore==-1?'未提交':vo.totalScore)</td>
+
                         <td>
+                            #if(isExpired)
+                            作业已过期
+                            #else
                             <a #if(assignment.isCaseEditFinish)title="提交代码" href="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(vo.questionId)"
                                #else title="教师未完成测试用例编辑，不可运行代码" #end  class="btn btn-success btn-xs" data-toggle="tooltip"
                                data-placement="bottom" >
                                 <i class="glyphicon glyphicon-play-circle"></i>
                             </a>
+                            #end
                             <button data-questionid="#(vo.questionId)" title="查看代码"
                                     class="btn btn-info btn-xs code-view" data-toggle="tooltip" data-placement="bottom">
                                 <i class="glyphicon glyphicon-list"></i>
                             </button>
+
                         </td>
                     </tr>
                     </tbody>
@@ -138,14 +144,6 @@
 
                 }
             });
-        });
-
-        $('#cCodeModel').on('shown.bs.modal', function (e) {
-            cEditor.refresh();
-        });
-
-        $('#cppCodeModel').on('shown.bs.modal', function (e) {
-            cppEditor.refresh();
         });
     });
 </script>
