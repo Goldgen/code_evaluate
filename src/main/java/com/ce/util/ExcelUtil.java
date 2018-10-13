@@ -82,6 +82,7 @@ public class ExcelUtil {
 
     private static void setCellValue(Cell cell, Object obj) {
         if (obj == null) {
+            cell.setCellValue("0");
             return;
         }
         if (obj instanceof String) {

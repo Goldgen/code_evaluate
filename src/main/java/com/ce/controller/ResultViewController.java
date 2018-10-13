@@ -307,7 +307,11 @@ public class ResultViewController extends Controller {
         headList.add("测试用例得分");
         headList.add("静态分析得分");
         headList.add("总分");
-        headList.add("提交状态");
+        List<Question> questionList = questionService.findByAssignmentId(assignmentId)
+                .stream().sorted(Comparator.comparing(Question::getQuestionNo)).collect(Collectors.toList());
+        for (int i = 0; i < questionList.size(); i++) {
+            headList.add("第" + (i + 1) + "题得分");
+        }
         List<Map<String, Object>> dataList = new ArrayList<>();
 
         for (ExecuteResultVo vo : executeResultVoList) {
@@ -317,10 +321,13 @@ public class ResultViewController extends Controller {
             temp.put("测试用例得分", vo.testCaseScore);
             temp.put("静态分析得分", vo.evaluateScore);
             temp.put("总分", vo.score);
+            for (QuestionResultVo questionResultVo : vo.questionResultList) {
+                temp.put("第" + questionResultVo.questionNo + "题得分", questionResultVo.totalScore);
+            }
             temp.put("提交状态", vo.submitStatus);
             dataList.add(temp);
         }
-
+        headList.add("提交状态");
         ExcelUtil.exportXlsx(response, fileName, headList, dataList);
         renderNull();
     }
@@ -375,6 +382,7 @@ public class ResultViewController extends Controller {
                 questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
                 questionResultVo.testCaseScore = x.getTestCaseScore();
                 questionResultVo.evaluateScore = x.getEvaluationScore();
+                questionResultVo.totalScore = x.getTestCaseScore() + x.getEvaluationScore();
                 return questionResultVo;
             }).collect(Collectors.toList());
 
@@ -436,6 +444,7 @@ public class ResultViewController extends Controller {
             questionResultVo.compileErrorInfo = x.getCompileErrorInfo();
             questionResultVo.testCaseScore = x.getTestCaseScore();
             questionResultVo.evaluateScore = x.getEvaluationScore();
+            questionResultVo.totalScore = x.getTestCaseScore() + x.getEvaluationScore();
             return questionResultVo;
         }).collect(Collectors.toList());
 
