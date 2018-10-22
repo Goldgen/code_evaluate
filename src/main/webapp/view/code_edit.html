@@ -41,13 +41,13 @@
                         <button type="button" class="btn btn-primary" id="submitBTN" disabled="disabled">点击运行</button>
                         <button type="button" class="btn btn-default" id="clearCode">清空</button>
                         <select class="form-control pull-right" id="sel1">
-                            <option #if(type=='cpp')selected="selected"#end
-                                    value="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)&type=cpp">
-                                C++
-                            </option>
                             <option #if(type=='c')selected="selected"#end
                                     value="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)&type=c">
                                 C
+                            </option>
+                            <option #if(type=='cpp')selected="selected"#end
+                                    value="/upload/edit?assignmentId=#(assignment.assignmentId)&questionId=#(question.questionId)&type=cpp">
+                                C++
                             </option>
                         </select>
                     </form>
@@ -171,6 +171,7 @@
             $('#evaluationScore').html(evaluationScore);
 
             var tbody = '';
+            $('#static-info').empty();
             $.each(data.violationList, function (index, obj) {
                 var diff = 0;
                 if (obj.priority === 3) {
@@ -192,6 +193,7 @@
             $('#testCaseInfo').html("测试用例信息：无");
             $('#testCaseScore').html("测试用例得分：0");
             $('#evaluationScore').html("静态分析得分：0");
+            $('#static-info').empty();
         }
     }
 

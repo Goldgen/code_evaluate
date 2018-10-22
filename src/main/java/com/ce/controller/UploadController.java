@@ -57,10 +57,10 @@ public class UploadController extends Controller {
         setAttr("assignment", assignment);
         Question question = questionService.findById(questionId);
         setAttr("question", question);
-        if (type != null && type.equals("c")) {
-            setAttr("type", "c");
-        } else {
+        if (type != null && type.equals("cpp")) {
             setAttr("type", "cpp");
+        } else {
+            setAttr("type", "c");
         }
         render("code_edit.html");
     }
