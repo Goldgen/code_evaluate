@@ -141,6 +141,10 @@ public class FileUtil {
             Matcher m = p.matcher(str);
             dest = m.replaceAll("");
         }
+        String last = dest.substring(dest.length() - 1);
+        if (last.equals("\n")) {
+            dest = dest.substring(0, dest.length() - 1);
+        }
         return dest;
     }
 
