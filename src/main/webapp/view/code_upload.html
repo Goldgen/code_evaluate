@@ -42,7 +42,7 @@
                     <tr>
                         <td>#(vo.questionNo)</td>
                         <td>
-                            <pre>#(vo.content)</pre>
+                            <pre>#escape(vo.content)</pre>
                         </td>
                         <td>#(vo.totalScore==-1?'未提交':vo.totalScore)</td>
 

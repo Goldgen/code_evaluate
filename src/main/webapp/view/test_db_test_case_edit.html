@@ -51,17 +51,17 @@
                             #for(testCase : testCaseList)
                             <tr>
                                 <td>
-                                    <pre>#(testCase.testCaseContent)</pre>
+                                    <pre>#escape(testCase.testCaseContent)</pre>
                                 </td>
                                 <td>
-                                    <pre>#(testCase.answer)</pre>
+                                    <pre>#escape(testCase.answer)</pre>
                                 </td>
                                 <td>
                                     <a href="javascript:void(0)" class="btn btn-success btn-xs edit-case-btn"
                                        title="修改"
                                        data-toggle="tooltip" data-placement="bottom" data-testid="#(testId)"
-                                       data-id="#(testCase.testCaseId)" data-content="#(testCase.testCaseContent)"
-                                       data-answer="#(testCase.answer)">
+                                       data-id="#(testCase.testCaseId)" data-content="#escape(testCase.testCaseContent)"
+                                       data-answer="#escape(testCase.answer)">
                                         <i class="glyphicon glyphicon-edit"></i></a>
                                     <a href="javascript:void(0)" class="btn btn-danger btn-xs delete-case-btn"
                                        title="删除" data-testid="#(testId)"

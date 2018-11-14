@@ -32,7 +32,7 @@
         <input id="assignmentId" type="hidden" value="#(assignment.assignmentId)"/>
         <div class="col-md-12">
             <label>第#(question.questionNo)题：</label>
-            <pre>#(question.content)</pre>
+            <pre>#escape(question.content)</pre>
         </div>
         <div class="col-md-12">
             <div class="panel panel-default">

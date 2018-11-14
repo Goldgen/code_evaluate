@@ -105,16 +105,16 @@
                             #for(x : question.testCaseList)
                             <tr>
                                 <td>
-                                    <pre>#(x.testCaseContent)</pre>
+                                    <pre>#escape(x.testCaseContent)</pre>
                                 </td>
                                 <td>
-                                    <pre>#(x.answer)</pre>
+                                    <pre>#escape(x.answer)</pre>
                                 </td>
                                 <td>
                                     <a href="javascript:void(0)" class="btn btn-success btn-xs" title="修改"
                                        data-toggle="tooltip" data-placement="bottom"
-                                       data-id="#(x.testCaseId)" data-content="#(x.testCaseContent)"
-                                       data-answer="#(x.answer)">
+                                       data-id="#(x.testCaseId)" data-content="#escape(x.testCaseContent)"
+                                       data-answer="#escape(x.answer)">
                                         <i class="glyphicon glyphicon-edit"></i></a>
                                     <a href="javascript:void(0)" class="btn btn-danger btn-xs" title="删除"
                                        data-toggle="tooltip" data-placement="bottom"
