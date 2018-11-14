@@ -68,8 +68,8 @@ public class TestDbController extends Controller {
 
         TestDbTestCase testCase = new TestDbTestCase();
         testCase.setTestId(testId);
-        testCase.setTestCaseContent(content.replaceAll("\\\\r\\\\n", "\n"));
-        testCase.setAnswer(answer.replaceAll("\\\\r\\\\n", "\n"));
+        testCase.setTestCaseContent(content.replaceAll("\r\n", "\n"));
+        testCase.setAnswer(answer.replaceAll("\r\n", "\n"));
         testCase.save();
 
         redirect("/testDb/caseList?testId=" + testId);
@@ -83,8 +83,8 @@ public class TestDbController extends Controller {
 
 
         TestDbTestCase testCase = testDbTestCaseService.findById(testCaseId);
-        testCase.setTestCaseContent(content.replaceAll("\\\\r\\\\n", "\n"));
-        testCase.setAnswer(answer.replaceAll("\\\\r\\\\n", "\n"));
+        testCase.setTestCaseContent(content.replaceAll("\r\n", "\n"));
+        testCase.setAnswer(answer.replaceAll("\r\n", "\n"));
         testCase.update();
 
         redirect("/testDb/caseList?testId=" + testId);

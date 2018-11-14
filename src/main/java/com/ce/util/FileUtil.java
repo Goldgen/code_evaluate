@@ -43,9 +43,11 @@ public class FileUtil {
     public static boolean compareFileWithString(String filePath, String compareStr) throws IOException {
         Path path = Paths.get(getRealPath(filePath));
         String fileStr = new String(Files.readAllBytes(path));
-        String last = fileStr.substring(fileStr.length() - 1);
-        if (last.equals("\n")) {
-            fileStr = fileStr.substring(0, fileStr.length() - 1);
+        if (fileStr.length() >= 1) {
+            String last = fileStr.substring(fileStr.length() - 1);
+            if (last.equals("\n")) {
+                fileStr = fileStr.substring(0, fileStr.length() - 1);
+            }
         }
         compareStr = replaceUseless(compareStr);
 

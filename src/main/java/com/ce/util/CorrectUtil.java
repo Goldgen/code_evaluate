@@ -58,7 +58,7 @@ public class CorrectUtil {
             process.waitFor();
         } else {
             if (!process.waitFor(seconds, TimeUnit.SECONDS)) {
-                //process.children().forEach(ProcessHandle::destroy);
+                process.children().forEach(ProcessHandle::destroy);
                 process.destroy();
                 System.out.println("执行命令：" + cmd + "超时");
                 shellReturnInfo.errorInfo = "运行超过" + seconds + "秒";

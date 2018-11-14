@@ -137,8 +137,8 @@ public class QuestionController extends Controller {
 
         TestCase testCase = new TestCase();
         testCase.setQuestionId(questionId);
-        testCase.setTestCaseContent(content.replaceAll("\\\\r\\\\n", "\n"));
-        testCase.setAnswer(answer.replaceAll("\\\\r\\\\n", "\n"));
+        testCase.setTestCaseContent(content.replaceAll("\r\n", "\n"));
+        testCase.setAnswer(answer.replaceAll("\r\n", "\n"));
         testCase.save();
 
         redirect("/question/" + assignmentId);
@@ -151,8 +151,8 @@ public class QuestionController extends Controller {
 
         int testCaseId = getParaToInt("testCaseId");
         TestCase testCase = testCaseService.findById(testCaseId);
-        testCase.setTestCaseContent(content.replaceAll("\\\\r\\\\n", "\n"));
-        testCase.setAnswer(answer.replaceAll("\\\\r\\\\n", "\n"));
+        testCase.setTestCaseContent(content.replaceAll("\r\n", "\n"));
+        testCase.setAnswer(answer.replaceAll("\r\n", "\n"));
         testCase.update();
 
         redirect("/question/" + assignmentId);
