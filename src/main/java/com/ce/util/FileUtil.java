@@ -43,12 +43,8 @@ public class FileUtil {
     public static boolean compareFileWithString(String filePath, String compareStr) throws IOException {
         Path path = Paths.get(getRealPath(filePath));
         String fileStr = new String(Files.readAllBytes(path));
-        if (fileStr.length() >= 1) {
-            String last = fileStr.substring(fileStr.length() - 1);
-            if (last.equals("\n")) {
-                fileStr = fileStr.substring(0, fileStr.length() - 1);
-            }
-        }
+        fileStr = deleteLastEnter(fileStr);
+        compareStr = deleteLastEnter(compareStr);
         compareStr = replaceUseless(compareStr);
 
 //        List<String> fileLineList = Files.readAllLines(path);
@@ -150,6 +146,16 @@ public class FileUtil {
         }
 
         return dest;
+    }
+
+    private static String deleteLastEnter(String str) {
+        if (str.length() >= 1) {
+            String last = str.substring(str.length() - 1);
+            if (last.equals("\n")) {
+                str = str.substring(0, str.length() - 1);
+            }
+        }
+        return str;
     }
 
 
