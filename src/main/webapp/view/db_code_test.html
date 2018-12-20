@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>代码提交</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+
+    #include("_codemirror.html")
+
+
+</head>
+
+<body>
+#include("_navbar.html")
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="breadcrumb">
+                <li><a href="/testDb/list">题库</a></li>
+                <li><span>代码测试</span></li>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <input id="testId" type="hidden" value="#(test.testId)"/>
+        <div class="col-md-12">
+            <label>ID：#(test.testId)</label>
+            <pre>#escape(test.content)</pre>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div id="compiler" class="panel-heading">
+                    <form class="form-inline" role="form">
+                        <button type="button" class="btn btn-primary" id="submitBTN" disabled="disabled">点击运行</button>
+                        <button type="button" class="btn btn-default" id="clearCode">清空</button>
+                        <select class="form-control pull-right" id="sel1">
+                            <option #if(type=='c')selected="selected"#end
+                                    value="/testDb/test_code?testId=#(test.testId)&type=c">
+                                C
+                            </option>
+                            <option #if(type=='cpp')selected="selected"#end
+                                    value="/testDb/test_code?testId=#(test.testId)&type=cpp">
+                                C++
+                            </option>
+                        </select>
+                    </form>
+                </div>
+                <div class="panel-body">
+                    <form role="form" id="compiler-form">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <textarea class="form-control" id="code" rows="18">#[[]]#</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resultModel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="modal-title">批改结果</h4>
+            </div>
+            <div class="modal-body">
+                <p id="compileInfo"></p>
+                <p id="testCaseInfo"></p>
+                <p id="testCaseScore"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script>
+    var type = '#(type)';
+    var mode;
+    var language;
+    if (type === 'c') {
+        mode = "text/x-csrc";
+        language = 1;
+    } else {
+        mode = "text/x-c++src";
+        language = 2;
+    }
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: mode,
+        indentUnit: 4,
+        indentWithTabs: true
+    });
+    var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;
+    CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";
+
+    btn = $("#submitBTN");
+
+    editor.on("change", function (editor, change) {
+        btn.prop('disabled', false);
+    });
+
+    btn.click(function () {
+        btn.prop('disabled', true);
+        var testId = $('#testId').val();
+        code = editor.getValue();
+        var index = layer.load(1, {
+            shade: [0.5, '#fff']
+        });
+        $.post("/testDb/run", {
+            code: code,
+            language: language,
+            testId: testId
+        }, function (data) {
+            if (data.code === 1) {
+                layer.close(index);
+                formatReturnInfo(data.payload);
+            }
+            $('#resultModel').modal('toggle');
+
+        });
+        setTimeout(function () {
+            btn.prop('disabled', false);
+        }, 3 * 1000);
+    });
+
+    function formatReturnInfo(data) {
+        if (data.isCompilePass) {
+            var compileInfo = "编译通过";
+            $('#compileInfo').html("编译信息：" + compileInfo);
+            var testCaseInfo = "在" + data.testCaseSize + "个测试用例中通过了" + data.testCasePassNum + "个 " + data.executeInfo;
+            $('#testCaseInfo').html("测试用例信息：" + testCaseInfo);
+            var testCaseScore = "测试用例得分：" + data.testCaseScore;
+            $('#testCaseScore').html(testCaseScore);
+        }
+        else {
+            var compileInfo = "编译未通过：<br>" + data.compileErrorInfo;
+            $('#compileInfo').html("编译信息：" + compileInfo);
+            $('#testCaseInfo').html("测试用例信息：无");
+            $('#testCaseScore').html("测试用例得分：0");
+        }
+    }
+
+    $(function () {
+
+        $('#sel1').on('change', function () {
+            var url = $(this).val();
+            if (url) {
+                window.location = url;
+            }
+            return false;
+        });
+
+        $("#clearCode").click(function () {
+            editor.setValue("");
+            editor.clearHistory();
+            $("#compiler-textarea-result").val("");
+            btn.prop('disabled', true);
+        });
+
+    });
+
+</script>
+
