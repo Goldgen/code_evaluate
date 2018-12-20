@@ -1,13 +1,15 @@
 package com.ce.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CommonUtil {
 
     public static String basePath = System.getProperty("user.dir");
 
-    public static String uploadPath = System.getProperty("user.dir")+"/src/main/webapp/upload";
+    public static String uploadPath = System.getProperty("user.dir") + "/src/main/webapp/upload";
+
     /**
      * 拆分集合
      *
@@ -46,5 +48,14 @@ public class CommonUtil {
         }
         return ret;
 
+    }
+
+    public static Calendar getCurrentTime() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal;
     }
 }

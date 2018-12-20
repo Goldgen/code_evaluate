@@ -10,6 +10,7 @@ import com.ce.service.AssignmentService;
 import com.ce.service.QuestionService;
 import com.ce.service.StudentQuestionService;
 import com.ce.service.TestCaseService;
+import com.ce.util.CommonUtil;
 import com.ce.util.CorrectUtil;
 import com.ce.util.FileUtil;
 import com.ce.vo.*;
@@ -36,12 +37,7 @@ public class UploadController extends Controller {
         int assignmentId = getParaToInt(0);
         String userId = getSessionAttr("userId");
         Assignment assignment = assignmentService.findById(assignmentId);
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        setAttr("isExpired", assignment.getEndDate().compareTo(new Date(cal.getTimeInMillis())) < 0);
+        setAttr("isExpired", assignment.getEndDate().compareTo(new Date(CommonUtil.getCurrentTime().getTimeInMillis())) < 0);
         setAttr("assignment", assignment);
 
         List<QuestionResultVo> questionResultVoList = studentQuestionService.findByAssignmentIdAndUserId(assignmentId, userId);
@@ -70,6 +66,11 @@ public class UploadController extends Controller {
         Assignment assignment = assignmentService.findById(assignmentId);
         if (!assignment.getIsCaseEditFinish()) {
             renderJson(JSON.toJSONString(JsonResponse.ok(2)));
+            return;
+        }
+
+        if (assignment.getEndDate().compareTo(new Date(CommonUtil.getCurrentTime().getTimeInMillis())) < 0) {
+            renderJson(JSON.toJSONString(JsonResponse.ok(3)));
             return;
         }
 
