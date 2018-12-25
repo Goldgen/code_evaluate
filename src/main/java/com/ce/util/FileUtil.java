@@ -113,6 +113,17 @@ public class FileUtil {
         return fileInfoList;
     }
 
+    //删除文件夹中所有的文件
+    public static void emptyDirectory(String directoryPath) throws IOException {
+        Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
     //删除文件夹以及下面所有的文件
     public static void deleteDirectory(String directoryPath) throws IOException {
         Files.walkFileTree(Paths.get(getRealPath(directoryPath)), new SimpleFileVisitor<Path>() {

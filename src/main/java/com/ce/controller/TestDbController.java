@@ -1,16 +1,28 @@
 package com.ce.controller;
 
-import com.ce.model.first.TestDb;
-import com.ce.model.first.TestDbTestCase;
+import com.alibaba.fastjson.JSON;
+import com.ce.model.first.*;
+import com.ce.model.second.Assignment;
+import com.ce.service.AssignmentService;
+import com.ce.service.QuestionService;
 import com.ce.service.TestDbService;
 import com.ce.service.TestDbTestCaseService;
 import com.ce.util.CommonUtil;
+import com.ce.util.CorrectUtil;
+import com.ce.util.FileUtil;
+import com.ce.vo.*;
 import com.jfinal.core.Controller;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TestDbController extends Controller {
+
+    private static AssignmentService assignmentService = new AssignmentService();
+
+    private static QuestionService questionService = new QuestionService();
 
     private static TestDbService testDbService = new TestDbService();
 
@@ -96,6 +108,79 @@ public class TestDbController extends Controller {
         testDbTestCaseService.deleteById(testCaseId);
 
         redirect("/testDb/caseList?testId=" + testId);
+    }
+
+    public void test_code() {
+        int testId = getParaToInt("testId");
+        TestDb test = testDbService.findById(testId);
+        String type = getPara("type");
+        if (type != null && type.equals("cpp")) {
+            setAttr("type", "cpp");
+        } else {
+            setAttr("type", "c");
+        }
+        setAttr("test", test);
+        render("db_code_test.html");
+    }
+
+    public void run() throws IOException, InterruptedException {
+        int testId = getParaToInt("testId");
+        String code = getPara("code");
+        int language = getParaToInt("language");
+
+        String testFolder = "test/";
+        String suffix = language == 1 ? ".c" : ".cpp";
+        String codePath = testFolder + testId + suffix;
+
+        List<TestDbTestCase> testCaseList = testDbTestCaseService.findByTestId(testId);
+        for (TestDbTestCase testCase : testCaseList) {
+            String inputFilePath = testFolder + testId + "_input_" + testCase.getTestCaseId() + ".txt";
+            FileUtil.createFile(inputFilePath, testCase.getTestCaseContent());
+        }
+
+
+        //如果不存在，则创建测试文件夹
+        FileUtil.createDirectory("test");
+
+        //创建代码文件
+        FileUtil.createFile(codePath, code);
+
+        String fileName = testId + suffix;
+        String prefix = String.valueOf(testId);
+
+        EvaluateInfoVo evaluateInfo = new EvaluateInfoVo();
+
+        //编译
+        ShellReturnInfo returnInfo = CorrectUtil.isCompilePass(testFolder, fileName);
+
+        evaluateInfo.isCompilePass = returnInfo.isPass;
+        evaluateInfo.compileErrorInfo = returnInfo.errorInfo.replace("\n", "<br>");
+
+        if (returnInfo.isPass) {
+            //执行，比较测试用例和输出
+            evaluateInfo.executeInfo = "";
+            double testCasePassNum = 0;
+            for (TestDbTestCase testCase : testCaseList) {
+                String inputFileName = testId + "_input_" + testCase.getTestCaseId() + ".txt";
+                String outputFileName = testId + "_output_" + testCase.getTestCaseId() + ".txt";
+                ShellReturnInfo excuteReturnInfo = CorrectUtil.execute(testFolder, prefix + ".out", "test/" + inputFileName, outputFileName);
+                if (!excuteReturnInfo.isPass)
+                    evaluateInfo.executeInfo = "有部分测试用例执行超时";
+                String outputFilePath = testFolder + outputFileName;
+                if (FileUtil.compareFileWithString(outputFilePath, testCase.getAnswer())) {
+                    testCasePassNum++;
+                }
+            }
+            int testCaseSize = testCaseList.size();
+
+            evaluateInfo.testCasePassNum = (int) testCasePassNum;
+            evaluateInfo.testCaseSize = testCaseSize;
+            evaluateInfo.testCaseScore = (int) ((testCasePassNum / testCaseSize) * 100);  //以百分制显示
+        }
+
+        FileUtil.emptyDirectory(testFolder);
+        String json = JSON.toJSONString(JsonResponse.ok(evaluateInfo, 1));
+        renderJson(json);
     }
 
 }
