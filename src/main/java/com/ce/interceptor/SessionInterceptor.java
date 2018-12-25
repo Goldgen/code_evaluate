@@ -26,7 +26,7 @@ public class SessionInterceptor implements Interceptor {
                     return;
                 }
             } else {
-                if (url.contains("testDb") || url.contains("question") || url.contains("similarity") || url.contains("analysis") || url.contains("execute")) {
+                if (url.contains("testDb") || url.contains("question") || url.contains("similarity") || url.contains("analysis") || url.contains("execute") || url.contains("caseResult")) {
                     controller.redirect("/noAuthority");
                     return;
                 }
