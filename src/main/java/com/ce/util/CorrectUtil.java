@@ -54,19 +54,11 @@ public class CorrectUtil {
         ShellReturnInfo shellReturnInfo = new ShellReturnInfo();
         String errStr = "";
         Process process = Runtime.getRuntime().exec(cmd);
-        if (seconds <= 0) {
-            process.waitFor();
-        } else {
-            if (!process.waitFor(seconds, TimeUnit.SECONDS)) {
-                process.children().forEach(ProcessHandle::destroy);
-                process.destroy();
-                System.out.println("执行命令：" + cmd + "超时");
-                shellReturnInfo.errorInfo = "运行超过" + seconds + "秒";
-                shellReturnInfo.isPass = false;
-                return shellReturnInfo;
-            }
-            System.out.println("执行命令：" + cmd + "正常");
-        }
+
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        while (buffer.readLine() != null) ;
+        buffer.close();
+
         BufferedReader bufferError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         StringBuilder errBuilder = new StringBuilder();
         while (true) {
@@ -80,6 +72,21 @@ public class CorrectUtil {
         }
         bufferError.close();
         errStr = errBuilder.toString();
+
+        if (seconds <= 0) {
+            process.waitFor();
+        } else {
+            if (!process.waitFor(seconds, TimeUnit.SECONDS)) {
+                process.children().forEach(ProcessHandle::destroy);
+                process.destroy();
+                System.out.println("执行命令：" + cmd + "超时");
+                shellReturnInfo.errorInfo = "运行超过" + seconds + "秒";
+                shellReturnInfo.isPass = false;
+                return shellReturnInfo;
+            }
+            System.out.println("执行命令：" + cmd + "正常");
+        }
+
         boolean isPass = errStr.isEmpty() || !errStr.contains("error");
         if (!isPass) {
             LogKit.error("执行命令：" + cmd + "出错,错误为：" + errStr);
