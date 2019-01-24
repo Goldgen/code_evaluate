@@ -45,4 +45,13 @@ public abstract class BaseQuestion<M extends BaseQuestion<M>> extends Model<M> i
 		return getStr("content");
 	}
 
+	public M setTestId(java.lang.Integer testId) {
+		set("testId", testId);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getTestId() {
+		return getInt("testId");
+	}
+
 }

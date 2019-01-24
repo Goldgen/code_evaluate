@@ -18,6 +18,42 @@ public abstract class BaseTestDb<M extends BaseTestDb<M>> extends Model<M> imple
 		return getInt("testId");
 	}
 
+	public M setCourseId(java.lang.String courseId) {
+		set("courseId", courseId);
+		return (M)this;
+	}
+	
+	public java.lang.String getCourseId() {
+		return getStr("courseId");
+	}
+
+	public M setTopicId(java.lang.Integer topicId) {
+		set("topicId", topicId);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getTopicId() {
+		return getInt("topicId");
+	}
+
+	public M setTestName(java.lang.String testName) {
+		set("testName", testName);
+		return (M)this;
+	}
+	
+	public java.lang.String getTestName() {
+		return getStr("testName");
+	}
+
+	public M setDifficulty(java.lang.Integer difficulty) {
+		set("difficulty", difficulty);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getDifficulty() {
+		return getInt("difficulty");
+	}
+
 	public M setContent(java.lang.String content) {
 		set("content", content);
 		return (M)this;

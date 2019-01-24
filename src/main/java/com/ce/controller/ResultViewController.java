@@ -2,6 +2,7 @@ package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.ce.model.first.Question;
+import com.ce.model.first.Similarity;
 import com.ce.model.first.StudentQuestion;
 import com.ce.model.first.TestCase;
 import com.ce.model.second.Assignment;
@@ -33,6 +34,8 @@ public class ResultViewController extends Controller {
     private static StudentQuestionService studentQuestionService = new StudentQuestionService();
 
     private static TestCaseService testCaseService = new TestCaseService();
+
+    private static SimilarityService similarityService = new SimilarityService();
 
     @ActionKey("/execute")
     public void executeResult() {
@@ -247,6 +250,21 @@ public class ResultViewController extends Controller {
             getSimilarityResult(cContent, cPattern, similarityVoList, userList);
             getSimilarityResult(cppContent, cppPattern, similarityVoList, userList);
 
+            for (SimilarityVo vo : similarityVoList) {
+                if (vo.similarity < 10) continue;
+                Similarity similarity = similarityService.findById(question.getQuestionId(), vo.userId2, vo.userId1);
+                if (similarity == null) {
+                    similarity = new Similarity();
+                    similarity.setQuestionId(question.getQuestionId());
+                    similarity.setUserId1(vo.userId1);
+                    similarity.setUserId2(vo.userId2);
+                    similarity.setSimilarity(vo.similarity);
+                    similarity.save();
+                } else {
+                    similarity.setSimilarity(vo.similarity);
+                    similarity.update();
+                }
+            }
             SimilarityResultVo similarityResultVo = new SimilarityResultVo();
             similarityResultVo.questionId = question.getQuestionId();
             similarityResultVo.questionNo = question.getQuestionNo();
@@ -257,6 +275,7 @@ public class ResultViewController extends Controller {
             similarityResultVo.highSimilarityVoList = similarityVoList
                     .stream().filter(x -> x.similarity > 50).collect(Collectors.toList());
             similarityResultVoList.add(similarityResultVo);
+
         }
 
         Collections.sort(similarityResultVoList);

@@ -63,6 +63,9 @@ public class StudentQuestionService {
         return voList;
     }
 
+    public List<StudentQuestion> findByQuestionId(int questionId) {
+        return studentQuestionDao.find("select * from student_question where questionId= ? ", questionId);
+    }
 
     public List<StudentQuestion> findByAssignmentId(int assignmentId) {
         return studentQuestionDao.find("SELECT q.questionNo, q.questionId,sq.* FROM question q inner join student_question sq on q.questionId=sq.questionId where q.assignmentId= ? ", assignmentId);

@@ -1,14 +1,12 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.model.first.Question;
-import com.ce.model.first.TestCase;
-import com.ce.model.first.TestDb;
-import com.ce.model.first.TestDbTestCase;
+import com.ce.model.first.*;
 import com.ce.model.second.Assignment;
 import com.ce.service.*;
 import com.ce.util.CommonUtil;
 import com.ce.util.FileUtil;
+import com.ce.vo.JsonResponse;
 import com.ce.vo.QuestionInfoVo;
 import com.ce.vo.QuestionListVo;
 import com.jfinal.core.Controller;
@@ -31,6 +29,8 @@ public class QuestionController extends Controller {
     private static TestDbService testDbService = new TestDbService();
 
     private static TestDbTestCaseService testDbTestCaseService = new TestDbTestCaseService();
+
+    private static StudentQuestionService studentQuestionService = new StudentQuestionService();
 
     public void index() {
         int assignmentId = getParaToInt(0);
@@ -62,6 +62,12 @@ public class QuestionController extends Controller {
         Question question = questionService.findById(questionId);
         question.setContent(content);
         question.update();
+
+        TestDb testDb = testDbService.findById(question.getTestId());
+        if (testDb != null) {
+            testDb.setContent(content);
+            testDb.update();
+        }
 
         redirect("/question/" + assignmentId);
     }
@@ -95,6 +101,7 @@ public class QuestionController extends Controller {
             question.setAssignmentId(assignmentId);
             infoList.stream().filter(x -> x.testId == test.getTestId()).findFirst().ifPresent(tempInfo -> question.setQuestionNo(tempInfo.questionNo));
             question.setContent(test.getContent());
+            question.setTestId(test.getTestId());
             question.save();
             List<TestDbTestCase> testDbTestCaseList = testDbTestCaseService.findByTestId(test.getTestId());
             List<TestCase> testCaseList = new ArrayList<>();
@@ -115,18 +122,22 @@ public class QuestionController extends Controller {
         int assignmentId = getParaToInt("assignmentId");
         int questionId = getParaToInt("questionId");
 
-        questionService.deleteById(questionId);
+        List<StudentQuestion> studentQuestionList = studentQuestionService.findByQuestionId(questionId);
+        if (studentQuestionList.size() > 0) {
+            renderJson(JSON.toJSONString(JsonResponse.fail()));
+        } else {
+            questionService.deleteById(questionId);
 
-        List<Question> questionList = questionService.findByAssignmentId(assignmentId);
+            List<Question> questionList = questionService.findByAssignmentId(assignmentId);
 
-        questionList.sort(Comparator.comparing(Question::getQuestionNo));
-        for (int i = 1; i <= questionList.size(); i++) {
-            Question question = questionList.get(i - 1);
-            question.setQuestionNo(i);
-            question.update();
+            questionList.sort(Comparator.comparing(Question::getQuestionNo));
+            for (int i = 1; i <= questionList.size(); i++) {
+                Question question = questionList.get(i - 1);
+                question.setQuestionNo(i);
+                question.update();
+            }
+            renderJson(JSON.toJSONString(JsonResponse.ok()));
         }
-
-        redirect("/question/" + assignmentId);
     }
 
     public void addTestCase() {

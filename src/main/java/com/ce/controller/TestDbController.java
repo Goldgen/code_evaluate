@@ -3,22 +3,25 @@ package com.ce.controller;
 import com.alibaba.fastjson.JSON;
 import com.ce.model.first.*;
 import com.ce.model.second.Assignment;
-import com.ce.service.AssignmentService;
-import com.ce.service.QuestionService;
-import com.ce.service.TestDbService;
-import com.ce.service.TestDbTestCaseService;
+import com.ce.model.second.Class;
+import com.ce.model.first.Topic;
+import com.ce.service.*;
 import com.ce.util.CommonUtil;
 import com.ce.util.CorrectUtil;
 import com.ce.util.FileUtil;
+import com.ce.util.TestVo;
 import com.ce.vo.*;
 import com.jfinal.core.Controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TestDbController extends Controller {
+
+    private static ClassService classService = new ClassService();
 
     private static AssignmentService assignmentService = new AssignmentService();
 
@@ -28,17 +31,73 @@ public class TestDbController extends Controller {
 
     private static TestDbTestCaseService testDbTestCaseService = new TestDbTestCaseService();
 
+    private static TopicService topicService = new TopicService();
+
     public void list() {
-        String content = getPara("content");
-        List<TestDb> testList = testDbService.getAll();
-        if (content != null && !content.isEmpty()) {
-            testList = testList.stream().filter(x -> x.getContent().contains(content)).collect(Collectors.toList());
+        String userId = getSessionAttr("userId", "");
+
+        List<Class> classList;
+        String classIdStr = getSessionAttr("classIdList", "");
+        List<String> classIdList = JSON.parseArray(classIdStr, String.class);
+        if (classIdList != null && !classIdList.isEmpty()) {
+            classList = classService.findByClassIdList(classIdList);
+        } else {
+            classList = classService.findAllByTeacherId(userId);
         }
-        int totalCount = testList.size();
-        List<List<TestDb>> result = CommonUtil.split(testList, 10); //把列表拆分成10个一组
+        List<String> courseIdList = new ArrayList<>();
+        List<CourseInfoVo> courseInfoVoList = classList.stream().map(x -> {
+            CourseInfoVo vo = new CourseInfoVo();
+            vo.courseId = x.getCourseId();
+            vo.courseName = x.getStr("courseName");
+            return vo;
+        }).filter(x -> {
+            boolean flag = !courseIdList.contains(x.courseId);
+            courseIdList.add(x.courseId);
+            return flag;
+        }).collect(Collectors.toList());
+
+
+        List<Topic> topicList = topicService.getAll();
+
+        setAttr("courseList", courseInfoVoList);
+        setAttr("topicList", topicList);
+        render("test_db.html");
+    }
+
+    public void search() {
+        String userId = getSessionAttr("userId", "");
+        String content = getPara("content");
+        int topicId = getParaToInt("topicId");
+        String courseId = getPara("courseId");
+        int difficulty = getParaToInt("difficulty");
+        int pageCount = getParaToInt("pageCount");
+        int pageSize = getParaToInt("pageSize");
+
+        int i = pageCount;
+        List<TestVo> testList = new ArrayList<>();
+        for (; i > 0; i--) {
+            testList = testDbService.getByConditionAndPage(i, pageSize, courseId, topicId, difficulty, content).stream().
+                    map(x -> {
+                        TestVo vo = new TestVo();
+                        vo.testId = x.getTestId();
+                        vo.courseId = x.getCourseId();
+                        vo.topicId = x.getTopicId();
+                        vo.topicName = x.getStr("topicName");
+                        vo.testName = x.getTestName();
+                        vo.difficulty = x.getDifficulty();
+                        vo.content = x.getContent();
+                        return vo;
+                    }).collect(Collectors.toList());
+            if (testList.size() > 0) break;
+        }
+
+        int totalCount = testDbService.countByCondition(courseId, topicId, difficulty, content);
+
+        setAttr("pageCount", i == 0 ? 1 : i);
+        setAttr("pageSize", pageSize);
         setAttr("totalCount", totalCount);
-        setAttr("testLists", result);
-        render("test_db_edit.html");
+        setAttr("testList", testList);
+        render("_test_db_table.html");
     }
 
     public void addTest() {
@@ -183,4 +242,39 @@ public class TestDbController extends Controller {
         renderJson(json);
     }
 
+    public void topicList() {
+        List<Topic> topicList = topicService.getAll();
+        setAttr("topicList", topicList);
+        render("topic.html");
+    }
+
+    public void addTopic() {
+        String topicName = getPara("topicName");
+
+        Topic topic = new Topic();
+        topic.setTopicName(topicName);
+        topic.save();
+
+        redirect("/testDb/topicList");
+    }
+
+    public void editTopic() {
+        int topicId = getParaToInt("topicId");
+        String topicName = getPara("topicName");
+
+        Topic topic = topicService.findById(topicId);
+        topic.setTopicName(topicName);
+        topic.update();
+
+        redirect("/testDb/topicList");
+    }
+
+    public void deleteTopic() {
+        int topicId = getParaToInt("topicId");
+
+        Topic topic = topicService.findById(topicId);
+        topic.delete();
+
+        redirect("/testDb/topicList");
+    }
 }

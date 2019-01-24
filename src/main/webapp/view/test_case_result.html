@@ -49,13 +49,13 @@
                     #for(vo : testCaseVoList)
                     <tr>
                         <td style="max-width: 250px">
-                            <pre>#(vo.content)</pre>
+                            <pre>#escape(vo.content)</pre>
                         </td>
                         <td style="max-width: 500px">
-                            <pre>#(vo.answer)</pre>
+                            <pre>#escape(vo.answer)</pre>
                         </td>
                         <td style="max-width: 500px">
-                            <pre>#(vo.output)</pre>
+                            <pre>#escape(vo.output)</pre>
                         </td>
                         <td>
                             #if(vo.isPass)是#else否#end

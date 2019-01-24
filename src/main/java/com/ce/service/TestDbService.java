@@ -38,6 +38,42 @@ public class TestDbService {
     }
 
     public List<TestDb> getAll() {
-        return dao.find("select * from test_db");
+        return dao.find("select * from test_db ");
+    }
+
+    public int countByCondition(String courseId, int topicId, int difficulty, String content) {
+        String sql = "select td.testId, td.courseId,td.topicId,tp.topicName,td.testName,td.difficulty,td.content " +
+                "from test_db td,topic tp where td.topicId=tp.topicId";
+        if (!courseId.isEmpty()) {
+            sql += " and td.courseId = " + courseId;
+        }
+        if (topicId > 0) {
+            sql += " and td.topicId = " + topicId;
+        }
+        if (difficulty > 0) {
+            sql += " and td.difficulty = " + difficulty;
+        }
+        if (!content.isEmpty()) {
+            sql += " and (td.testName like '%" + content + "%' or td.content like '%" + content + "%')";
+        }
+        return dao.find(sql).size();
+    }
+
+    public List<TestDb> getByConditionAndPage(int pageCount, int pageSize, String courseId, int topicId, int difficulty, String content) {
+        String sql = "select td.testId, td.courseId,td.topicId,tp.topicName,td.testName,td.difficulty,td.content " +
+                "from test_db td,topic tp where td.topicId=tp.topicId";
+        if (!courseId.isEmpty()) {
+            sql += " and td.courseId = " + courseId;
+        }
+        if (topicId > 0) {
+            sql += " and td.topicId = " + topicId;
+        }
+        if (difficulty > 0) {
+            sql += " and td.difficulty = " + difficulty;
+        }
+        if (!content.isEmpty()) {
+            sql += " and (td.testName like '%" + content + "%' or td.content like '%" + content + "%')";
+        }
+        return dao.find(sql + " limit ? , ?", (pageCount - 1) * pageSize, pageSize);
     }
 }

@@ -36,22 +36,13 @@ public abstract class BaseSimilarity<M extends BaseSimilarity<M>> extends Model<
 		return getInt("questionId");
 	}
 
-	public M setFromSimilarity(java.lang.Integer fromSimilarity) {
-		set("fromSimilarity", fromSimilarity);
+	public M setSimilarity(java.lang.Integer similarity) {
+		set("similarity", similarity);
 		return (M)this;
 	}
 	
-	public java.lang.Integer getFromSimilarity() {
-		return getInt("fromSimilarity");
-	}
-
-	public M setToSimilarity(java.lang.Integer toSimilarity) {
-		set("toSimilarity", toSimilarity);
-		return (M)this;
-	}
-	
-	public java.lang.Integer getToSimilarity() {
-		return getInt("toSimilarity");
+	public java.lang.Integer getSimilarity() {
+		return getInt("similarity");
 	}
 
 }

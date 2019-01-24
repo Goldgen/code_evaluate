@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)https://leetcode-cn.com/problemset/all/ -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <title>题库维护</title>
+
+
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+          name="viewport">
+
+
+    #include("_css.html")
+    <link rel="stylesheet" href="/statics/css/test_db.css" type="text/css">
+    <style>
+        .btn-default {
+            color: #333;
+            background-color: #fff;
+            border-color: #ccc0;
+        }
+
+        .btn-default:hover {
+            background-color: #e6e6e6;
+            border-color: #ccc0;
+        }
+
+        .open > .dropdown-toggle.btn-default:focus, .open > .dropdown-toggle.btn-default:hover {
+            background-color: #e6e6e6;
+            border-color: #ccc0;
+        }
+    </style>
+</head>
+<body>
+
+#include("_navbar.html")
+
+
+<div class="container main">
+    <!-- end scroll_to_top_button -->
+    <div class="row" id="category-app"></div>
+
+
+    <div class="row">
+        <div class="col-md-9 blog-main">
+            <div class="row" id="question-app">
+                <div>
+                    <div>
+                        <div class="question-list-base">
+                            <div class="question-filter-base">
+                                <div class="separator-line question-filter-hr">
+                                    <div class="separator-op"></div>
+                                    <div class="separator_left_mask"></div>
+                                    <div class="separator_right_mask"></div>
+                                </div>
+                                <div class="row search-bar-control">
+                                    <div class="col-sm-6 col-lg-7">
+                                        <input type="text" class="form-control list-search-bar"
+                                               placeholder="搜索题目 包括名称、内容" value="">
+                                    </div>
+                                    <div class="pull-right dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button"
+                                                id="knowledge-point-dropdown"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            知识点
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="knowledge-point-dropdown">
+                                            #for(topic : topicList)
+                                            <li><a class="topic-filter" data-id="#(topic.topicId)" href="#">【#escape(topic.topicName)】</a>
+                                            </li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                    <div class="pull-right dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button"
+                                                id="course-dropdown"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            课程
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="course-dropdown">
+                                            #for(course : courseList)
+                                            <li><a class="course-filter" data-id="#(course.courseId)"
+                                                   href="#">【#escape(course.courseName)】</a></li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                    <div class="pull-right dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button"
+                                                id="difficulty-dropdown"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            难度
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="difficulty-dropdown">
+                                            <li><a class="difficulty-filter" data-id="3" href="#">简单</a></li>
+                                            <li><a class="difficulty-filter" data-id="2" href="#">中等</a></li>
+                                            <li><a class="difficulty-filter" data-id="1" href="#">困难</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-xs-12">
+                                        <div class="filter-tag-bar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="main-table">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 blog-sidebar">
+            <div class="row sidebar-module">
+                <div class="col-md-offset-2 col-md-10">
+                    <div id="user-progress-app">
+                        <div class="hidden-sm hidden-xs">
+                            <div><!-- Explore Ad Img-->
+                                <style>
+                                    #explore-ad img {
+                                        width: 100%;
+                                        border-radius: 10px;
+                                        transform: translateY(-10px);
+                                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+                                        transition: all 0.6s;
+                                    }
+
+                                    #explore-ad:hover img {
+                                        transform: translateY(-12px);
+                                        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+                                    }
+                                </style>
+                                <div id="explore-ad" style="margin-top: 20px; margin-bottom: 10px;"
+                                     class="hide">
+                                    <a href="https://leetcode-cn.com/contest/weekly-contest-117/">
+                                        <img src="./题库 - 力扣 (LeetCode)_files/come_n_join.png"></a>
+                                </div>
+
+
+                            </div>
+                            <div>
+                                <div class="progress-module show">
+                                    <div class="progress-panel-base">
+                                        <div class="text-300 text-lg sidebar-title"><i class="fa fa-bar-chart"
+                                                                                       aria-hidden="true"></i>&nbsp;
+                                            我的进展
+                                        </div>
+                                        <ul class="list-group lg">
+                                            <li class="list-group-item session-select"><span>当前进度:</span><span
+                                                    class="pull-right tab-btn session-manager-btn"><span
+                                                    class="dropdown"><button
+                                                    class="btn btn-default dropdown-toggle btn-xs" type="button"
+                                                    id="sessionMenu" data-toggle="dropdown"><span
+                                                    class="hide pull-right"><i class="caret"></i></span><div
+                                                    class="session-name"
+                                                    title="未命名进度">未命名进度&nbsp;</div></button><ul
+                                                    class="dropdown-menu session-list hide" role="menu"
+                                                    aria-labelledby="sessionMenu"></ul></span><a
+                                                    class="btn btn-default btn-xs manage-btn"
+                                                    href="https://leetcode-cn.com/session/"><span><i
+                                                    class="fa fa-cog" aria-hidden="true"></i></span></a></span>
+                                            </li>
+                                            <li class="list-group-item chart-elem">
+                                                <div data-highcharts-chart="0">
+                                                    <div id="highcharts-z1i0wd1-0" class="highcharts-container "
+                                                         style="position: relative; overflow: hidden; width: 244px; height: 200px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                                                        <svg version="1.1" class="highcharts-root"
+                                                             style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Arial, Helvetica, sans-serif;font-size:12px;"
+                                                             xmlns="http://www.w3.org/2000/svg" width="244"
+                                                             height="200" viewBox="0 0 244 200">
+                                                            <desc>Created with Highcharts 5.0.14</desc>
+                                                            <defs>
+                                                                <clippath id="highcharts-z1i0wd1-1">
+                                                                    <rect x="0" y="0" width="224" height="175"
+                                                                          fill="none"></rect>
+                                                                </clippath>
+                                                            </defs>
+                                                            <rect fill="none" class="highcharts-background"
+                                                                  x="0" y="0" width="244" height="200" rx="0"
+                                                                  ry="0"></rect>
+                                                            <rect fill="none" class="highcharts-plot-background"
+                                                                  x="10" y="10" width="224" height="175"></rect>
+                                                            <rect fill="none" class="highcharts-plot-border"
+                                                                  x="10" y="10" width="224" height="175"></rect>
+                                                            <g class="highcharts-series-group">
+                                                                <g class="highcharts-series highcharts-series-0 highcharts-pie-series highcharts-color-undefined highcharts-tracker "
+                                                                   transform="translate(10,10) scale(1 1)">
+                                                                    <path fill="#428bca"
+                                                                          d="M 116.78616774382172 10.147930872354806 A 77.5 77.5 0 1 1 111.89235405479945 10.0000747590652 L 111.89235405479945 10.0000747590652 A 77.5 77.5 0 1 0 116.78616774382172 10.147930872354806 Z"
+                                                                          class="highcharts-halo highcharts-color-2"
+                                                                          fill-opacity="0.25"
+                                                                          style="cursor:auto;"></path>
+                                                                    <path fill="#5cb85c"
+                                                                          d="M 111.98421532671362 10.000001607457506 A 77.5 77.5 0 0 1 115.5479748263808 10.081256309396437 L 112 87.5 A 0 0 0 0 0 112 87.5 Z"
+                                                                          transform="translate(0,0)"
+                                                                          stroke="#ffffff" stroke-width="1"
+                                                                          stroke-linejoin="round"
+                                                                          class="highcharts-point highcharts-color-0 highcharts-drilldown-point"
+                                                                          style="cursor:pointer;"></path>
+                                                                    <path fill="#f0ad4e"
+                                                                          d="M 115.625391783181 10.084842993000123 A 77.5 77.5 0 0 1 116.70881329450242 10.143183381440025 L 112 87.5 A 0 0 0 0 0 112 87.5 Z"
+                                                                          transform="translate(0,0)"
+                                                                          stroke="#ffffff" stroke-width="1"
+                                                                          stroke-linejoin="round"
+                                                                          class="highcharts-point highcharts-color-1"></path>
+                                                                    <path fill="#428bca"
+                                                                          d="M 116.78616774382172 10.147930872354806 A 77.5 77.5 0 1 1 111.89235405479945 10.0000747590652 L 112 87.5 A 0 0 0 1 0 112 87.5 Z"
+                                                                          transform="translate(0,0)"
+                                                                          stroke="#ffffff" stroke-width="1"
+                                                                          stroke-linejoin="round"
+                                                                          class="highcharts-point highcharts-color-2 "></path>
+                                                                </g>
+                                                                <g class="highcharts-markers highcharts-series-0 highcharts-pie-series highcharts-color-undefined "
+                                                                   transform="translate(10,10) scale(1 1)"></g>
+                                                            </g>
+                                                            <g class="highcharts-legend">
+                                                                <rect fill="none" class="highcharts-legend-box"
+                                                                      rx="0" ry="0" x="0" y="0" width="8"
+                                                                      height="8" visibility="hidden"></rect>
+                                                                <g>
+                                                                    <g></g>
+                                                                </g>
+                                                            </g>
+                                                            <text x="234" class="highcharts-credits"
+                                                                  text-anchor="end"
+                                                                  style="cursor:pointer;color:#999999;font-size:9px;fill:#999999;"
+                                                                  y="195">Highcharts.com
+                                                            </text>
+                                                            <g class="highcharts-label highcharts-tooltip highcharts-color-2"
+                                                               style="cursor:default;pointer-events:none;white-space:nowrap;"
+                                                               transform="translate(153,-9999)" opacity="0"
+                                                               visibility="visible">
+                                                                <path fill="none"
+                                                                      class="highcharts-label-box highcharts-tooltip-box"
+                                                                      d="M 3.5 0.5 L 58.5 0.5 C 61.5 0.5 61.5 0.5 61.5 3.5 L 61.5 46.5 C 61.5 49.5 61.5 49.5 58.5 49.5 L 3.5 49.5 C 0.5 49.5 0.5 49.5 0.5 46.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5"
+                                                                      isShadow="true" stroke="#000000"
+                                                                      stroke-opacity="0.049999999999999996"
+                                                                      stroke-width="5"
+                                                                      transform="translate(1, 1)"></path>
+                                                                <path fill="none"
+                                                                      class="highcharts-label-box highcharts-tooltip-box"
+                                                                      d="M 3.5 0.5 L 58.5 0.5 C 61.5 0.5 61.5 0.5 61.5 3.5 L 61.5 46.5 C 61.5 49.5 61.5 49.5 58.5 49.5 L 3.5 49.5 C 0.5 49.5 0.5 49.5 0.5 46.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5"
+                                                                      isShadow="true" stroke="#000000"
+                                                                      stroke-opacity="0.09999999999999999"
+                                                                      stroke-width="3"
+                                                                      transform="translate(1, 1)"></path>
+                                                                <path fill="none"
+                                                                      class="highcharts-label-box highcharts-tooltip-box"
+                                                                      d="M 3.5 0.5 L 58.5 0.5 C 61.5 0.5 61.5 0.5 61.5 3.5 L 61.5 46.5 C 61.5 49.5 61.5 49.5 58.5 49.5 L 3.5 49.5 C 0.5 49.5 0.5 49.5 0.5 46.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5"
+                                                                      isShadow="true" stroke="#000000"
+                                                                      stroke-opacity="0.15" stroke-width="1"
+                                                                      transform="translate(1, 1)"></path>
+                                                                <path fill="rgba(247,247,247,0.85)"
+                                                                      class="highcharts-label-box highcharts-tooltip-box"
+                                                                      d="M 3.5 0.5 L 58.5 0.5 C 61.5 0.5 61.5 0.5 61.5 3.5 L 61.5 46.5 C 61.5 49.5 61.5 49.5 58.5 49.5 L 3.5 49.5 C 0.5 49.5 0.5 49.5 0.5 46.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5"
+                                                                      stroke="#428bca" stroke-width="1"></path>
+                                                                <text x="8"
+                                                                      style="font-size:12px;color:#333333;fill:#333333;"
+                                                                      y="20">
+                                                                    <tspan style="fill:#428bca">未做</tspan>
+                                                                    <tspan style="font-weight:bold" x="8"
+                                                                           dy="15">99.01%
+                                                                    </tspan>
+                                                                </text>
+                                                            </g>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="row progress-status">
+                                                    <div class="col-xs-4 text-primary text-center">
+                                                        <div class="text-500 status">801</div>
+                                                        <span class="text text-sm status">未做</span></div>
+                                                    <div class="col-xs-4 text-success text-center">
+                                                        <div class="text-500 status">6 / 809</div>
+                                                        <span class="text text-sm status">已解答</span></div>
+                                                    <div class="col-xs-4 text-warning text-center">
+                                                        <div class="text-500 status">2</div>
+                                                        <span class="text text-sm status">尝试过</span></div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item points-info">
+                                                <div class="row text-sm">
+                                                    <div class="col-xs-6 text-center"><span
+                                                            class="xp-total info-value"><span
+                                                            class="text text-500">经验：</span><span>28</span></span>
+                                                    </div>
+                                                    <div class="col-xs-6 text-center"><a
+                                                            href="https://leetcode-cn.com/points/"
+                                                            target="_blank"><span
+                                                            class="leetcoin-total info-value">28&nbsp;<img
+                                                            src="./题库 - 力扣 (LeetCode)_files/LeetCoin.png"
+                                                            alt="LeetCoin" width="10px"></span></a></div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="list-card-app"><span class="text-300 text-lg sidebar-title"><i
+                            class="glyphicon glyphicon-fire" aria-hidden="true"></i>&nbsp; 热门推荐</span>
+                        <div class="list-group-item visible-sm visible-xs active"><a
+                                href="https://leetcode-cn.com/problemset/all/" class="text-gray text-400">
+                            <div class="list-content-wrapper">
+                                <div class="pull-right"></div>
+                                全部题目
+                            </div>
+                        </a></div>
+                        <div class="list-group-item undefined "><a href="https://leetcode-cn.com/problemset/50/"
+                                                                   class="text-gray text-400">
+                            <div class="list-content-wrapper">
+                                <div class="pull-right"></div>
+                                <span><i class="fa fa-list-ul fav-list-icon" aria-hidden="true"></i>&nbsp; 腾讯精选练习（50 题）</span>
+                            </div>
+                        </a></div>
+                        <hr class="line dotted fav-list-hr hidden-xs hidden-sm">
+                        <div class="list-group-item  "><a href="https://leetcode-cn.com/contribute/"
+                                                          class="text-gray text-400">
+                            <div class="list-content-wrapper">
+                                <div class="pull-right"></div>
+                                <span><i class="glyphicon glyphicon-heart contribute-icon"
+                                         aria-hidden="true"></i>&nbsp; 贡献题目</span></div>
+                        </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="testModel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">新增题目</h4>
+            </div>
+            <form class="form-horizontal" id="test-form" method="post" action="/testDb/addTest">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <input type="hidden" name="testId" id="testId" value="0">
+                        <label class="col-sm-2 control-label">题目内容</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="6" name="content" id="test-content"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+#include("_js.html")
+
+<script>
+
+    $(function () {
+
+        search();
+
+        $('.topic-filter').click(function () {
+            var topicId = $(this).data('id');
+            var content = $(this).html();
+            var flag = 1;
+            $('.filter-tag-bar').children().each(function (index, ele) {
+                if ($(ele).data('type') === 'topic') {
+                    $(ele).data('id', topicId);
+                    $(ele).html(content
+                        + '<i class="glyphicon glyphicon-remove active-filter-remove" onclick="removeTag(this)"></i>');
+                    flag = 0;
+                }
+            });
+            if (flag)
+                $('.filter-tag-bar').append('<span class="active-filter-label label label-success" data-type="topic" data-id="' + topicId + '">' + content
+                    + '<i class="glyphicon glyphicon-remove active-filter-remove" onclick="removeTag(this)"></i></span>');
+            search();
+        });
+
+        $('.course-filter').click(function () {
+            var courseId = $(this).data('id');
+            var content = $(this).html();
+            var flag = 1;
+            $('.filter-tag-bar').children().each(function (index, ele) {
+                if ($(ele).data('type') === 'course') {
+                    $(ele).data('id', courseId);
+                    $(ele).html(content
+                        + '<i class="glyphicon glyphicon-remove active-filter-remove" onclick="removeTag(this)"></i>');
+                    flag = 0;
+                }
+            });
+            if (flag)
+                $('.filter-tag-bar').append('<span class="active-filter-label label label-success" data-type="course"  data-id="' + courseId + '">' + content
+                    + '<i class="glyphicon glyphicon-remove active-filter-remove" onclick="removeTag(this)"></i></span>');
+            search();
+        });
+
+        $('.difficulty-filter').click(function () {
+            var difficulty = $(this).data('id');
+            var content = $(this).html();
+            var flag = 1;
+            $('.filter-tag-bar').children().each(function (index, ele) {
+                if ($(ele).data('type') === 'difficulty') {
+                    $(ele).data('id', difficulty);
+                    $(ele).html(content
+                        + '<i class="glyphicon glyphicon-remove active-filter-remove" onclick="removeTag(this)"></i>');
+                    flag = 0;
+                }
+            });
+            if (flag)
+                $('.filter-tag-bar').append('<span class="active-filter-label label label-success" data-type="difficulty"  data-id="' + difficulty + '">' + content
+                    + '<i class="glyphicon glyphicon-remove active-filter-remove" onclick="removeTag(this)"></i></span>');
+
+            search();
+
+        });
+
+        $(".list-search-bar").on("input", function () {
+            var content = $(this).val();
+            var flag = 1;
+            $('.filter-tag-bar').children().each(function (index, ele) {
+                if ($(ele).data('type') === 'content') {
+                    $(ele).html(content
+                        + '<i class="glyphicon glyphicon-remove active-filter-remove" onclick="removeTag(this)"></i>');
+                    if (content === '')
+                        $(ele).remove();
+                    flag = 0;
+                }
+            });
+            if (flag)
+                $('.filter-tag-bar').append('<span class="active-filter-label label label-success" data-type="content" data-content="' + content + '">' + content
+                    + '<i class="glyphicon glyphicon-remove active-filter-remove" onclick="removeTag(this)"></i></span>');
+            search();
+        });
+
+
+    });
+
+    function removeTag(ele) {
+        if ($(ele).parent().data('type') === 'content')
+            $(".list-search-bar").val('');
+        $(ele).parent().remove();
+        search();
+    }
+
+    function search() {
+        var topicId = 0;
+        var courseId = '';
+        var difficulty = 0;
+        var content = '';
+        var pageCount = parseInt($('#pageCount').val());
+        var pageSize = parseInt($('#pageSize').val());
+        if ($('#pageCount').val() === undefined || $('#pageSize').val() === '') {
+            pageCount = 1;
+            pageSize = 20;
+        }
+        $('.filter-tag-bar').children().each(function (index, ele) {
+            if ($(ele).data('type') === 'topic') {
+                topicId = $(ele).data('id');
+            }
+            if ($(ele).data('type') === 'course') {
+                courseId = $(ele).data('id');
+            }
+            if ($(ele).data('type') === 'difficulty') {
+                difficulty = $(ele).data('id');
+            }
+            if ($(ele).data('type') === 'content') {
+                content = $(ele).data('content');
+            }
+        });
+
+        $.post("/testDb/search", {
+            pageSize: pageSize,
+            pageCount: pageCount,
+            courseId: courseId,
+            topicId: topicId,
+            difficulty: difficulty,
+            content: content
+        }, function (data) {
+            $('#main-table').html(data);
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            var addUrl = '/testDb/addTest';
+            var editUrl = '/testDb/editTest';
+
+            $('.add-test-btn').click(function () {
+                $('#test-form').attr('action', addUrl);
+                $('.modal-title').html('新增题目');
+                $('#test-content').val('');
+                $('#testModel').modal('toggle');
+            });
+
+            $('.edit-test-btn').click(function () {
+                $('#test-form').attr('action', editUrl);
+                $('.modal-title').html('修改题目');
+                $('#testId').val($(this).data('id'));
+                $('#test-content').val($(this).data('content'));
+                $('#testModel').modal('toggle');
+            });
+
+            $('.delete-test-btn').click(function () {
+                var btn = $(this);
+                layer.confirm('此操作将会删除该问题及其下所有测试用例，是否确认删除？', {
+                    btn: ['确认', '取消']
+                }, function (index, layero) {
+                    window.location.href = '/testDb/deleteTest?testId=' + btn.data('id');
+                }, function (index) {
+                    layer.close(index);
+                });
+            });
+
+            $('.test-content-show').click(function () {
+                var that = $(this);
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    area: ['800px', '400px'], //宽高
+                    content: '<pre style="white-space: -moz-pre-wrap; /* Mozilla, supported since 1999 */\n' +
+                        '    white-space: -pre-wrap; /* Opera */\n' +
+                        '    white-space: -o-pre-wrap; /* Opera */\n' +
+                        '    white-space: pre-wrap; /* CSS3 - Text module (Candidate Recommendation) http://www.w3.org/TR/css3-text/#white-space */\n' +
+                        '    word-wrap: break-word; /* IE 5.5+ */">' + that.data('content') + '</pre>'
+                });
+            });
+
+        });
+
+
+    }
+</script>
+</body>
+</html>
