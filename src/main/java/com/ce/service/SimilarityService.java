@@ -7,6 +7,6 @@ public class SimilarityService {
     private static final Similarity dao = new Similarity().dao();
 
     public Similarity findById(int questionId, String userId2, String userId1) {
-        return dao.findById(questionId, userId2, userId1);
+        return dao.findById(questionId, userId1, userId2);
     }
 }

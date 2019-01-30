@@ -10,10 +10,8 @@ import com.ce.vo.JsonResponse;
 import com.ce.vo.QuestionInfoVo;
 import com.ce.vo.QuestionListVo;
 import com.jfinal.core.Controller;
-import com.jfinal.plugin.activerecord.Db;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,13 +20,11 @@ public class QuestionController extends Controller {
 
     private static AssignmentService assignmentService = new AssignmentService();
 
-    private static TestCaseService testCaseService = new TestCaseService();
-
     private static QuestionService questionService = new QuestionService();
 
     private static TestDbService testDbService = new TestDbService();
 
-    private static TestDbTestCaseService testDbTestCaseService = new TestDbTestCaseService();
+    private static TestCaseService TestCaseService = new TestCaseService();
 
     private static StudentQuestionService studentQuestionService = new StudentQuestionService();
 
@@ -36,7 +32,7 @@ public class QuestionController extends Controller {
         int assignmentId = getParaToInt(0);
         Assignment assignment = assignmentService.findById(assignmentId);
         setAttr("assignment", assignment);
-        List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+        List<QuestionListVo> questionVoList = TestCaseService.findByAssignmentIdGroupByTestId(assignmentId);
         setAttr("questionSize", questionVoList.size());
         setAttr("questionVoList", questionVoList);
         render("test_case_edit.html");
@@ -103,16 +99,6 @@ public class QuestionController extends Controller {
             question.setContent(test.getContent());
             question.setTestId(test.getTestId());
             question.save();
-            List<TestDbTestCase> testDbTestCaseList = testDbTestCaseService.findByTestId(test.getTestId());
-            List<TestCase> testCaseList = new ArrayList<>();
-            for (TestDbTestCase testDbTestCase : testDbTestCaseList) {
-                TestCase testCase = new TestCase();
-                testCase.setQuestionId(question.getQuestionId());
-                testCase.setTestCaseContent(testDbTestCase.getTestCaseContent());
-                testCase.setAnswer(testDbTestCase.getAnswer());
-                testCaseList.add(testCase);
-            }
-            Db.batchSave(testCaseList, 1000);
         }
 
         redirect("/question/" + assignmentId);
@@ -138,43 +124,6 @@ public class QuestionController extends Controller {
             }
             renderJson(JSON.toJSONString(JsonResponse.ok()));
         }
-    }
-
-    public void addTestCase() {
-        int assignmentId = getParaToInt("assignmentId");
-        int questionId = getParaToInt("questionId");
-        String content = getPara("content");
-        String answer = getPara("answer");
-
-        TestCase testCase = new TestCase();
-        testCase.setQuestionId(questionId);
-        testCase.setTestCaseContent(content.replaceAll("\r\n", "\n"));
-        testCase.setAnswer(answer.replaceAll("\r\n", "\n"));
-        testCase.save();
-
-        redirect("/question/" + assignmentId);
-    }
-
-    public void editTestCase() {
-        int assignmentId = getParaToInt("assignmentId");
-        String content = getPara("content");
-        String answer = getPara("answer");
-
-        int testCaseId = getParaToInt("testCaseId");
-        TestCase testCase = testCaseService.findById(testCaseId);
-        testCase.setTestCaseContent(content.replaceAll("\r\n", "\n"));
-        testCase.setAnswer(answer.replaceAll("\r\n", "\n"));
-        testCase.update();
-
-        redirect("/question/" + assignmentId);
-    }
-
-    public void deleteTestCase() {
-        int assignmentId = getParaToInt("assignmentId");
-        int testCaseId = getParaToInt("testCaseId");
-        testCaseService.deleteById(testCaseId);
-
-        redirect("/question/" + assignmentId);
     }
 
     public void startEdit() throws IOException {
@@ -208,7 +157,7 @@ public class QuestionController extends Controller {
 
 
         //创建测试用例文件
-        List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+        List<QuestionListVo> questionVoList = TestCaseService.findByAssignmentIdGroupByTestId(assignmentId);
         for (QuestionListVo vo : questionVoList) {
             for (TestCase testCase : vo.testCaseList) {
                 String inputFilePath = assignmentDirectoryPath + vo.questionNo + "_input_" + testCase.getTestCaseId() + ".txt";

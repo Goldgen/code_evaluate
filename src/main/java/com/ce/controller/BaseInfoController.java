@@ -69,4 +69,6 @@ public class BaseInfoController extends Controller {
         render("assignment_list.html");
     }
 
+
+
 }

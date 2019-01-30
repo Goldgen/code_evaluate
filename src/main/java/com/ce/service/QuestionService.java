@@ -1,7 +1,6 @@
 package com.ce.service;
 
 import com.ce.model.first.Question;
-import com.ce.model.first.TestCase;
 import com.jfinal.plugin.activerecord.Db;
 
 import java.util.List;
@@ -9,8 +8,6 @@ import java.util.List;
 public class QuestionService {
 
     private static final Question questionDao = new Question().dao();
-
-    private static final TestCase testCaseDao = new TestCase().dao();
 
     public Question findById(int questionId) {
         return questionDao.findById(questionId);
@@ -24,6 +21,10 @@ public class QuestionService {
         });
         questionDao.deleteById(questionId);
 
+    }
+
+    public List<Question> getAll() {
+        return questionDao.find("select * from question where assignmentId");
     }
 
     public List<Question> findByAssignmentId(int assignmentId) {

@@ -9,27 +9,27 @@ import java.util.List;
 
 public class TestCaseService {
 
-    private static final TestCase testCaseDao = new TestCase().dao();
+    private static final TestCase dao = new TestCase().dao();
 
     private static final Question questionDao = new Question().dao();
 
     public TestCase findById(int id) {
-        return testCaseDao.findById(id);
+        return dao.findById(id);
     }
 
     public void deleteById(int id) {
-        testCaseDao.deleteById(id);
+        dao.deleteById(id);
     }
 
-    public List<TestCase> findByQuestionId(int questionId) {
-        return testCaseDao.find("select * from test_case where questionId = ? ", questionId);
+    public List<TestCase> findByTestId(int testId) {
+        return dao.find("select * from test_db_test_case where testId = ?", testId);
     }
 
-    public List<QuestionListVo> findByAssignmentIdGroupByquestionId(int assignmentId) {
+    public List<QuestionListVo> findByAssignmentIdGroupByTestId(int assignmentId) {
         List<QuestionListVo> result = new ArrayList<>();
         List<Question> questionList = questionDao.find("select * from question where assignmentId = ? order by questionNo", assignmentId);
         for (Question question : questionList) {
-            List<TestCase> testCaseList = testCaseDao.find("select * from test_case where questionId = ? ", question.getQuestionId());
+            List<TestCase> testCaseList = dao.find("select * from test_case where testId = ? ", question.getTestId());
             QuestionListVo vo = new QuestionListVo();
             vo.questionId = question.getQuestionId();
             vo.questionNo = question.getQuestionNo();
@@ -39,6 +39,4 @@ public class TestCaseService {
         }
         return result;
     }
-
-
 }

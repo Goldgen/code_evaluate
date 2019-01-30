@@ -16,10 +16,8 @@ import com.ce.util.FileUtil;
 import com.ce.vo.*;
 import com.jfinal.core.Controller;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class UploadController extends Controller {
 
     private static StudentQuestionService studentQuestionService = new StudentQuestionService();
 
-    private static TestCaseService testCaseService = new TestCaseService();
+    private static TestCaseService TestCaseService = new TestCaseService();
 
     public void index() {
         int assignmentId = getParaToInt(0);
@@ -127,7 +125,7 @@ public class UploadController extends Controller {
                 studentQuestion.save();
             }
         } else {
-            List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+            List<QuestionListVo> questionVoList = TestCaseService.findByAssignmentIdGroupByTestId(assignmentId);
 
             List<TestCase> testCaseList = questionVoList.stream().filter(x -> x.questionId == questionId)
                     .findFirst().orElse(new QuestionListVo()).testCaseList;

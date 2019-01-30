@@ -2,11 +2,9 @@ package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.ce.model.first.*;
-import com.ce.model.second.Assignment;
 import com.ce.model.second.Class;
 import com.ce.model.first.Topic;
 import com.ce.service.*;
-import com.ce.util.CommonUtil;
 import com.ce.util.CorrectUtil;
 import com.ce.util.FileUtil;
 import com.ce.util.TestVo;
@@ -15,7 +13,6 @@ import com.jfinal.core.Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +26,7 @@ public class TestDbController extends Controller {
 
     private static TestDbService testDbService = new TestDbService();
 
-    private static TestDbTestCaseService testDbTestCaseService = new TestDbTestCaseService();
+    private static TestCaseService TestCaseService = new TestCaseService();
 
     private static TopicService topicService = new TopicService();
 
@@ -73,6 +70,7 @@ public class TestDbController extends Controller {
         int pageCount = getParaToInt("pageCount");
         int pageSize = getParaToInt("pageSize");
 
+
         int i = pageCount;
         List<TestVo> testList = new ArrayList<>();
         for (; i > 0; i--) {
@@ -101,32 +99,50 @@ public class TestDbController extends Controller {
     }
 
     public void addTest() {
+        String testName = getPara("testName");
         String content = getPara("content");
+        String courseId = getPara("courseId");
+        int difficulty = getParaToInt("difficulty");
+        int topicId = getParaToInt("topicId");
+
         TestDb test = new TestDb();
+        test.setTestName(testName);
         test.setContent(content);
+        test.setTopicId(topicId);
+        test.setDifficulty(difficulty);
+        test.setCourseId(courseId);
         test.save();
-        redirect("/testDb/list");
+        renderJson(JsonResponse.ok());
     }
 
     public void editTest() {
         int testId = getParaToInt("testId");
+        String testName = getPara("testName");
         String content = getPara("content");
+        String courseId = getPara("courseId");
+        int difficulty = getParaToInt("difficulty");
+        int topicId = getParaToInt("topicId");
+
         TestDb test = testDbService.findById(testId);
+        test.setTestName(testName);
         test.setContent(content);
+        test.setTopicId(topicId);
+        test.setDifficulty(difficulty);
+        test.setCourseId(courseId);
         test.update();
-        redirect("/testDb/list");
+        renderJson(JsonResponse.ok());
     }
 
     public void deleteTest() {
         int testId = getParaToInt("testId");
         testDbService.deleteById(testId);
-        redirect("/testDb/list");
+        renderJson(JsonResponse.ok());
     }
 
 
     public void caseList() {
         int testId = getParaToInt("testId");
-        List<TestDbTestCase> testCaseList = testDbTestCaseService.findByTestId(testId);
+        List<TestCase> testCaseList = TestCaseService.findByTestId(testId);
         setAttr("testId", testId);
         setAttr("testCaseList", testCaseList);
         render("test_db_test_case_edit.html");
@@ -137,7 +153,7 @@ public class TestDbController extends Controller {
         String content = getPara("content");
         String answer = getPara("answer");
 
-        TestDbTestCase testCase = new TestDbTestCase();
+        TestCase testCase = new TestCase();
         testCase.setTestId(testId);
         testCase.setTestCaseContent(content.replaceAll("\r\n", "\n"));
         testCase.setAnswer(answer.replaceAll("\r\n", "\n"));
@@ -153,7 +169,7 @@ public class TestDbController extends Controller {
         String answer = getPara("answer");
 
 
-        TestDbTestCase testCase = testDbTestCaseService.findById(testCaseId);
+        TestCase testCase = TestCaseService.findById(testCaseId);
         testCase.setTestCaseContent(content.replaceAll("\r\n", "\n"));
         testCase.setAnswer(answer.replaceAll("\r\n", "\n"));
         testCase.update();
@@ -164,7 +180,7 @@ public class TestDbController extends Controller {
     public void deleteCase() {
         int testId = getParaToInt("testId");
         int testCaseId = getParaToInt("testCaseId");
-        testDbTestCaseService.deleteById(testCaseId);
+        TestCaseService.deleteById(testCaseId);
 
         redirect("/testDb/caseList?testId=" + testId);
     }
@@ -191,8 +207,8 @@ public class TestDbController extends Controller {
         String suffix = language == 1 ? ".c" : ".cpp";
         String codePath = testFolder + testId + suffix;
 
-        List<TestDbTestCase> testCaseList = testDbTestCaseService.findByTestId(testId);
-        for (TestDbTestCase testCase : testCaseList) {
+        List<TestCase> testCaseList = TestCaseService.findByTestId(testId);
+        for (TestCase testCase : testCaseList) {
             String inputFilePath = testFolder + testId + "_input_" + testCase.getTestCaseId() + ".txt";
             FileUtil.createFile(inputFilePath, testCase.getTestCaseContent());
         }
@@ -219,7 +235,7 @@ public class TestDbController extends Controller {
             //执行，比较测试用例和输出
             evaluateInfo.executeInfo = "";
             double testCasePassNum = 0;
-            for (TestDbTestCase testCase : testCaseList) {
+            for (TestCase testCase : testCaseList) {
                 String inputFileName = testId + "_input_" + testCase.getTestCaseId() + ".txt";
                 String outputFileName = testId + "_output_" + testCase.getTestCaseId() + ".txt";
                 ShellReturnInfo excuteReturnInfo = CorrectUtil.execute(testFolder, prefix + ".out", "test/" + inputFileName, outputFileName);

@@ -31,7 +31,7 @@ public class TestDbService {
 
     public void deleteById(int id) {
         Db.tx(() -> {
-            Db.delete("delete from test_db_test_case where testId = ?", id);
+            Db.delete("delete from test_case where testId = ?", id);
             return true;
         });
         dao.deleteById(id);
@@ -44,7 +44,7 @@ public class TestDbService {
     public int countByCondition(String courseId, int topicId, int difficulty, String content) {
         String sql = "select td.testId, td.courseId,td.topicId,tp.topicName,td.testName,td.difficulty,td.content " +
                 "from test_db td,topic tp where td.topicId=tp.topicId";
-        if (!courseId.isEmpty()) {
+        if (!(courseId.isEmpty() || courseId.equals("-1"))) {
             sql += " and td.courseId = " + courseId;
         }
         if (topicId > 0) {
@@ -53,7 +53,7 @@ public class TestDbService {
         if (difficulty > 0) {
             sql += " and td.difficulty = " + difficulty;
         }
-        if (!content.isEmpty()) {
+        if (!(content.isEmpty() || content.equals("-1"))) {
             sql += " and (td.testName like '%" + content + "%' or td.content like '%" + content + "%')";
         }
         return dao.find(sql).size();
@@ -62,7 +62,7 @@ public class TestDbService {
     public List<TestDb> getByConditionAndPage(int pageCount, int pageSize, String courseId, int topicId, int difficulty, String content) {
         String sql = "select td.testId, td.courseId,td.topicId,tp.topicName,td.testName,td.difficulty,td.content " +
                 "from test_db td,topic tp where td.topicId=tp.topicId";
-        if (!courseId.isEmpty()) {
+        if (!(courseId.isEmpty() || courseId.equals("-1"))) {
             sql += " and td.courseId = " + courseId;
         }
         if (topicId > 0) {
@@ -71,7 +71,7 @@ public class TestDbService {
         if (difficulty > 0) {
             sql += " and td.difficulty = " + difficulty;
         }
-        if (!content.isEmpty()) {
+        if (!(content.isEmpty() || content.equals("-1"))) {
             sql += " and (td.testName like '%" + content + "%' or td.content like '%" + content + "%')";
         }
         return dao.find(sql + " limit ? , ?", (pageCount - 1) * pageSize, pageSize);

@@ -44,7 +44,12 @@
                 <a href="javascript:void(0)" class="btn btn-success btn-xs edit-test-btn"
                    title="修改"
                    data-toggle="tooltip" data-placement="bottom"
-                   data-id="#(test.testId)" data-content="#escape(test.content)">
+                   data-id="#(test.testId)"
+                   data-test-name="#escape(test.testName)"
+                   data-test-content="#escape(test.content)"
+                   data-difficulty="#escape(test.difficulty)"
+                   data-topic-id="#escape(test.topicId)"
+                   data-course-id="#escape(test.courseId)">
                     <i class="glyphicon glyphicon-edit"></i></a>
                 <a href="javascript:void(0)" class="btn btn-danger btn-xs delete-test-btn"
                    title="删除"

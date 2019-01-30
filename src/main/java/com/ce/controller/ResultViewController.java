@@ -1,10 +1,7 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.model.first.Question;
-import com.ce.model.first.Similarity;
-import com.ce.model.first.StudentQuestion;
-import com.ce.model.first.TestCase;
+import com.ce.model.first.*;
 import com.ce.model.second.Assignment;
 import com.ce.model.second.User;
 import com.ce.service.*;
@@ -33,7 +30,7 @@ public class ResultViewController extends Controller {
 
     private static StudentQuestionService studentQuestionService = new StudentQuestionService();
 
-    private static TestCaseService testCaseService = new TestCaseService();
+    private static TestCaseService TestCaseService = new TestCaseService();
 
     private static SimilarityService similarityService = new SimilarityService();
 
@@ -110,7 +107,7 @@ public class ResultViewController extends Controller {
             studentQuestion.setCompileErrorInfo(returnInfo.errorInfo);
             studentQuestion.update();
         } else {
-            List<QuestionListVo> questionVoList = testCaseService.findByAssignmentIdGroupByquestionId(assignmentId);
+            List<QuestionListVo> questionVoList = TestCaseService.findByAssignmentIdGroupByTestId(assignmentId);
 
             List<TestCase> testCaseList = questionVoList.stream().filter(x -> x.questionId == questionId)
                     .findFirst().orElse(new QuestionListVo()).testCaseList;
@@ -157,7 +154,7 @@ public class ResultViewController extends Controller {
         String studentDirectoryPath = assignment.getUploadDirectory() + "/" + userId + "/";
         int questionNo = question.getQuestionNo();
 
-        List<TestCase> testCaseList = testCaseService.findByQuestionId(questionId);
+        List<TestCase> testCaseList = TestCaseService.findByTestId(question.getTestId());
         List<TestCaseVo> testCaseVoList = new ArrayList<>();
         try {
             for (TestCase testCase : testCaseList) {
@@ -200,6 +197,90 @@ public class ResultViewController extends Controller {
         renderFile(unionName + ".zip");
         //FileUtil.deleteFile(unionName + ".zip");
     }
+
+    @ActionKey("tmp")
+    public void tmp() throws IOException, InterruptedException {
+
+//        for (int i = 194; i < 214; i++) {
+//
+//            Assignment assignment = assignmentService.findById(i);
+//            List<Question> questionList = questionService.findByAssignmentId(i);
+//            String unionFolderName = assignment.getUploadDirectory();
+//            List<FileInfo> fileInfoList = FileUtil.getSubDirectoryAndFile(unionFolderName);
+//
+//            List<String> stuNumList = fileInfoList.stream().map(x -> x.fatherDirectory).distinct().collect(Collectors.toList());
+//
+//            List<User> userList = userService.findByIds(stuNumList);
+//
+//            List<FileInfo> cfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("c")).collect(Collectors.toList());
+//            List<FileInfo> cppfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("cpp")).collect(Collectors.toList());
+//
+//            Map<String, List<FileInfo>> cfileInfoListHashByQuestionNo = cfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
+//            Map<String, List<FileInfo>> cppfileInfoListHashByQuestionNo = cppfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
+//
+//            List<SimilarityResultVo> similarityResultVoList = new ArrayList<>();
+//
+//            for (Question question : questionList) {
+//                List<SimilarityVo> similarityVoList = new ArrayList<>();
+//                String questionNoStr = question.getQuestionNo().toString();
+//                StringBuilder cFileStr = new StringBuilder();
+//                StringBuilder cppFileStr = new StringBuilder();
+//                List<FileInfo> cList = cfileInfoListHashByQuestionNo.get(questionNoStr);
+//                List<FileInfo> cppList = cppfileInfoListHashByQuestionNo.get(questionNoStr);
+//                if (cList != null) {
+//                    for (FileInfo fileInfo : cList) {
+//                        cFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
+//                    }
+//                }
+//                if (cppList != null) {
+//                    for (FileInfo fileInfo : cppList) {
+//                        cppFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
+//                    }
+//                }
+//
+//                CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
+//                CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cppFileStr.toString(), "cpp");
+//                String cContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_c.txt");
+//                String cppContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_cpp.txt");
+//                String cPattern = "\\./(.*?)/" + questionNoStr + "\\.c consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.c";
+//                String cppPattern = "\\./(.*?)/" + questionNoStr + "\\.cpp consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.cpp";
+//
+//                getSimilarityResult(cContent, cPattern, similarityVoList, userList);
+//                getSimilarityResult(cppContent, cppPattern, similarityVoList, userList);
+//
+//                for (SimilarityVo vo : similarityVoList) {
+//                    if (vo.similarity < 10) continue;
+//                    Similarity similarity = similarityService.findById(question.getQuestionId(), vo.userId2, vo.userId1);
+//                    if (similarity == null) {
+//                        similarity = new Similarity();
+//                        similarity.setQuestionId(question.getQuestionId());
+//                        similarity.setUserId1(vo.userId1);
+//                        similarity.setUserId2(vo.userId2);
+//                        similarity.setSimilarity(vo.similarity);
+//                        similarity.save();
+//                    } else {
+//                        similarity.setSimilarity(vo.similarity);
+//                        similarity.update();
+//                    }
+//                }
+//                SimilarityResultVo similarityResultVo = new SimilarityResultVo();
+//                similarityResultVo.questionId = question.getQuestionId();
+//                similarityResultVo.questionNo = question.getQuestionNo();
+//                similarityResultVo.lowSimilarityVoList = similarityVoList
+//                        .stream().filter(x -> x.similarity > 10 && x.similarity <= 30).collect(Collectors.toList());
+//                similarityResultVo.mediumSimilarityVoList = similarityVoList
+//                        .stream().filter(x -> x.similarity > 30 && x.similarity <= 50).collect(Collectors.toList());
+//                similarityResultVo.highSimilarityVoList = similarityVoList
+//                        .stream().filter(x -> x.similarity > 50).collect(Collectors.toList());
+//                similarityResultVoList.add(similarityResultVo);
+//
+//            }
+//
+//            Collections.sort(similarityResultVoList);
+//        }
+        renderNull();
+    }
+
 
     @ActionKey("/analysis")
     public void analysis() throws IOException, InterruptedException {
