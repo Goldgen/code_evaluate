@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/*??????????double??+?-?*?/????
+??5.6*27 ?3+6???????(??3???)?
+???
+3+6
+9.000*/
+
+int main()
+{
+    double a, b;
+    char op;
+    scanf("%lf%c%lf", &a, &op, &b);
+    if(op=='+') printf("%.3f", a+b);
+    else if(op=='-') printf("%.3f", a-b);
+    else if(op=='*') printf("%.3f", a*b);
+    else if(op=='/') printf("%.3f", a/b);
+    return 0;
+}

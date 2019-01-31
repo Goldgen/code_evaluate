@@ -1,7 +1,11 @@
 package com.ce.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.ce.model.first.*;
+
+import com.ce.model.first.Question;
+import com.ce.model.first.Similarity;
+import com.ce.model.first.StudentQuestion;
+import com.ce.model.first.TestCase;
 import com.ce.model.second.Assignment;
 import com.ce.model.second.User;
 import com.ce.service.*;
@@ -20,6 +24,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import it.uniroma1.dis.wsngroup.gexf4j.core.EdgeType;
+import it.uniroma1.dis.wsngroup.gexf4j.core.Gexf;
+import it.uniroma1.dis.wsngroup.gexf4j.core.Graph;
+import it.uniroma1.dis.wsngroup.gexf4j.core.Mode;
+import it.uniroma1.dis.wsngroup.gexf4j.core.Node;
+import it.uniroma1.dis.wsngroup.gexf4j.core.data.Attribute;
+import it.uniroma1.dis.wsngroup.gexf4j.core.data.AttributeClass;
+import it.uniroma1.dis.wsngroup.gexf4j.core.data.AttributeList;
+import it.uniroma1.dis.wsngroup.gexf4j.core.data.AttributeType;
+import it.uniroma1.dis.wsngroup.gexf4j.core.impl.GexfImpl;
+import it.uniroma1.dis.wsngroup.gexf4j.core.impl.StaxGraphWriter;
+import it.uniroma1.dis.wsngroup.gexf4j.core.impl.data.AttributeListImpl;
+
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.Calendar;
+
 public class ResultViewController extends Controller {
 
     private static AssignmentService assignmentService = new AssignmentService();
@@ -33,6 +56,7 @@ public class ResultViewController extends Controller {
     private static TestCaseService TestCaseService = new TestCaseService();
 
     private static SimilarityService similarityService = new SimilarityService();
+
 
     @ActionKey("/execute")
     public void executeResult() {
@@ -284,86 +308,141 @@ public class ResultViewController extends Controller {
 
     @ActionKey("/analysis")
     public void analysis() throws IOException, InterruptedException {
+//        int assignmentId = getParaToInt(0);
+//
+//        Assignment assignment = assignmentService.findById(assignmentId);
+//        List<Question> questionList = questionService.findByAssignmentId(assignmentId);
+//        String unionFolderName = assignment.getUploadDirectory();
+//        List<FileInfo> fileInfoList = FileUtil.getSubDirectoryAndFile(unionFolderName);
+//
+//        List<String> stuNumList = fileInfoList.stream().map(x -> x.fatherDirectory).distinct().collect(Collectors.toList());
+//
+//        List<User> userList = userService.findByIds(stuNumList);
+//
+//        List<FileInfo> cfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("c")).collect(Collectors.toList());
+//        List<FileInfo> cppfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("cpp")).collect(Collectors.toList());
+//
+//        Map<String, List<FileInfo>> cfileInfoListHashByQuestionNo = cfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
+//        Map<String, List<FileInfo>> cppfileInfoListHashByQuestionNo = cppfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
+//
+//        List<SimilarityResultVo> similarityResultVoList = new ArrayList<>();
+//
+//        for (Question question : questionList) {
+//            List<SimilarityVo> similarityVoList = new ArrayList<>();
+//            String questionNoStr = question.getQuestionNo().toString();
+//            StringBuilder cFileStr = new StringBuilder();
+//            StringBuilder cppFileStr = new StringBuilder();
+//            List<FileInfo> cList = cfileInfoListHashByQuestionNo.get(questionNoStr);
+//            List<FileInfo> cppList = cppfileInfoListHashByQuestionNo.get(questionNoStr);
+//            if (cList != null) {
+//                for (FileInfo fileInfo : cList) {
+//                    cFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
+//                }
+//            }
+//            if (cppList != null) {
+//                for (FileInfo fileInfo : cppList) {
+//                    cppFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
+//                }
+//            }
+//
+//            CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
+//            CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cppFileStr.toString(), "cpp");
+//            String cContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_c.txt");
+//            String cppContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_cpp.txt");
+//            String cPattern = "\\./(.*?)/" + questionNoStr + "\\.c consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.c";
+//            String cppPattern = "\\./(.*?)/" + questionNoStr + "\\.cpp consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.cpp";
+//
+//            getSimilarityResult(cContent, cPattern, similarityVoList, userList);
+//            getSimilarityResult(cppContent, cppPattern, similarityVoList, userList);
+//
+//            SimilarityResultVo similarityResultVo = new SimilarityResultVo();
+//            similarityResultVo.questionId = question.getQuestionId();
+//            similarityResultVo.questionNo = question.getQuestionNo();
+//            similarityResultVo.lowSimilarityVoList = similarityVoList
+//                    .stream().filter(x -> x.similarity > 10 && x.similarity <= 30).collect(Collectors.toList());
+//            similarityResultVo.mediumSimilarityVoList = similarityVoList
+//                    .stream().filter(x -> x.similarity > 30 && x.similarity <= 50).collect(Collectors.toList());
+//            similarityResultVo.highSimilarityVoList = similarityVoList
+//                    .stream().filter(x -> x.similarity > 50).collect(Collectors.toList());
+//            similarityResultVoList.add(similarityResultVo);
+//        }
+//
+//        Collections.sort(similarityResultVoList);
+//
+//        setAttr("similarityResultVoList", similarityResultVoList);
+//
+//        render("_similarity_result.html");
         int assignmentId = getParaToInt(0);
-
-        Assignment assignment = assignmentService.findById(assignmentId);
         List<Question> questionList = questionService.findByAssignmentId(assignmentId);
-        String unionFolderName = assignment.getUploadDirectory();
-        List<FileInfo> fileInfoList = FileUtil.getSubDirectoryAndFile(unionFolderName);
+        List<List<Similarity>> simialrityLists = new ArrayList<>();
 
-        List<String> stuNumList = fileInfoList.stream().map(x -> x.fatherDirectory).distinct().collect(Collectors.toList());
-
-        List<User> userList = userService.findByIds(stuNumList);
-
-        List<FileInfo> cfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("c")).collect(Collectors.toList());
-        List<FileInfo> cppfileInfoList = fileInfoList.stream().filter(x -> x.suffix.equals("cpp")).collect(Collectors.toList());
-
-        Map<String, List<FileInfo>> cfileInfoListHashByQuestionNo = cfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
-        Map<String, List<FileInfo>> cppfileInfoListHashByQuestionNo = cppfileInfoList.stream().collect(Collectors.groupingBy(x -> x.prefix));
-
-        List<SimilarityResultVo> similarityResultVoList = new ArrayList<>();
-
-        for (Question question : questionList) {
-            List<SimilarityVo> similarityVoList = new ArrayList<>();
-            String questionNoStr = question.getQuestionNo().toString();
-            StringBuilder cFileStr = new StringBuilder();
-            StringBuilder cppFileStr = new StringBuilder();
-            List<FileInfo> cList = cfileInfoListHashByQuestionNo.get(questionNoStr);
-            List<FileInfo> cppList = cppfileInfoListHashByQuestionNo.get(questionNoStr);
-            if (cList != null) {
-                for (FileInfo fileInfo : cList) {
-                    cFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
-                }
-            }
-            if (cppList != null) {
-                for (FileInfo fileInfo : cppList) {
-                    cppFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
-                }
-            }
-
-            CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
-            CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cppFileStr.toString(), "cpp");
-            String cContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_c.txt");
-            String cppContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_cpp.txt");
-            String cPattern = "\\./(.*?)/" + questionNoStr + "\\.c consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.c";
-            String cppPattern = "\\./(.*?)/" + questionNoStr + "\\.cpp consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.cpp";
-
-            getSimilarityResult(cContent, cPattern, similarityVoList, userList);
-            getSimilarityResult(cppContent, cppPattern, similarityVoList, userList);
-
-            for (SimilarityVo vo : similarityVoList) {
-                if (vo.similarity < 10) continue;
-                Similarity similarity = similarityService.findById(question.getQuestionId(), vo.userId2, vo.userId1);
-                if (similarity == null) {
-                    similarity = new Similarity();
-                    similarity.setQuestionId(question.getQuestionId());
-                    similarity.setUserId1(vo.userId1);
-                    similarity.setUserId2(vo.userId2);
-                    similarity.setSimilarity(vo.similarity);
-                    similarity.save();
-                } else {
-                    similarity.setSimilarity(vo.similarity);
-                    similarity.update();
-                }
-            }
-            SimilarityResultVo similarityResultVo = new SimilarityResultVo();
-            similarityResultVo.questionId = question.getQuestionId();
-            similarityResultVo.questionNo = question.getQuestionNo();
-            similarityResultVo.lowSimilarityVoList = similarityVoList
-                    .stream().filter(x -> x.similarity > 10 && x.similarity <= 30).collect(Collectors.toList());
-            similarityResultVo.mediumSimilarityVoList = similarityVoList
-                    .stream().filter(x -> x.similarity > 30 && x.similarity <= 50).collect(Collectors.toList());
-            similarityResultVo.highSimilarityVoList = similarityVoList
-                    .stream().filter(x -> x.similarity > 50).collect(Collectors.toList());
-            similarityResultVoList.add(similarityResultVo);
-
+//<<<<<<< Updated upstream
+//        List<SimilarityResultVo> similarityResultVoList = new ArrayList<>();
+//
+//        for (Question question : questionList) {
+//            List<SimilarityVo> similarityVoList = new ArrayList<>();
+//            String questionNoStr = question.getQuestionNo().toString();
+//            StringBuilder cFileStr = new StringBuilder();
+//            StringBuilder cppFileStr = new StringBuilder();
+//            List<FileInfo> cList = cfileInfoListHashByQuestionNo.get(questionNoStr);
+//            List<FileInfo> cppList = cppfileInfoListHashByQuestionNo.get(questionNoStr);
+//            if (cList != null) {
+//                for (FileInfo fileInfo : cList) {
+//                    cFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
+//                }
+//            }
+//            if (cppList != null) {
+//                for (FileInfo fileInfo : cppList) {
+//                    cppFileStr.append(" ./").append(fileInfo.fatherDirectory).append("/").append(fileInfo.fileName);
+//                }
+//            }
+//
+//            CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cFileStr.toString(), "c");
+//            CorrectUtil.similarityTest(unionFolderName, question.getQuestionNo(), cppFileStr.toString(), "cpp");
+//            String cContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_c.txt");
+//            String cppContent = FileUtil.readFile(unionFolderName + "/similarity" + questionNoStr + "_cpp.txt");
+//            String cPattern = "\\./(.*?)/" + questionNoStr + "\\.c consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.c";
+//            String cppPattern = "\\./(.*?)/" + questionNoStr + "\\.cpp consists for (.*?) % of \\./(.*?)/" + questionNoStr + "\\.cpp";
+//
+//            getSimilarityResult(cContent, cPattern, similarityVoList, userList);
+//            getSimilarityResult(cppContent, cppPattern, similarityVoList, userList);
+//
+//            for (SimilarityVo vo : similarityVoList) {
+//                if (vo.similarity < 10) continue;
+//                Similarity similarity = similarityService.findById(question.getQuestionId(), vo.userId2, vo.userId1);
+//                if (similarity == null) {
+//                    similarity = new Similarity();
+//                    similarity.setQuestionId(question.getQuestionId());
+//                    similarity.setUserId1(vo.userId1);
+//                    similarity.setUserId2(vo.userId2);
+//                    similarity.setSimilarity(vo.similarity);
+//                    similarity.save();
+//                } else {
+//                    similarity.setSimilarity(vo.similarity);
+//                    similarity.update();
+//                }
+//            }
+//            SimilarityResultVo similarityResultVo = new SimilarityResultVo();
+//            similarityResultVo.questionId = question.getQuestionId();
+//            similarityResultVo.questionNo = question.getQuestionNo();
+//            similarityResultVo.lowSimilarityVoList = similarityVoList
+//                    .stream().filter(x -> x.similarity > 10 && x.similarity <= 30).collect(Collectors.toList());
+//            similarityResultVo.mediumSimilarityVoList = similarityVoList
+//                    .stream().filter(x -> x.similarity > 30 && x.similarity <= 50).collect(Collectors.toList());
+//            similarityResultVo.highSimilarityVoList = similarityVoList
+//                    .stream().filter(x -> x.similarity > 50).collect(Collectors.toList());
+//            similarityResultVoList.add(similarityResultVo);
+//
+//=======
+        for(Question question : questionList){
+            List<Similarity> similarityList = similarityService.findByQuestionId(question.getQuestionId());
+            simialrityLists.add(similarityList);
         }
 
-        Collections.sort(similarityResultVoList);
+        setAttr("similarityData",simialrityLists);
 
-        setAttr("similarityResultVoList", similarityResultVoList);
-
-        render("_similarity_result.html");
+        setAttr("questionList", questionList);
+        render("_similarity_result_view.html");
     }
 
     public void staticAnalysis() throws IOException, InterruptedException {
@@ -592,6 +671,54 @@ public class ResultViewController extends Controller {
                 vo.similarity = Integer.parseInt(matcher.group(2));
                 similarityVoList.add(vo);
             }
+        }
+    }
+
+    private void generateGexf(List<List<Similarity>> similarityData){
+        Gexf gexf = new GexfImpl();
+        Calendar date = Calendar.getInstance();
+
+        gexf.getMetadata()
+                .setLastModified(date.getTime())
+                .setCreator("Gephi.org")
+                .setDescription("A Web network");
+        gexf.setVisualization(true);
+
+        Graph graph = gexf.getGraph();
+        graph.setDefaultEdgeType(EdgeType.UNDIRECTED).setMode(Mode.STATIC);
+
+        AttributeList attrList = new AttributeListImpl(AttributeClass.NODE);
+        graph.getAttributeLists().add(attrList);
+
+        Attribute attUrl = attrList.createAttribute("studentId", AttributeType.INTEGER, "StudentId");
+
+
+
+        Node gephi = graph.createNode("0");
+        gephi
+                .setLabel("郝大通")
+                .getAttributeValues()
+                .addValue(attUrl, "3");
+
+
+
+        Node webatlas = graph.createNode("1");
+        webatlas
+                .setLabel("郝大通")
+                .getAttributeValues()
+                .addValue(attUrl, "3");
+
+        gephi.connectTo("0", webatlas).setWeight(0.8f);
+
+        StaxGraphWriter graphWriter = new StaxGraphWriter();
+        File f = new File("static_graph_sample.gexf");
+        Writer out;
+        try {
+            out =  new FileWriter(f, false);
+            graphWriter.writeToStream(gexf, out, "UTF-8");
+            System.out.println(f.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

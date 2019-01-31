@@ -32,7 +32,11 @@
 
             <input id="assignmentId" type="hidden" value="#(assignment.assignmentId)"/>
             <div class="row" style="margin-bottom: 20px">
-                <a class="btn btn-primary analysis-btn">进行相似度分析</a>
+
+                <a class="btn btn-primary analysis-btn">总体相似度</a>
+                #for(question : questionList)
+                <a class="btn btn-primary analysis-btn">第#(question.questionNo)题相似度</a>
+                #end
             </div>
             <div class="row" id="main">
 
